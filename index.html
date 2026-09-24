@@ -1,0 +1,706 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Planificador LucidFlex</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{color-scheme:dark;--bg:#050505;--s1:#0E0E0F;--s2:#151517;--line:#232326;--line2:#303034;--ink:#EDEDED;--mut:#8C8C92;--dim:#5E5E64;
+--acc:#8AB4FF;--acc-bg:#101A2E;--good:#4CC38A;--good-bg:#0D1F17;--bad:#F2666A;--bad-bg:#221012;--warn:#E5B454;--warn-bg:#211A0C}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.55 "IBM Plex Sans",system-ui,sans-serif;padding-inline:16px;padding-block:20px 60px}
+.wrap{max-width:1180px;margin:0 auto;display:flex;flex-direction:column;gap:22px}
+h1,h2,h3{margin:0;font-weight:600;line-height:1.2;text-wrap:balance}
+h1{font-size:22px;letter-spacing:-.01em}h2{font-size:17px}h3{font-size:12px;color:var(--mut);font-weight:500;text-transform:uppercase;letter-spacing:.07em}
+p{margin:0}
+.num,td,th,input,select{font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums}
+.mut{color:var(--mut)}.small{font-size:12px}
+.pos{color:var(--good)}.neg{color:var(--bad)}
+.top{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;border-bottom:1px solid var(--line);padding-bottom:14px}
+.top .sub{font-size:12.5px;color:var(--mut);max-width:70ch;margin-top:4px}
+nav{display:flex;flex-wrap:wrap;gap:4px}
+nav a{font-size:12px;color:var(--mut);text-decoration:none;padding:5px 9px;border:1px solid var(--line);border-radius:6px}
+nav a:hover,nav a:focus-visible{color:var(--ink);border-color:var(--line2);outline:none}
+.strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--line);gap:1px}
+.strip>div{padding:12px 14px;background:var(--s1);display:flex;flex-direction:column;gap:2px;min-width:0}
+.strip .l{font-size:11px;color:var(--mut);text-transform:uppercase;letter-spacing:.06em}
+.strip .v{font:600 20px/1.2 "IBM Plex Mono",monospace}
+.strip .s{font-size:11.5px;color:var(--dim)}
+.layout{display:grid;grid-template-columns:minmax(0,320px) minmax(0,1fr);gap:18px;align-items:start}
+@media (max-width:900px){.layout{grid-template-columns:minmax(0,1fr)}}
+aside{position:sticky;top:12px;max-height:calc(100vh - 24px);overflow:auto;border:1px solid var(--line);border-radius:10px;background:var(--s1);scrollbar-width:thin}
+@media (max-width:900px){aside{position:static;max-height:none}}
+details.g{border-bottom:1px solid var(--line)}
+details.g:last-child{border-bottom:0}
+details.g>summary{list-style:none;cursor:pointer;padding:12px 14px;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--mut);display:flex;justify-content:space-between}
+details.g>summary::-webkit-details-marker{display:none}
+details.g>summary::after{content:"+";color:var(--dim)}
+details.g[open]>summary::after{content:"–"}
+details.g>summary:focus-visible{outline:1px solid var(--acc);outline-offset:-1px}
+.gb{padding:0 14px 14px;display:flex;flex-direction:column;gap:10px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+label.f{display:flex;flex-direction:column;gap:4px;font-size:11.5px;color:var(--mut)}
+input,select{font-size:13.5px;padding:7px 9px;border:1px solid var(--line2);border-radius:6px;background:var(--bg);color:var(--ink);width:100%}
+input:focus,select:focus,button:focus-visible{outline:1px solid var(--acc);outline-offset:0;border-color:var(--acc)}
+input[type=range]{padding:0;border:0;accent-color:var(--ink)}
+.seg{display:flex;border:1px solid var(--line2);border-radius:7px;overflow:hidden}
+.seg button{flex:1;font:500 12.5px "IBM Plex Sans",sans-serif;padding:7px 6px;border:0;border-right:1px solid var(--line2);background:transparent;color:var(--mut);cursor:pointer}
+.seg button:last-child{border-right:0}
+.seg button[aria-pressed="true"]{background:var(--ink);color:#000}
+.btn{font:500 12px "IBM Plex Sans",sans-serif;padding:7px 10px;border-radius:6px;border:1px solid var(--line2);background:transparent;color:var(--ink);cursor:pointer}
+.btn:hover{border-color:var(--mut)}
+.btn.pri{background:var(--ink);color:#000;border-color:var(--ink)}
+.chk{display:flex;gap:8px;align-items:center;font-size:12.5px;color:var(--mut)}
+.chk input{width:auto}
+.hint{font-size:11px;color:var(--dim)}
+.qc{border:1px solid var(--line2);border-radius:8px;padding:10px 12px;display:grid;grid-template-columns:1fr 1fr;gap:4px 10px;background:var(--bg)}
+.qc .h{font-size:11px;color:var(--mut);text-transform:uppercase;letter-spacing:.06em}
+.qc .n{font:600 24px/1.1 "IBM Plex Mono",monospace;color:var(--dim)}
+.qc .on .n{color:var(--ink)}
+.qc .d{font-size:11.5px;color:var(--dim)}
+.qc .full{grid-column:1/-1;font-size:11.5px;color:var(--mut);border-top:1px solid var(--line);padding-top:6px;margin-top:4px}
+main{display:flex;flex-direction:column;gap:18px;min-width:0}
+section.card{border:1px solid var(--line);border-radius:10px;background:var(--s1);padding:16px;display:flex;flex-direction:column;gap:14px;scroll-margin-top:12px}
+.sh{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
+.sh .tag{font-size:11.5px;color:var(--dim)}
+.kp{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.kp>div{background:var(--s1);padding:10px 12px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.kp .l{font-size:11px;color:var(--mut)}
+.kp .v{font:600 18px/1.25 "IBM Plex Mono",monospace}
+.kp .s{font-size:11.5px;color:var(--dim)}
+.kp .big .v{font-size:22px}
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:8px}
+table{border-collapse:collapse;width:100%;font-size:12px}
+th,td{padding:7px 10px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}
+th{font-family:"IBM Plex Sans",sans-serif;font-weight:500;color:var(--mut);background:var(--s2);font-size:11.5px}
+td:first-child,th:first-child{text-align:left}
+tr:last-child td{border-bottom:0}
+tr.hl td{background:var(--acc-bg)}
+tr.tot td{font-weight:600;border-top:1px solid var(--line2)}
+.note{font-size:12.5px;padding:9px 12px;border-radius:7px;border:1px solid var(--line2);background:var(--s2)}
+.note.ok{border-color:#1D4D36;background:var(--good-bg)}
+.note.w{border-color:#4D3E17;background:var(--warn-bg)}
+.note.b{border-color:#5A2226;background:var(--bad-bg)}
+.note.i{border-color:#22375E;background:var(--acc-bg)}
+.chart svg{width:100%;height:auto;display:block}
+.lg{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:11.5px;color:var(--mut);margin-top:4px}
+.lg i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:-1px}
+.bar{height:6px;border-radius:3px;background:var(--s2);overflow:hidden;display:flex}
+.bar span{display:block;height:100%}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:end}
+.row label.f{width:120px}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:700px){.split{grid-template-columns:1fr}}
+.sub{display:flex;flex-direction:column;gap:10px}
+details.more>summary{cursor:pointer;font-size:12px;color:var(--mut)}
+#xK{grid-template-columns:repeat(3,minmax(0,1fr))}
+@media (max-width:560px){#xK{grid-template-columns:repeat(2,minmax(0,1fr))}}
+footer{font-size:11px;color:var(--dim);border-top:1px solid var(--line);padding-top:12px}
+</style>
+</head>
+<body>
+
+
+<div class="wrap">
+<div class="top">
+  <div><h1>Planificador LucidFlex</h1><p class="sub">Operativa, costes y beneficios de evaluación y fondeo, con simulación Monte Carlo (10.000 trayectorias) desde el estado real de tu cuenta.</p></div>
+  <nav aria-label="Secciones"><a href="#s-op">Operación</a><a href="#s-ev">Evaluación</a><a href="#s-ex">Explorador</a><a href="#s-fu">Fondeo</a><a href="#s-un">Economía</a><a href="#s-pl">Plan</a><a href="#s-co">Conclusión</a></nav>
+</div>
+
+<div class="strip" id="strip" aria-live="polite"></div>
+
+<div class="layout">
+<aside aria-label="Parámetros">
+  <details class="g" open><summary>Cuenta</summary><div class="gb">
+    <label class="f" for="iPre">Cuenta y reglas<select id="iPre"><option value="25K" selected>LucidFlex 25K</option><option value="50K">LucidFlex 50K</option><option value="100K">LucidFlex 100K</option><option value="150K">LucidFlex 150K</option><option value="custom">Personalizada</option></select></label>
+    <div class="seg" id="sPh" role="group" aria-label="Fase"><button type="button" data-v="e" aria-pressed="true">Evaluación</button><button type="button" data-v="f" aria-pressed="false">Fondeada</button></div>
+    <div class="two">
+      <label class="f" for="iBal">Beneficio actual ($)<input id="iBal" type="text" inputmode="decimal" value="0"></label>
+      <label class="f" for="iHi">Máximo cierre ($)<input id="iHi" type="text" inputmode="decimal" value="0"></label>
+    </div>
+    <div class="two" id="gEv">
+      <label class="f" for="iMaxDay">Mayor día ganador ($)<input id="iMaxDay" type="text" inputmode="decimal" value="0"></label>
+      <div style="font-size:11.5px;color:var(--mut);display:flex;flex-direction:column;gap:4px">Suelo (MLL)<span class="num" id="oFloor" style="font-size:13.5px;color:var(--ink);padding:7px 0">–</span></div>
+    </div>
+    <div class="two" id="gFu" hidden>
+      <label class="f" for="iQ">Días válidos en el ciclo<input id="iQ" type="text" inputmode="numeric" value="0"></label>
+      <label class="f" for="iNpay">Pagos ya cobrados<input id="iNpay" type="text" inputmode="numeric" value="0"></label>
+    </div>
+  </div></details>
+
+  <details class="g" open><summary>Operación</summary><div class="gb">
+    <div class="two">
+      <label class="f" for="iSL">Stop (puntos)<input id="iSL" type="text" inputmode="decimal" value="10" autocomplete="off"></label>
+      <label class="f" for="iRR">RR (TP en R)<input id="iRR" type="text" inputmode="decimal" value="2"></label>
+    </div>
+    <div class="qc" id="qc" aria-live="polite"></div>
+    <div class="two">
+      <label class="f" for="iRE">Riesgo evaluación ($)<input id="iRE" type="text" inputmode="decimal" value="300"></label>
+      <label class="f" for="iRF">Riesgo fondeada ($)<input id="iRF" type="text" inputmode="decimal" value="187.5"></label>
+    </div>
+    <button type="button" class="btn" id="bRec">Usar riesgos recomendados</button>
+    <div class="two">
+      <label class="f" for="iMT">Máx. trades / día<select id="iMT"><option>1</option><option>2</option><option selected>3</option><option>4</option></select></label>
+      <label class="f" for="iDpw">Días que operas / semana<select id="iDpw"><option>3</option><option>4</option><option selected>5</option></select></label>
+    </div>
+    <label class="chk" for="iStopWin"><input id="iStopWin" type="checkbox" checked> Parar tras el primer ganador del día</label>
+    <label class="chk" for="iCapOff"><input id="iCapOff" type="checkbox"> Permitir riesgo de evaluación por encima del tope</label>
+    <div class="two">
+      <label class="f" for="iComm">Comisión i/v por MES ($)<input id="iComm" type="text" inputmode="decimal" value="1"></label>
+      <label class="f" for="iSlip">Deslizamiento / trade (ticks)<input id="iSlip" type="text" inputmode="decimal" value="1"></label>
+    </div>
+  </div></details>
+
+  <details class="g" open><summary>Estrategia</summary><div class="gb">
+    <label class="f" for="iWR">Win rate (TP antes que SL) · <span class="num" id="oWR" style="color:var(--ink)">40 %</span><input id="iWR" type="range" min="25" max="65" step="1" value="40"></label>
+    <label class="f" for="iVar">Variación mensual del win rate<select id="iVar"><option value="0" selected>Estable</option><option value="5">± 5 puntos</option><option value="10">± 10 puntos</option><option value="15">± 15 puntos</option></select></label>
+  </div></details>
+
+  <details class="g" open><summary>Plan y costes</summary><div class="gb">
+    <div class="two">
+      <label class="f" for="iPM">Challenges / mes<input id="iPM" type="text" inputmode="numeric" value="2"></label>
+      <label class="f" for="iExtra">Disponibles ahora<input id="iExtra" type="text" inputmode="numeric" value="1"></label>
+    </div>
+    <div class="two">
+      <label class="f" for="iThr">Pedir pago al llegar a ($)<input id="iThr" type="text" inputmode="decimal" value="1500"></label>
+      <label class="f" for="iHm">Horizonte (meses)<select id="iHm"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option selected>6</option><option>9</option><option>12</option></select></label>
+    </div>
+    <div class="two">
+      <label class="f" for="iFix">Costes fijos / mes ($)<input id="iFix" type="text" inputmode="decimal" value="0"></label>
+      <label class="f" for="iTax">Impuestos sobre cobros (%)<input id="iTax" type="text" inputmode="decimal" value="0"></label>
+    </div>
+    <p class="hint">Costes fijos: plataforma, datos, VPS… «Disponibles ahora» son los challenges ya pagados, sin contar la cuenta actual.</p>
+  </div></details>
+
+  <details class="g"><summary>Reglas de la firma</summary><div class="gb">
+    <div class="two">
+      <label class="f" for="rTarget">Objetivo eval. ($)<input id="rTarget" type="text" inputmode="decimal"></label>
+      <label class="f" for="rMll">Drawdown MLL ($)<input id="rMll" type="text" inputmode="decimal"></label>
+    </div>
+    <div class="two">
+      <label class="f" for="rLock">Suelo se bloquea en (+$)<input id="rLock" type="text" inputmode="decimal"></label>
+      <label class="f" for="rCons">Consistencia eval. (%)<input id="rCons" type="text" inputmode="decimal"></label>
+    </div>
+    <div class="two">
+      <label class="f" for="rMaxE">Máx. MES evaluación<input id="rMaxE" type="text" inputmode="numeric"></label>
+      <label class="f" for="rDll">Pérdida diaria máx. ($, 0 = no)<input id="rDll" type="text" inputmode="decimal"></label>
+    </div>
+    <label class="f" for="rTiers">Escalado fondeada (beneficio:MES, …)<input id="rTiers" type="text"></label>
+    <div class="two">
+      <label class="f" for="rPct">Pago: % del beneficio<input id="rPct" type="text" inputmode="decimal"></label>
+      <label class="f" for="rCap">Pago máximo ($)<input id="rCap" type="text" inputmode="decimal"></label>
+    </div>
+    <div class="two">
+      <label class="f" for="rMin">Pago mínimo ($)<input id="rMin" type="text" inputmode="decimal"></label>
+      <label class="f" for="rSplit">Split para ti (%)<input id="rSplit" type="text" inputmode="decimal"></label>
+    </div>
+    <div class="two">
+      <label class="f" for="rQn">Días ganadores / ciclo<input id="rQn" type="text" inputmode="numeric"></label>
+      <label class="f" for="rQd">Mínimo por día válido ($)<input id="rQd" type="text" inputmode="decimal"></label>
+    </div>
+    <div class="two">
+      <label class="f" for="rMaxP">Pagos máx. por cuenta<input id="rMaxP" type="text" inputmode="numeric"></label>
+      <label class="f" for="rMaxF">Fondeadas máx. a la vez<input id="rMaxF" type="text" inputmode="numeric"></label>
+    </div>
+    <div class="two">
+      <label class="f" for="rFee">Precio evaluación ($)<input id="rFee" type="text" inputmode="decimal"></label>
+      <label class="f" for="rAct">Activación al aprobar ($)<input id="rAct" type="text" inputmode="decimal"></label>
+    </div>
+    <p class="hint">Valores de LucidFlex a sept. 2026, a precio de lista. Pon tu precio con descuento. Si cambias una regla, la cuenta pasa a «Personalizada».</p>
+  </div></details>
+</aside>
+
+<main>
+  <section class="card" id="s-op" aria-labelledby="h-op">
+    <div class="sh"><h2 id="h-op">Operación de hoy</h2><span class="tag" id="tOp"></span></div>
+    <div class="kp" id="kOp"></div>
+    <div id="nOp" class="note"></div>
+    <div class="split">
+      <div class="sub"><h3>Cómo puede acabar el día</h3><div class="tw"><table id="tDay"></table></div></div>
+      <div class="sub"><h3>Contratos por stop</h3><div class="tw"><table id="tCheat"></table></div></div>
+    </div>
+  </section>
+
+  <section class="card" id="s-ev" aria-labelledby="h-ev">
+    <div class="sh"><h2 id="h-ev">Evaluación · costes y probabilidades</h2><span class="tag" id="tEv"></span></div>
+    <h3>Una evaluación nueva</h3>
+    <div class="kp" id="kEv"></div>
+    <div id="evCur" class="sub">
+      <h3>Tu evaluación desde hoy</h3>
+      <div class="kp" id="kEvC"></div>
+      <div><div class="bar" id="bEv"></div><div class="lg" id="lbEv"></div></div>
+      <div class="row">
+        <label class="f" for="iXd">En días<input id="iXd" type="text" inputmode="numeric" value="5"></label>
+        <label class="f" for="iXt">En trades<input id="iXt" type="text" inputmode="numeric" value="10"></label>
+        <label class="f" for="iXm">Tabla por<select id="iXm"><option value="d">días</option><option value="t">trades</option></select></label>
+      </div>
+      <div class="kp" id="kX"></div>
+      <div class="chart"><div id="cCum"></div><div class="lg" id="lCum"></div></div>
+      <div class="tw"><table id="tCum"></table></div>
+      <div class="chart"><div id="cPath"></div><div class="lg" id="lPath"></div></div>
+    </div>
+  </section>
+
+  <section class="card" id="s-ex" aria-labelledby="h-ex">
+    <div class="sh"><h2 id="h-ex">Explorador de probabilidades</h2><span class="tag">sale de las mismas 10.000 simulaciones · mueve los controles</span></div>
+    <div class="sub">
+      <h3 id="hExA">Tu cuenta, día a día</h3>
+      <div class="row">
+        <label class="f" for="xMode">Medir en<select id="xMode"><option value="d">días</option><option value="t">trades</option></select></label>
+        <label class="f" style="flex:1;min-width:220px" for="xRange"><span id="xLab">Día 5</span><input id="xRange" type="range" min="1" max="126" step="1" value="5"></label>
+      </div>
+      <div class="bar" style="height:22px;border-radius:5px" id="xBar"></div>
+      <div class="kp" id="xK"></div>
+      <div id="xNote" class="note i"></div>
+    </div>
+    <div class="split">
+      <div class="sub">
+        <h3>Tus challenges: ¿cuántos necesito?</h3>
+        <label class="f" for="kRange"><span id="kLab">4 challenges</span><input id="kRange" type="range" min="1" max="24" step="1" value="4"></label>
+        <div class="kp" id="kK"></div>
+        <div class="tw"><table id="kT"></table></div>
+      </div>
+      <div class="sub">
+        <h3>Tu plan: cuentas por mes</h3>
+        <label class="f" for="mSel">Mes<select id="mSel"></select></label>
+        <div class="tw"><table id="mT"></table></div>
+        <p class="small mut" id="mNote"></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="card" id="s-fu" aria-labelledby="h-fu">
+    <div class="sh"><h2 id="h-fu">Fondeo · cobros y vida de la cuenta</h2><span class="tag" id="tFu"></span></div>
+    <h3>Una fondeada nueva</h3>
+    <div class="kp" id="kFu"></div>
+    <div class="tw"><table id="tPay"></table></div>
+    <div id="fuCur" class="sub" hidden>
+      <h3>Tu fondeada desde hoy</h3>
+      <div class="kp" id="kFuC"></div>
+      <div class="row">
+        <label class="f" for="iXd2">En días<input id="iXd2" type="text" inputmode="numeric" value="10"></label>
+        <label class="f" for="iXm2">Tabla por<select id="iXm2"><option value="d">días</option><option value="t">trades</option></select></label>
+      </div>
+      <div class="chart"><div id="cCum2"></div><div class="lg" id="lCum2"></div></div>
+      <div class="tw"><table id="tCum2"></table></div>
+    </div>
+  </section>
+
+  <section class="card" id="s-un" aria-labelledby="h-un">
+    <div class="sh"><h2 id="h-un">Economía por challenge</h2><span class="tag">valor esperado de cada evaluación que compras</span></div>
+    <div class="split">
+      <div class="tw"><table id="tUnit"></table></div>
+      <div class="sub"><div class="kp" id="kUnit"></div><div id="nUnit" class="note"></div></div>
+    </div>
+    <h3>Sensibilidad al win rate</h3>
+    <div class="tw"><table id="tSens"></table></div>
+  </section>
+
+  <section class="card" id="s-pl" aria-labelledby="h-pl">
+    <div class="sh"><h2 id="h-pl">Plan · cuenta de resultados</h2><span class="tag" id="tPl"></span></div>
+    <p class="small mut">Siempre 1 evaluación en marcha (si queda crédito) más las fondeadas que consigas; todas operan los mismos trades. Los cobros no se reinvierten. Los costes fijos se pagan al empezar cada mes.</p>
+    <div class="kp" id="kPl"></div>
+    <div class="split">
+      <div class="tw"><table id="tPnl"></table></div>
+      <div class="chart"><div id="cPl"></div><div class="lg" id="lPl"></div></div>
+    </div>
+    <div class="tw"><table id="tMon"></table></div>
+  </section>
+
+  <section class="card" id="s-co" aria-labelledby="h-co">
+    <div class="sh"><h2 id="h-co">Conclusión</h2><span class="tag" id="tCo"></span></div>
+    <h3>Lo más probable</h3>
+    <div id="oLikely" class="sub"></div>
+    <h3>Lo óptimo con tus datos</h3>
+    <div class="row"><label class="f" for="iObj" style="width:min(100%,360px)">Optimizar para<select id="iObj"><option value="eq" selected>Equilibrado: lo más seguro y, dentro de eso, lo que más gana</option><option value="net">Máximo neto medio</option><option value="pos">Máxima probabilidad de acabar en positivo</option><option value="fast">Rapidez: aprobar o cobrar en ≤ X días</option></select></label></div>
+    <div class="bar" id="bOpt"><span style="width:0%;background:var(--ink)"></span></div>
+    <div class="tw"><table id="tOpt"></table></div>
+    <div id="nOpt" class="note"></div>
+    <div class="tw"><table id="tWhy"></table></div>
+    <p class="small mut">▲ = riesgo de evaluación por encima del tope de seguridad. Cada combinación se simula con 10.000 trayectorias en paralelo; «Actual» usa las mismas trayectorias, así que las diferencias son comparables.</p>
+    <div><button type="button" class="btn pri" id="bApply" hidden>Aplicar configuración óptima</button></div>
+    <details class="more"><summary>Ver todas las combinaciones probadas</summary><div class="tw" style="margin-top:8px"><table id="tOptAll"></table></div></details>
+  </section>
+</main>
+</div>
+
+<footer>Modelo: trades independientes con probabilidad de TP antes que SL igual al win rate; máximo de trades al día y parada tras el primer ganador. Drawdown EOD que se bloquea en el suelo indicado; al pedir un pago, el suelo salta a ese nivel. Consistencia solo en evaluación. Costes por trade = (comisión + deslizamiento) × contratos. 1 MES = $5 por punto; 1 ES = 10 MES. Reglas LucidFlex a sept. 2026: verifícalas en el Help Center de Lucid. No es asesoramiento financiero.</footer>
+</div>
+
+<script>
+const PRESET={
+ '25K':{target:1250,mll:1000,lock:100,cons:50,maxE:20,dll:0,tiers:'0:10, 1000:20',pct:50,cap:1000,min:500,split:90,qn:5,qd:100,maxP:5,maxF:5,fee:89,act:0,thr:1500},
+ '50K':{target:3000,mll:2000,lock:100,cons:50,maxE:40,dll:0,tiers:'0:20, 1000:30, 2000:40',pct:50,cap:2000,min:500,split:90,qn:5,qd:150,maxP:5,maxF:5,fee:149,act:0,thr:3000},
+ '100K':{target:6000,mll:3000,lock:100,cons:50,maxE:60,dll:0,tiers:'0:30, 1000:40, 2000:50, 3000:60',pct:50,cap:2500,min:500,split:90,qn:5,qd:200,maxP:5,maxF:5,fee:307,act:0,thr:5000},
+ '150K':{target:9000,mll:4500,lock:100,cons:50,maxE:100,dll:0,tiers:'0:40, 1000:50, 2000:60, 3000:80, 4500:100',pct:50,cap:3000,min:500,split:90,qn:5,qd:250,maxP:5,maxF:5,fee:407,act:0,thr:6000}};
+const RF={target:'rTarget',mll:'rMll',lock:'rLock',cons:'rCons',maxE:'rMaxE',dll:'rDll',tiers:'rTiers',pct:'rPct',cap:'rCap',min:'rMin',split:'rSplit',qn:'rQn',qd:'rQd',maxP:'rMaxP',maxF:'rMaxF',fee:'rFee',act:'rAct'};
+const $=id=>document.getElementById(id);
+const num=id=>{const v=parseFloat(String($(id).value).replace(/\s/g,'').replace(',','.'));return isFinite(v)?v:NaN};
+const usd=v=>!isFinite(v)?'–':(v<0?'−$':'$')+Math.abs(Math.round(v)).toLocaleString('es-ES');
+const pct=v=>!isFinite(v)?'–':(v<0?'−':'')+(Math.round(Math.abs(v)*1000)/10).toLocaleString('es-ES')+' %';
+const n0=v=>v==null||!isFinite(v)?'–':Math.round(v).toLocaleString('es-ES');
+const n1=v=>!isFinite(v)?'–':(Math.round(v*10)/10).toLocaleString('es-ES');
+const pts=v=>isFinite(v)?(+v.toFixed(2)).toLocaleString('es-ES'):'–';
+let ph='e';
+function loadPreset(k){const X=PRESET[k];if(!X)return;for(const f in RF)$(RF[f]).value=X[f];$('iThr').value=X.thr;setRec(false)}
+function rules(){const r={};for(const f in RF)r[f]=f==='tiers'?$(RF.tiers).value:num(RF[f]);
+ r.tierArr=String(r.tiers).split(/[,;]/).map(s=>s.split(':').map(x=>parseFloat(x))).filter(a=>a.length===2&&isFinite(a[0])&&isFinite(a[1])).sort((a,b)=>a[0]-b[0]);
+ if(!r.tierArr.length)r.tierArr=[[0,r.maxE||10]];
+ for(const k of ['lock','dll','act','min'])if(!isFinite(r[k]))r[k]=0;
+ if(!isFinite(r.maxF)||r.maxF<1)r.maxF=1;if(!isFinite(r.maxP)||r.maxP<1)r.maxP=1;if(!isFinite(r.qn))r.qn=0;if(!isFinite(r.qd))r.qd=0;if(!isFinite(r.cap))r.cap=1e9;if(!isFinite(r.maxE))r.maxE=1e6;
+ r.capE=r.mll*0.3125;r.cons=(r.cons||0)/100;r.pct=(isFinite(r.pct)?r.pct:50)/100;r.split=(isFinite(r.split)?r.split:90)/100;return r}
+const tierMax=(r,prof)=>{let m=r.tierArr[0][1];for(const [t,v] of r.tierArr)if(prof>=t)m=v;return m};
+function contracts(r,phase,risk,sl,prof,nocap){const per=sl*5;if(!(per>0)||!(risk>0))return 0;
+ if(phase==='e')return Math.max(0,Math.min(Math.floor((nocap?risk:Math.min(risk,r.capE))/per+1e-9),r.maxE));
+ return Math.max(0,Math.min(Math.round(risk/per),tierMax(r,prof)))}
+function setRec(go=true){const r=rules();$('iRE').value=+(r.mll*0.3).toFixed(1);$('iRF').value=+(r.mll*0.1875).toFixed(1);if(go){quick();schedule()}}
+function P(){const r=rules();const dpw=+$('iDpw').value,L=Math.max(1,Math.round(dpw*4.2));
+ return{r,sl:num('iSL'),rr:num('iRR'),rE:num('iRE'),rF:num('iRF'),mt:+$('iMT').value,stopWin:$('iStopWin').checked,
+ costMES:(num('iComm')||0)+(num('iSlip')||0)*1.25,wr:+$('iWR').value/100,vr:+$('iVar').value/100,
+ pm:Math.max(0,num('iPM')|0),extra:Math.max(0,num('iExtra')|0),thr:num('iThr'),months:+$('iHm').value,L,H:L*(+$('iHm').value),dpw,
+ fix:num('iFix')||0,tax:(num('iTax')||0)/100,bal:num('iBal')||0,hi:Math.max(num('iHi')||0,num('iBal')||0,0),maxDay:Math.max(0,num('iMaxDay')||0),
+ q:Math.max(0,num('iQ')|0),npay:Math.max(0,num('iNpay')|0),ph,capOff:$('iCapOff').checked}}
+
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+function run(p,o){const r=p.r,rnd=mulberry32(o.seed||20260924),N=o.nsim,H=o.H||p.H,M=Math.max(1,(r.maxF|0)+1),L=p.L;
+ const nE=contracts(r,'e',p.rE,p.sl,0,p.capOff),RE=nE*p.sl*5,cE=nE*p.costMES;
+ const nan=()=>new Float64Array(N).fill(NaN);
+ const out={pass:nan(),passT:nan(),burn:nan(),burnT:nan(),pay1:nan(),pay1T:nan(),cob:new Float64Array(N),gross:new Float64Array(N),fees:new Float64Array(N),apr:new Float64Array(N),
+  npays:new Float64Array(N),maxf:new Float64Array(N),life:new Float64Array(N),minCash:new Float64Array(N),payD:[],mon:[],path:o.track?[]:null,nE,bmE:[],bmF:[],amE:[]};
+ const months=Math.ceil(H/L);
+ for(let s=0;s<N;s++){
+  const sl=[];for(let i=0;i<M;i++)sl.push({act:false});
+  let st;
+  if(o.start==='freshE')st={ph:0,bal:0,hi:0,mx:0,q:0,cyc:0,lk:false,npy:0};
+  else if(o.start==='freshF')st={ph:1,bal:0,hi:0,mx:0,q:0,cyc:0,lk:false,npy:0};
+  else st={ph:p.ph==='e'?0:1,bal:p.bal,hi:p.hi,mx:p.maxDay,q:p.ph==='f'?p.q:0,cyc:0,lk:p.ph==='f'&&p.npay>0,npy:p.ph==='f'?p.npay:0};
+  st.fl=st.lk?r.lock:Math.min(st.hi-r.mll,r.lock);st.act=st.npy<r.maxP;st.orig=true;sl[0]=st;
+  let bank=o.pipeline?p.extra:0,nf=0,cob=0,gr=0,np=0,nt=0,apr=0,mf=0,wr=p.wr,life=NaN;const pd=[];
+  const mon=o.pipeline?new Array(months+1):null;if(mon)mon[0]=[0,0,0,0];const bE=o.pipeline?new Array(months).fill(0):null,bF=o.pipeline?new Array(months).fill(0):null,aE=o.pipeline?new Array(months).fill(0):null;
+  const pth=o.track?new Float32Array(H+1):null;if(pth)pth[0]=o.trackCob?0:st.bal;
+  let minC=0,fixPaid=0;
+  for(let d=1;d<=H;d++){
+   if((d-1)%L===0){if(p.vr>0)wr=Math.min(.95,Math.max(.05,p.wr+(rnd()*2-1)*p.vr));if(o.pipeline){if(d>1)bank+=p.pm;fixPaid+=p.fix}}
+   if(o.pipeline){let ne=0,nfd=0;for(const x of sl){if(x.act&&x.ph===0)ne++;if(x.act&&x.ph===1)nfd++}
+    if(nfd>mf)mf=nfd;
+    if(ne===0&&bank>=1){for(let i=0;i<M;i++)if(!sl[i].act){sl[i]={ph:0,bal:0,hi:0,fl:-r.mll,mx:0,q:0,cyc:0,lk:false,npy:0,act:true};bank-=1;nf++;break}}}
+   let any=false;for(const x of sl){if(x.act){any=true;x.day=0;x.alive=true}else x.alive=false}
+   if(any){
+    for(let t=0;t<p.mt;t++){const win=rnd()<wr;nt++;let traded=false;
+     for(let i=0;i<M;i++){const x=sl[i];if(!x.alive)continue;traded=true;
+      let R,c;if(x.ph===0){R=RE;c=cE}else{const n=Math.max(1,contracts(r,'f',p.rF,p.sl,x.bal));R=n*p.sl*5;c=n*p.costMES}
+      const pl=(win?p.rr*R:-R)-c;x.bal+=pl;x.day+=pl;
+      if(x.bal<=x.fl){x.alive=false;x.act=false;if(bE){if(x.ph===0)bE[Math.ceil(d/L)-1]++;else bF[Math.ceil(d/L)-1]++}if(x.orig&&isNaN(out.burn[s])){out.burn[s]=d;out.burnT[s]=nt;if(isNaN(life))life=d}continue}
+      if(x.ph===0){const m=Math.max(x.mx,x.day);
+       if(x.bal>=r.target&&(r.cons<=0||m<=r.cons*x.bal)){apr++;if(aE)aE[Math.ceil(d/L)-1]++;if(isNaN(out.pass[s])){out.pass[s]=d;out.passT[s]=nt}
+        if(!o.continueAfterPass&&x.orig){x.act=false;x.alive=false;continue}
+        Object.assign(x,{ph:1,bal:0,hi:0,fl:-r.mll,mx:0,q:0,cyc:0,lk:false,npy:0,day:0});x.alive=false;
+        let c2=0;for(const y of sl)if(y.act&&y.ph===1)c2++;if(c2>r.maxF)x.act=false;continue}}
+      if(r.dll>0&&x.day<=-r.dll)x.alive=false}
+     if(!traded)break;
+     if(win&&p.stopWin)break}
+    for(const x of sl){if(!x.act)continue;
+     if(x.ph===0){if(x.day>x.mx)x.mx=x.day;if(x.bal>x.hi){x.hi=x.bal;x.fl=Math.min(x.hi-r.mll,r.lock)}}
+     else{if(x.day>=r.qd&&x.day>0)x.q++;if(!x.lk&&x.bal>x.hi){x.hi=x.bal;x.fl=Math.min(x.hi-r.mll,r.lock)}
+      if(x.q>=r.qn&&x.bal>x.cyc&&x.bal>=p.thr){const amt=Math.min(r.pct*x.bal,r.cap);
+       if(amt>=r.min&&amt>0){x.bal-=amt;gr+=amt;cob+=r.split*amt;np++;if(x.orig)pd.push(d);if(isNaN(out.pay1[s])){out.pay1[s]=d;out.pay1T[s]=nt}
+        x.fl=r.lock;x.lk=true;x.q=0;x.cyc=x.bal;x.npy++;if(x.npy>=r.maxP){x.act=false;if(x.orig&&isNaN(life))life=d}}}}}}
+   if(pth)pth[d]=o.trackCob?cob:sl[0].orig?sl[0].bal:pth[d-1];
+   if(o.pipeline){const cash=cob*(1-p.tax)-nf*r.fee-apr*r.act-fixPaid;if(cash<minC)minC=cash;if(d%L===0||d===H)mon[Math.ceil(d/L)]=[cob,gr,nf,apr]}
+   if(!o.pipeline&&!o.track&&!sl[0].act)break}
+  out.cob[s]=cob;out.gross[s]=gr;out.fees[s]=nf;out.apr[s]=apr;out.npays[s]=np;out.maxf[s]=mf;out.life[s]=isNaN(life)?H:life;out.minCash[s]=minC;out.payD.push(pd);
+  if(mon){for(let m=1;m<=months;m++)if(!mon[m])mon[m]=mon[m-1];out.mon.push(mon);out.bmE.push(bE);out.bmF.push(bF);out.amE.push(aE)}if(pth)out.path.push(pth)}
+ return out}
+const A2=a=>Array.from(a),fin=x=>isFinite(x);
+const q=(arr,pc)=>{const v=A2(arr).filter(fin).sort((a,b)=>a-b);if(!v.length)return NaN;return v[Math.min(v.length-1,Math.floor(pc*(v.length-1)+0.5))]};
+const mean=a=>{let s=0,n=0;for(const x of a)if(isFinite(x)){s+=x;n++}return n?s/n:NaN};
+const frac=(a,f)=>{let c=0;for(const x of a)if(f(x))c++;return c/a.length};
+
+const C={mut:'#8C8C92',dim:'#5E5E64',line:'#232326',acc:'#8AB4FF',good:'#4CC38A',bad:'#F2666A',warn:'#E5B454',open:'#34343A'};
+function axisY(s,W,m,Y,y0,y1,fmt,n=4){for(let i=0;i<=n;i++){const v=y0+(y1-y0)*i/n;s.push(`<line x1="${m.l}" x2="${W-m.r}" y1="${Y(v)}" y2="${Y(v)}" stroke="${C.line}"/><text x="${m.l-8}" y="${Y(v)+4}" text-anchor="end" font-size="11" fill="${C.mut}" font-family="IBM Plex Mono">${fmt(v)}</text>`)}}
+function fan(el,lg,xs,bands,{yfmt,xfmt,hl=[],xl=''}){const W=720,H=260,m={l:62,r:12,t:10,b:36};
+ const all=bands.flatMap(b=>b.lo.concat(b.hi||[])).concat(hl.map(h=>h.v)).filter(fin);if(!all.length){el.innerHTML='';return}let y0=Math.min(...all),y1=Math.max(...all);if(y0===y1){y0-=1;y1+=1}const pd=(y1-y0)*.06;y0-=pd;y1+=pd;
+ const X=i=>m.l+i/((xs.length-1)||1)*(W-m.l-m.r),Y=v=>m.t+(1-(v-y0)/(y1-y0))*(H-m.t-m.b);const s=[`<svg viewBox="0 0 ${W} ${H}" role="img">`];axisY(s,W,m,Y,y0,y1,yfmt);
+ if(y0<0&&y1>0)s.push(`<line x1="${m.l}" x2="${W-m.r}" y1="${Y(0)}" y2="${Y(0)}" stroke="${C.dim}"/>`);
+ const st=Math.max(1,Math.ceil(xs.length/8));xs.forEach((x,i)=>{if(i%st===0||i===xs.length-1)s.push(`<text x="${X(i)}" y="${H-m.b+16}" text-anchor="middle" font-size="11" fill="${C.mut}" font-family="IBM Plex Mono">${xfmt(x)}</text>`)});
+ if(xl)s.push(`<text x="${(m.l+W-m.r)/2}" y="${H-3}" text-anchor="middle" font-size="11" fill="${C.dim}">${xl}</text>`);
+ hl.forEach(h=>s.push(`<line x1="${m.l}" x2="${W-m.r}" y1="${Y(h.v)}" y2="${Y(h.v)}" stroke="${h.c}" stroke-dasharray="4 4"/><text x="${W-m.r-4}" y="${Y(h.v)-5}" text-anchor="end" font-size="11" fill="${h.c}">${h.t}</text>`));
+ bands.forEach(b=>{if(b.hi){s.push(`<polygon points="${b.hi.map((v,i)=>X(i)+','+Y(v)).join(' ')} ${b.lo.map((v,i)=>X(i)+','+Y(v)).reverse().join(' ')}" fill="${b.c}" fill-opacity="${b.op}"/>`)}
+  else s.push(`<polyline fill="none" stroke="${b.c}" stroke-width="2" points="${b.lo.map((v,i)=>X(i)+','+Y(v)).join(' ')}"/>`)});
+ el.innerHTML=s.join('')+'</svg>';lg.innerHTML=bands.map(b=>`<span><i style="background:${b.c};opacity:${b.hi?.5:1}"></i>${b.name}</span>`).join('')+hl.map(h=>`<span><i style="background:${h.c}"></i>${h.t}</span>`).join('')}
+function stack(el,lg,xs,ser,xl){const W=720,H=220,m={l:44,r:12,t:8,b:36};const X=i=>m.l+i/((xs.length-1)||1)*(W-m.l-m.r),Y=v=>m.t+(1-v)*(H-m.t-m.b);
+ const s=[`<svg viewBox="0 0 ${W} ${H}" role="img">`];axisY(s,W,m,Y,0,1,v=>Math.round(v*100)+'%');
+ let base=xs.map(()=>0);ser.forEach(sr=>{const top=base.map((b,i)=>b+sr.v[i]);s.push(`<polygon points="${top.map((v,i)=>X(i)+','+Y(v)).join(' ')} ${base.map((v,i)=>X(i)+','+Y(v)).reverse().join(' ')}" fill="${sr.c}"/>`);base=top});
+ const st=Math.max(1,Math.ceil(xs.length/10));xs.forEach((x,i)=>{if(i%st===0||i===xs.length-1)s.push(`<text x="${X(i)}" y="${H-m.b+16}" text-anchor="middle" font-size="11" fill="${C.mut}" font-family="IBM Plex Mono">${x}</text>`)});
+ s.push(`<text x="${(m.l+W-m.r)/2}" y="${H-3}" text-anchor="middle" font-size="11" fill="${C.dim}">${xl}</text>`);el.innerHTML=s.join('')+'</svg>';
+ lg.innerHTML=ser.map(sr=>`<span><i style="background:${sr.c}"></i>${sr.name}</span>`).join('')}
+const K=(l,v,s='',cls='')=>`<div class="${cls}"><span class="l">${l}</span><span class="v">${v}</span><span class="s">${s}</span></div>`;
+
+function valid(p){return p.sl>0&&p.rE>0&&p.rF>0&&p.rr>0&&p.r.mll>0&&p.r.target>0&&p.thr>0}
+function quick(){const p=P(),r=p.r;if(!(p.sl>0)){$('qc').innerHTML='<div class="full">Escribe el stop en puntos (por ejemplo, 10 o 12,5).</div>';return}
+ const ne=contracts(r,'e',p.rE,p.sl,0,p.capOff),nf=contracts(r,'f',p.rF,p.sl,ph==='f'?p.bal:0),per=p.sl*5;
+ const eq=n=>{const e=Math.floor(n/10),m=n%10;return e?`${e} ES${m?' + '+m+' MES':''}`:'solo MES'};
+ $('qc').innerHTML=`<div class="${ph==='e'?'on':''}"><div class="h">Evaluación</div><div class="n">${ne} MES</div><div class="d">${usd(ne*per)} · ${eq(ne)}</div></div>
+ <div class="${ph==='f'?'on':''}"><div class="h">Fondeada</div><div class="n">${nf} MES</div><div class="d">${usd(nf*per)} · ${eq(nf)}</div></div>
+ <div class="full">SL ${pts(p.sl)} pts · ${Math.round(p.sl*4)} ticks &nbsp;|&nbsp; TP ${pts(p.sl*p.rr)} pts · ${Math.round(p.sl*p.rr*4)} ticks</div>`}
+function render(){const p=P(),r=p.r;quick();
+ $('oWR').textContent=Math.round(p.wr*100)+' %'+(p.vr?` ± ${Math.round(p.vr*100)}`:'');
+ $('gEv').hidden=ph!=='e';$('gFu').hidden=ph!=='f';$('evCur').hidden=ph!=='e';$('fuCur').hidden=ph!=='f';
+ const locked=ph==='f'&&p.npay>0,fl=locked?r.lock:Math.min(p.hi-r.mll,r.lock);$('oFloor').textContent=usd(fl);
+ if(!valid(p)){$('nOp').className='note b';$('nOp').textContent='Revisa los datos: el stop, el RR, los riesgos, el objetivo, el drawdown y el umbral de pago tienen que ser mayores que 0.';return}
+ const n=contracts(r,ph,ph==='e'?p.rE:p.rF,p.sl,ph==='f'?p.bal:0,p.capOff),per=p.sl*5,R=n*per,c=n*p.costMES,Wn=R*p.rr-c,Ln=R+c,cush=p.bal-fl;
+ $('tOp').textContent=`${$('iPre').selectedOptions[0].text} · ${ph==='e'?'evaluación':'fondeada'}`;
+ const lossN=n?Math.max(0,Math.floor((cush-0.01)/Ln)):0;
+ let goal;if(ph==='e'){const rem=Math.max(0,r.target-p.bal);goal=K('Hasta el objetivo',usd(rem),`≈ ${n0(n?Math.ceil(rem/Wn):NaN)} trades ganadores${r.cons>0?' · día máx. '+usd(Math.max(p.maxDay,r.cons*r.target)):''}`)}
+ else{const need=Math.max(0,p.thr-p.bal),amt=Math.min(r.pct*Math.max(p.bal,p.thr),r.cap);goal=K('Hasta pedir el pago',usd(need),`+ ${Math.max(0,r.qn-p.q)} días ≥ ${usd(r.qd)} · cobras ${usd(amt*r.split)}`)}
+ $('kOp').innerHTML=K('Contratos',`${n} MES`,n>=10?`${Math.floor(n/10)} ES${n%10?' + '+n%10+' MES':''}`:'solo micros','big')+K('Riesgo',usd(R),`${pct(R/r.mll)} del drawdown`)+K('Coste / trade',usd(c),`${usd(p.costMES)} por MES`)+
+  K('Si toca el TP',usd(Wn),`${pts(p.sl*p.rr)} pts, neto`)+K('Si toca el SL',usd(-Ln),`${pts(p.sl)} pts + costes`)+K('Colchón',usd(cush),`aguantas ${lossN} pérdida${lossN===1?'':'s'} seguida${lossN===1?'':'s'}`)+goal;
+ let note,cls;const worst=p.mt*Ln;
+ if(!n){note='Con este stop no llegas a 1 MES dentro del riesgo. Reduce el stop o sube el riesgo.';cls='b'}
+ else if(ph==='e'&&p.rE>r.capE&&!p.capOff){note=`El riesgo supera el tope de evaluación (${usd(r.capE)}): se calcula con el tope, para que 3 pérdidas no quemen la cuenta el primer día.`;cls='w'}
+ else if(ph==='e'&&p.capOff&&n*per>r.capE){note=`Riesgo por encima del tope de seguridad (${usd(r.capE)}): ${Math.ceil(cush/Ln)} pérdidas seguidas queman la cuenta, y pueden llegar el mismo día.`;cls='b'}
+ else if(worst>=cush){const safe=Math.max(0,Math.floor((cush-1)/(p.mt*(per+p.costMES))));note=`El peor día (${p.mt} pérdidas, ${usd(worst)}) supera tu colchón de ${usd(cush)}. Para sobrevivirlo: ${safe?safe+' MES':'reduce el stop'}, o haz como máximo ${Math.max(1,lossN)} trade${lossN>1?'s':''} hoy.`;cls='w'}
+ else{note=`El peor día (${p.mt} pérdida${p.mt>1?'s':''}, ${usd(worst)}) te deja con ${usd(cush-worst)} de colchón.`;cls='ok'}
+ $('nOp').className='note '+cls;$('nOp').textContent=note;
+ let tb='<tr><th>Secuencia</th><th>Prob.</th><th>Día</th><th>Beneficio</th></tr>';
+ if(!p.stopWin)tb+='<tr><td colspan="4">Sin parar tras el ganador, el resultado depende del orden de los trades.</td></tr>';
+ else if(n){let pr=1,done=false;for(let k=0;k<p.mt;k++){if(k>0&&p.bal-k*Ln<=fl){tb+=`<tr><td>${'P'.repeat(k)} · quemada</td><td>${pct(pr)}</td><td class="neg">${usd(-k*Ln)}</td><td class="neg">${usd(p.bal-k*Ln)}</td></tr>`;done=true;break}
+   const res=-k*Ln+Wn;tb+=`<tr><td>${'P'.repeat(k)}G</td><td>${pct(pr*p.wr)}</td><td class="${res>=0?'pos':'neg'}">${res>=0?'+':''}${usd(res)}</td><td>${usd(p.bal+res)}</td></tr>`;pr*=1-p.wr}
+  if(!done){const res=-p.mt*Ln,b=p.bal+res<=fl;tb+=`<tr><td>${'P'.repeat(p.mt)}</td><td>${pct(pr)}</td><td class="neg">${usd(res)}</td><td class="${b?'neg':''}">${usd(p.bal+res)}${b?' · quemada':''}</td></tr>`}}
+ $('tDay').innerHTML=tb;
+ let ch='<tr><th>Stop</th><th>TP</th><th>Eval.</th><th>Fondeada</th><th>3 SL eval.</th></tr>';
+ for(let s=6;s<=20;s+=(s<16?1:2)){const ne=contracts(r,'e',p.rE,s,0,p.capOff),nf=contracts(r,'f',p.rF,s,0),l3=3*ne*(s*5+p.costMES);
+  ch+=`<tr${Math.abs(s-p.sl)<0.5?' class="hl"':''}><td>${s}</td><td>${pts(s*p.rr)}</td><td>${ne} · ${usd(ne*s*5)}</td><td>${nf} · ${usd(nf*s*5)}</td><td class="${l3>=r.mll?'neg':''}">${usd(l3)}</td></tr>`}
+ $('tCheat').innerHTML=ch;schedSim()}
+
+let simT=null,tok=0,S={};
+function schedSim(){clearTimeout(simT);tok++;const t=tok;['tEv','tFu','tPl','tCo'].forEach(i=>$(i).textContent='calculando…');simT=setTimeout(()=>simAll(t),80)}
+const later=fn=>new Promise(res=>setTimeout(()=>{fn();res()},0));
+async function simAll(t){const p=P();if(!valid(p))return;const LONG=Math.max(p.H,400);
+ await later(()=>{if(t!==tok)return;S.p=p;S.E=run(p,{nsim:10000,start:'freshE',H:LONG,seed:11})});if(t!==tok)return;
+ await later(()=>{if(t!==tok)return;S.F=run(p,{nsim:10000,start:'freshF',H:LONG,seed:12,continueAfterPass:true})});if(t!==tok)return;
+ await later(()=>{if(t!==tok)return;S.C=run(p,{nsim:10000,start:'state',H:p.H,seed:13,track:true,trackCob:ph==='f',continueAfterPass:ph==='f'})});if(t!==tok)return;
+ renderEval();renderFund();renderUnit();
+ await later(()=>{if(t!==tok)return;S.B=run(p,{nsim:10000,start:'state',H:p.H,seed:14,pipeline:true,continueAfterPass:true})});if(t!==tok)return;
+ renderPlan();renderStrip();likely();
+ if(t!==tok)return;renderExplorer();sens(t);optimize(t)}
+
+function renderEval(){const E=S.E,p=S.p,r=p.r;const pp=frac(E.pass,fin),dec=A2(E.pass).map((v,i)=>fin(v)?v:E.burn[i]),decT=A2(E.passT).map((v,i)=>fin(v)?v:E.burnT[i]);
+ const att=1/pp,costF=r.fee*att+r.act,daysF=mean(dec)*att,tradesF=mean(decT)*att;
+ $('tEv').textContent=`${E.nE} MES · ${usd(E.nE*p.sl*5)} por trade · 10.000 simulaciones`;
+ $('kEv').innerHTML=K('Aprueba',pct(pp),`se quema ${pct(frac(E.burn,fin))}`,'big')+K('Un intento dura',`${n0(q(dec,.5))} d`,`mediana · ${n0(q(decT,.5))} trades`)+
+  K('Si aprueba',`${n0(q(E.pass,.5))} d · ${n0(q(E.passT,.5))} t`,`80 %: ≤ ${n0(q(E.pass,.8))} días`)+K('Si se quema',`${n0(q(E.burn,.5))} d · ${n0(q(E.burnT,.5))} t`,`en 2 días: ${pct(frac(E.burn,x=>x<=2))}`)+
+  K('Intentos por fondeada',n1(att),`de media quemas ${n1(att-1)} antes`)+K('Coste por fondeada',usd(costF),`${usd(r.fee)} × ${n1(att)}${r.act?' + activación':''}`)+K('Tiempo por fondeada',`${n0(daysF)} d`,`≈ ${n0(tradesF)} trades · ${n1(daysF/p.dpw)} semanas`);
+ if(ph!=='e')return;const C0=S.C;
+ const pP=frac(C0.pass,fin),pB=frac(C0.burn,fin),po=Math.max(0,1-pP-pB);
+ $('kEvC').innerHTML=K('Aprueba',pct(pP),`en ${p.months} mes${p.months>1?'es':''}`,'big')+K('Se quema',pct(pB),`2 días: ${pct(frac(C0.burn,x=>x<=2))} · 5 días: ${pct(frac(C0.burn,x=>x<=5))}`)+
+  K('Si aprueba',`${n0(q(C0.pass,.5))} d · ${n0(q(C0.passT,.5))} t`,`80 %: ≤ ${n0(q(C0.pass,.8))} d · ${n0(q(C0.passT,.8))} t`)+K('Si se quema',`${n0(q(C0.burn,.5))} d · ${n0(q(C0.burnT,.5))} t`,'mediana')+K('Sin decidir',pct(po),'al final del horizonte');
+ $('bEv').innerHTML=`<span style="width:${pP*100}%;background:${C.good}"></span><span style="width:${po*100}%;background:${C.open}"></span><span style="width:${pB*100}%;background:${C.bad}"></span>`;
+ $('lbEv').innerHTML=`<span><i style="background:${C.good}"></i>aprueba ${pct(pP)}</span><span><i style="background:${C.open}"></i>abierta ${pct(po)}</span><span><i style="background:${C.bad}"></i>se quema ${pct(pB)}</span>`;
+ cumul('e');
+ const H=p.H,step=Math.max(1,Math.floor(H/70)),xs=[],lo=[],md=[],hi=[],l25=[],h75=[];
+ for(let d=0;d<=H;d+=step){xs.push(d);const col=C0.path.map(a=>a[d]);lo.push(q(col,.1));l25.push(q(col,.25));md.push(q(col,.5));h75.push(q(col,.75));hi.push(q(col,.9))}
+ fan($('cPath'),$('lPath'),xs,[{name:'10-90 %',lo,hi,c:C.acc,op:.12},{name:'25-75 %',lo:l25,hi:h75,c:C.acc,op:.22},{name:'Mediana',lo:md,c:C.acc}],{yfmt:usd,xfmt:d=>'d'+d,xl:'beneficio de la cuenta · días de trading',hl:[{v:r.target,t:'objetivo',c:C.good},{v:Math.min(p.hi-r.mll,r.lock),t:'suelo inicial',c:C.bad}]})}
+function cumul(kind){const C0=S.C,p=S.p,N=C0.burn.length,ev=kind==='e';if(!C0)return;
+ const G=ev?C0.pass:C0.pay1,GT=ev?C0.passT:C0.pay1T;
+ const BD=ev?C0.burn:A2(C0.burn).map((v,i)=>fin(G[i])&&G[i]<=v?NaN:v),BT=ev?C0.burnT:A2(C0.burnT).map((v,i)=>fin(GT[i])&&GT[i]<=v?NaN:v);
+ const gl=ev?'Aprueba':'Cobra el 1.er pago',bl=ev?'Se quema':'Se quema sin cobrar';
+ const by=(a,x)=>{let c=0;for(const v of a)if(v<=x)c++;return c/N};
+ const mode=$(ev?'iXm':'iXm2').value,xd=Math.max(1,num(ev?'iXd':'iXd2')|0||1);
+ if(ev){const xt=Math.max(1,num('iXt')|0||1),g1=by(G,xd),b1=by(BD,xd),g2=by(GT,xt),b2=by(BT,xt);
+  $('kX').innerHTML=K(`Aprueba en ${xd} día${xd>1?'s':''}`,pct(g1),`se quema ${pct(b1)} · abierta ${pct(Math.max(0,1-g1-b1))}`)+K(`Aprueba en ${xt} trades`,pct(g2),`se quema ${pct(b2)} · abierta ${pct(Math.max(0,1-g2-b2))}`)}
+ else{const g1=by(G,xd),b1=by(BD,xd);$('kFuC').innerHTML=K('Cobra el 1.er pago',pct(frac(G,fin)),`mediana ${n0(q(G,.5))} d · ${n0(q(GT,.5))} t`,'big')+K('Se quema sin cobrar',pct(frac(BD,fin)),`mediana ${n0(q(BD,.5))} d`)+
+  K(`Cobra en ${xd} días`,pct(g1),`se quema sin cobrar ${pct(b1)}`)+K('Cobros de esta cuenta',usd(mean(C0.cob)),`mediana ${usd(q(C0.cob,.5))} · ${n1(mean(C0.npays))} pagos`)}
+ const maxT=Math.max(1,q(GT,.99)||1,q(BT,.99)||1);let xs=[];
+ if(mode==='d')for(let d=0;d<=p.H;d++)xs.push(d);else{const st=Math.max(1,Math.round(maxT/80));for(let t=0;t<=maxT*1.1;t+=st)xs.push(t)}
+ const GG=mode==='d'?G:GT,BB=mode==='d'?BD:BT;
+ const cum=a=>{const v=A2(a).filter(fin).sort((x,y)=>x-y);let j=0;return xs.map(x=>{while(j<v.length&&v[j]<=x)j++;return j/N})};
+ let cg=cum(GG),cb=cum(BB),co=xs.map((_,i)=>Math.max(0,1-cg[i]-cb[i]));
+ {let k=co.findIndex(v=>v<0.005);if(k>0){k=Math.min(xs.length,Math.max(k+2,11));xs.length=k;cg.length=k;cb.length=k;co.length=k}}
+ stack($(ev?'cCum':'cCum2'),$(ev?'lCum':'lCum2'),xs,[{name:gl,v:cg,c:'#2E7A57'},{name:'Abierta',v:co,c:C.open},{name:bl,v:cb,c:'#9C3A3E'}],mode==='d'?'días de trading desde hoy':'trades desde hoy');
+ const ptsL=(mode==='d'?[1,2,3,4,5,6,7,8,10,12,15,21,30,42,63,84,105,126,168,252]:[1,2,3,4,5,6,8,10,12,15,20,25,30,40,50,60,80,100,150,200,300]).filter(x=>x<=(mode==='d'?p.H:p.H*p.mt));
+ let t=`<tr><th>${mode==='d'?'Días':'Trades'}</th><th>${gl}</th><th>${bl}</th><th>Abierta</th><th>${gl} en el tramo</th><th>${bl} en el tramo</th></tr>`,pg=0,pb=0;
+ for(const x of ptsL){const g=by(GG,x),b=by(BB,x);t+=`<tr><td>${x}</td><td class="pos">${pct(g)}</td><td class="neg">${pct(b)}</td><td>${pct(Math.max(0,1-g-b))}</td><td>+${pct(g-pg)}</td><td>+${pct(b-pb)}</td></tr>`;pg=g;pb=b}
+ $(ev?'tCum':'tCum2').innerHTML=t}
+function renderFund(){const F=S.F,p=S.p,r=p.r;const nF=contracts(r,'f',p.rF,p.sl,0);
+ const p1=frac(F.pay1,fin),V=mean(F.cob),Vg=mean(F.gross);
+ $('tFu').textContent=`${nF} MES al empezar · ${usd(nF*p.sl*5)} por trade · pago a ${usd(p.thr)} · 10.000 simulaciones`;
+ $('kFu').innerHTML=K('Cobra ≥ 1 pago',pct(p1),`mediana ${n0(q(F.pay1,.5))} d · ${n0(q(F.pay1T,.5))} t`,'big')+K('Valor por fondeada',usd(V),`para ti, media · mediana ${usd(q(F.cob,.5))}`)+
+  K('Retirado bruto',usd(Vg),`${pct(r.split)} para ti · ${usd(Vg-V)} para la firma`)+K('Pagos por cuenta',n1(mean(F.npays)),`máx. ${r.maxP} · 10 % mejores: ${usd(q(F.cob,.9))}`)+
+  K('Se quema',pct(frac(F.burn,fin)),`vida mediana ${n0(q(F.life,.5))} d`)+K('Completa todos los pagos',pct(frac(F.npays,x=>x>=r.maxP)),'y pasa a revisión');
+ let t='<tr><th>Pago</th><th>Llegan</th><th>Día (mediana)</th><th>El 80 % antes del día</th></tr>';
+ for(let k=1;k<=r.maxP;k++){const d=F.payD.map(a=>a.length>=k?a[k-1]:NaN);t+=`<tr><td>${k}.º</td><td>${pct(frac(d,fin))}</td><td>${n0(q(d,.5))}</td><td>${n0(q(d,.8))}</td></tr>`}
+ $('tPay').innerHTML=t;if(ph==='f')cumul('f')}
+function unit(E,F,r){const pp=frac(E.pass,fin),V=mean(F.cob);return{pp,V,ev:pp*(V-r.act)-r.fee,costF:pp>0?r.fee/pp+r.act:NaN}}
+function renderUnit(){const p=S.p,r=p.r,u=unit(S.E,S.F,r);
+ $('tUnit').innerHTML=`<tr><th>Por cada evaluación que compras</th><th>Importe</th></tr>
+ <tr><td>Precio de la evaluación</td><td class="neg">${usd(-r.fee)}</td></tr>
+ <tr><td>Probabilidad de aprobar</td><td>${pct(u.pp)}</td></tr>
+ <tr><td>Activación × prob. de aprobar</td><td class="neg">${usd(-u.pp*r.act)}</td></tr>
+ <tr><td>Cobros de una fondeada (media, para ti)</td><td>${usd(u.V)}</td></tr>
+ <tr><td>Cobros × prob. de aprobar</td><td class="pos">${usd(u.pp*u.V)}</td></tr>
+ <tr class="tot"><td>Valor esperado por evaluación</td><td class="${u.ev>=0?'pos':'neg'}">${usd(u.ev)}</td></tr>
+ <tr><td>Después de impuestos (${pct(p.tax)})</td><td>${usd(u.pp*u.V*(1-p.tax)-r.fee-u.pp*r.act)}</td></tr>`;
+ $('kUnit').innerHTML=K('Rentabilidad por evaluación',pct(u.ev/r.fee),'valor esperado ÷ precio','big')+K('Coste por fondeada',usd(u.costF),`${n1(1/u.pp)} intentos`)+K('Margen por fondeada',usd(u.V-u.costF),'cobros − coste de conseguirla');
+ $('nUnit').className='note '+(u.ev>0?'ok':'b');$('nUnit').textContent=u.ev>0?`Cada evaluación vale de media ${usd(u.ev)} más de lo que cuesta. Es una media: en la práctica o la pierdes (${pct(1-u.pp)} de las veces) o apruebas y cobras.`:`Con estos datos cada evaluación pierde dinero de media (${usd(u.ev)}). Revisa tu win rate real, los costes o el riesgo.`}
+function sens(t){const p=S.p;const ws=[-10,-5,0,5,10].map(d=>({d,w:Math.round(p.wr*100)+d})).filter(x=>x.w>=20&&x.w<=75);
+ runJobs(ws.map(x=>({kind:'unit',p:{...p,wr:x.w/100},nsim:10000})),null,()=>t!==tok).then(out=>{if(!out||t!==tok)return;
+ let h='<tr><th>Win rate</th><th>Aprueba</th><th>Coste por fondeada</th><th>Valor por fondeada</th><th>Valor / evaluación</th><th>Rentabilidad</th></tr>';
+ ws.forEach((x,i)=>{const u=out[i];h+=`<tr${x.d===0?' class="hl"':''}><td>${x.w} %</td><td>${pct(u.pp)}</td><td>${usd(u.costF)}</td><td>${usd(u.V)}</td><td class="${u.ev>=0?'pos':'neg'}">${usd(u.ev)}</td><td class="${u.ev>=0?'pos':'neg'}">${pct(u.ev/p.r.fee)}</td></tr>`});
+ $('tSens').innerHTML=h})}
+function netArr(B,p){const r=p.r,months=Math.ceil(p.H/p.L);return A2(B.cob).map((c,i)=>c*(1-p.tax)-B.fees[i]*r.fee-B.apr[i]*r.act-p.fix*months)}
+function renderPlan(){const B=S.B,p=S.p,r=p.r,months=Math.ceil(p.H/p.L),net=netArr(B,p);
+ $('tPl').textContent=`${p.months} mes${p.months>1?'es':''} · ${p.H} días de trading · 10.000 simulaciones`;
+ $('kPl').innerHTML=K('Neto medio',usd(mean(net)),`mediana ${usd(q(net,.5))}`,'big')+K('Prob. de acabar en positivo',pct(frac(net,x=>x>0)),`10 % peores: ${usd(q(net,.1))}`)+
+  K('Capital necesario',usd(-q(B.minCash,.1)),'máximo que pones antes de cobrar (90 %)')+K('Cuentas aprobadas',n1(mean(B.apr)),`fondeadas a la vez: ${n1(mean(B.maxf))}`)+
+  K('Pagos cobrados',n1(mean(B.npays)),`el 1.º hacia el día ${n0(q(B.pay1,.5))}`)+K('Challenges comprados',n1(mean(B.fees)),'además de la cuenta actual');
+ const g=mean(B.gross),cb=mean(B.cob),tx=cb*p.tax,fe=mean(B.fees)*r.fee,ac=mean(B.apr)*r.act,fx=p.fix*months,nt=cb-tx-fe-ac-fx;
+ $("tPnl").innerHTML=`<tr><th>Cuenta de resultados (media)</th><th>Importe</th></tr>
+ <tr><td>Retirado bruto de las fondeadas</td><td>${usd(g)}</td></tr>
+ <tr><td>− Parte de la firma (${pct(1-r.split)})</td><td class="neg">${usd(-(g-cb))}</td></tr>
+ <tr><td>= Cobros para ti</td><td class="pos">${usd(cb)}</td></tr>
+ <tr><td>− Impuestos (${pct(p.tax)})</td><td class="neg">${usd(-tx)}</td></tr>
+ <tr><td>− Evaluaciones (${n1(mean(B.fees))} × ${usd(r.fee)})</td><td class="neg">${usd(-fe)}</td></tr>
+ <tr><td>− Activaciones</td><td class="neg">${usd(-ac)}</td></tr>
+ <tr><td>− Costes fijos (${months} × ${usd(p.fix)})</td><td class="neg">${usd(-fx)}</td></tr>
+ <tr class="tot"><td>= Neto</td><td class="${nt>=0?'pos':'neg'}">${usd(nt)}</td></tr>`;
+ const xs=[],lo=[],md=[],hi=[],mn=[];let tm='<tr><th>Mes</th><th>Evaluaciones</th><th>Aprobadas</th><th>Cobros</th><th>Gastos</th><th>Neto acum. (media)</th><th>Mediana</th><th>10 % peores</th><th>Positivo</th></tr>';
+ for(let m=0;m<=months;m++){const col=B.mon.map(a=>{const [c,,nf,ap]=a[m];return c*(1-p.tax)-nf*r.fee-ap*r.act-p.fix*m});
+  xs.push(m);lo.push(q(col,.1));md.push(q(col,.5));hi.push(q(col,.9));mn.push(mean(col));
+  if(m>0){const d=k=>mean(B.mon.map(a=>a[m][k]-a[m-1][k]));const dnf=d(2),dap=d(3),dco=d(0);
+   tm+=`<tr><td>${m}</td><td>${n1(dnf)}</td><td>${n1(dap)}</td><td class="pos">${usd(dco*(1-p.tax))}</td><td class="neg">${usd(-(dnf*r.fee+dap*r.act+p.fix))}</td><td class="${mn[m]>=0?'pos':'neg'}">${usd(mn[m])}</td><td>${usd(md[m])}</td><td class="${lo[m]<0?'neg':''}">${usd(lo[m])}</td><td>${pct(frac(col,x=>x>0))}</td></tr>`}}
+ $('tMon').innerHTML=tm;
+ fan($('cPl'),$('lPl'),xs,[{name:'10-90 %',lo,hi,c:C.acc,op:.14},{name:'Mediana',lo:md,c:C.acc},{name:'Media',lo:mn,c:C.warn}],{yfmt:usd,xfmt:m=>'m'+m,xl:'neto acumulado por mes'})}
+function renderStrip(){const p=S.p,r=p.r,u=unit(S.E,S.F,r),B=S.B,net=netArr(B,p);const n=contracts(r,ph,ph==='e'?p.rE:p.rF,p.sl,ph==='f'?p.bal:0,p.capOff);
+ const cur=ph==='e'?['Esta evaluación aprueba',pct(frac(S.C.pass,fin)),`se quema ${pct(frac(S.C.burn,fin))}`]:['Esta fondeada cobra',pct(frac(S.C.pay1,fin)),`1.er pago hacia el día ${n0(q(S.C.pay1,.5))}`];
+ $('strip').innerHTML=[['Contratos hoy',`${n} MES`,`${usd(n*p.sl*5)} · stop ${pts(p.sl)} pts`],cur,['Coste por fondeada',usd(u.costF),`${n1(1/u.pp)} intentos`],['Valor por fondeada',usd(u.V),'cobros medios para ti'],
+  ['Valor por evaluación',usd(u.ev),`${pct(u.ev/r.fee)} sobre el precio`],[`Neto a ${p.months} meses`,usd(q(net,.5)),`mediana · positivo ${pct(frac(net,x=>x>0))}`]]
+  .map(([l,v,s])=>`<div><span class="l">${l}</span><span class="v">${v}</span><span class="s">${s}</span></div>`).join('')}
+
+function likely(){const p=S.p,r=p.r,C0=S.C,B=S.B,u=unit(S.E,S.F,r);const L=[];
+ if(ph==='e'){const pP=frac(C0.pass,fin),pB=frac(C0.burn,fin);const dec=A2(C0.pass).map((v,i)=>fin(v)?v:C0.burn[i]);
+  L.push(`<b>Tu evaluación:</b> lo más probable es <b>${pP>=pB?'aprobarla':'quemarla'}</b> (${pct(Math.max(pP,pB))} frente a ${pct(Math.min(pP,pB))}). La mitad de las veces se decide en ${n0(q(dec,.5))} días o menos. Si aprueba, suele hacerlo en ${n0(q(C0.pass,.5))} días (${n0(q(C0.passT,.5))} trades); si se quema, en ${n0(q(C0.burn,.5))} días (${n0(q(C0.burnT,.5))} trades).`)}
+ else{const p1=frac(C0.pay1,fin);L.push(`<b>Tu fondeada:</b> lo más probable es <b>${p1>=0.5?'cobrar al menos un pago':'quemarla antes de cobrar'}</b> (cobra el ${pct(p1)}). El primer pago suele llegar hacia el día ${n0(q(C0.pay1,.5))}; cobro típico de la cuenta: ${usd(q(C0.cob,.5))}.`)}
+ L.push(`<b>Cada evaluación nueva</b> aprueba el ${pct(u.pp)} de las veces: necesitas ${n1(1/u.pp)} de media por cada fondeada (${usd(u.costF)}), y cada fondeada te deja ${usd(u.V)} de media. Valor esperado de cada evaluación: <b class="${u.ev>=0?'pos':'neg'}">${usd(u.ev)}</b>.`);
+ const net=netArr(B,p);const mode=a=>{const m={};for(const v of a){const k=Math.round(v);m[k]=(m[k]||0)+1}return +Object.entries(m).sort((x,y)=>y[1]-x[1])[0][0]};
+ L.push(`<b>Tu plan a ${p.months} meses:</b> el caso típico acaba en <b>${usd(q(net,.5))}</b> netos. Lo más frecuente es aprobar ${mode(B.apr)} cuenta(s) y cobrar ${mode(B.npays)} pago(s). Acaba en positivo el ${pct(frac(net,x=>x>0))} de las veces; en el 10 % de los peores casos, ${usd(q(net,.1))}. Ten disponible ${usd(-q(B.minCash,.1))} para challenges y costes antes del primer cobro.`);
+ $('oLikely').innerHTML=L.map(l=>`<div class="note i">${l}</div>`).join('')}
+function metricsW(p,nsim,seed,X){const ev=p.ph==='e';const A=run(p,{nsim,start:'state',H:p.H,seed,continueAfterPass:!ev});
+ const B=run(p,{nsim,start:'state',H:p.H,seed:seed+1,pipeline:true,continueAfterPass:true}),net=netArr(B,p);
+ const G=ev?A.pass:A.pay1,GT=ev?A.passT:A.pay1T;
+ return{pass:frac(G,fin),passD:q(G,.5),passT:q(GT,.5),passX:frac(G,x=>x<=X),burn:frac(A.burn,fin),burn2:frac(A.burn,x=>x<=2),
+  net:mean(net),med:q(net,.5),p10:q(net,.1),pos:frac(net,x=>x>0),pay1:q(B.pay1,.5),cap:-q(B.minCash,.1),apr:mean(B.apr),cob:mean(B.cob)}}
+function unitW(p,nsim){const E=run(p,{nsim,start:'freshE',H:400,seed:21}),F=run(p,{nsim,start:'freshF',H:400,seed:22,continueAfterPass:true});return unit(E,F,p.r)}
+// ===== pool de workers (10.000 simulaciones por tarea, en paralelo) =====
+const WSRC=Object.entries({mulberry32,tierMax,contracts,run,q,mean,frac,netArr,unit,metricsW,unitW}).map(([k,f])=>`const ${k}=${f.toString()};`).join('\n')+
+ "\nconst A2=a=>Array.from(a),fin=x=>isFinite(x);\nonmessage=e=>{const {id,kind,p,nsim,seed,X}=e.data;const r=kind==='unit'?unitW(p,nsim):metricsW(p,nsim,seed,X);postMessage({id,r})}";
+let POOL=null;const JQ=[];let jobId=0;const RUN={};
+function pool(){if(POOL)return POOL;const n=Math.max(2,Math.min(8,(navigator.hardwareConcurrency||4)));POOL=[];
+ try{const url=URL.createObjectURL(new Blob([WSRC],{type:'text/javascript'}));for(let i=0;i<n;i++){const w=new Worker(url);w.busy=false;
+  w.onmessage=e=>{const j=RUN[e.data.id];delete RUN[e.data.id];w.busy=false;w.job=0;if(j)j.cb(e.data.r);pump()};
+  w.onerror=ev=>{ev.preventDefault&&ev.preventDefault();const j=RUN[w.job];delete RUN[w.job];w.busy=false;w.job=0;if(j)j.cb(null);pump()};POOL.push(w)}}catch(e){POOL=[]}
+ return POOL}
+function pump(){for(const w of POOL){if(w.busy)continue;let j;while((j=JQ.shift())&&j.cancelled()){j.cb(null)}if(!j)return;const id=++jobId;RUN[id]=j;w.busy=true;w.job=id;w.postMessage({id,...j.task})}}
+function runJobs(tasks,onProgress,isCancelled){return new Promise(res=>{const W=pool(),out=new Array(tasks.length);let done=0,dead=false;
+ if(!W.length){for(let i=0;i<tasks.length;i++){if(isCancelled()){res(null);return}const t=tasks[i];out[i]=t.kind==='unit'?unitW(t.p,t.nsim):metricsW(t.p,t.nsim,t.seed,t.X);onProgress&&onProgress(i+1,tasks.length)}res(out);return}
+ tasks.forEach((task,i)=>JQ.push({task,cancelled:isCancelled,cb:r=>{if(dead)return;if(r===null||isCancelled()){dead=true;res(null);return}out[i]=r;done++;onProgress&&onProgress(done,tasks.length);if(done===tasks.length)res(out)}}));
+ pump()})}
+function optimize(t){const p0=P(),r=p0.r,per=p0.sl*5;if(!(per>0)||!valid(p0))return;const ev=ph==='e';
+ const X=Math.max(1,num('iXd')|0||5);
+ const capN=Math.max(1,Math.min(Math.floor(r.capE/per),r.maxE)),nEhi=Math.max(1,Math.min(r.maxE,Math.floor(capN*1.5)));
+ const Es=[...new Set([1,2,3,4,5,6,8,10,12,15,20,25,30].filter(x=>x<=nEhi).concat([capN,nEhi]))].sort((a,b)=>a-b);
+ const nFhi=Math.max(1,Math.min(tierMax(r,1e9),Math.round(r.mll*0.5/per)));
+ const Fs=[...new Set([1,2,3,4,5,6,8,10,12,15,20].filter(x=>x<=nFhi).concat([nFhi]))].filter(n=>n*per*p0.rr-n*p0.costMES>=r.qd).sort((a,b)=>a-b);if(!Fs.length)Fs.push(nFhi);
+ const base=p0.thr;const Ts=[...new Set([Math.max(r.min*2,base-r.cap*0.5),base,base+r.cap*0.5].map(x=>Math.round(x/100)*100))];
+ // en evaluación solo influye E en la cuenta actual, pero el plan usa E y F
+ const combos=[];for(const e of Es)for(const f of Fs)for(const th of Ts)combos.push({e,f,th});
+ const cur={e:contracts(r,'e',p0.rE,p0.sl,0,p0.capOff),f:Math.max(1,contracts(r,'f',p0.rF,p0.sl,0)),th:p0.thr};
+ if(!combos.some(c=>c.e===cur.e&&c.f===cur.f&&c.th===cur.th))combos.push({...cur});
+ $('tCo').textContent=`simulando ${combos.length} combinaciones × 10.000…`;$('bApply').hidden=true;$('bOpt').firstElementChild.style.width='0%';
+ const tasks=combos.map(c=>({kind:'m',p:{...p0,rE:c.e*per,rF:c.f*per,thr:c.th,capOff:p0.capOff||c.e>capN},nsim:10000,seed:4242,X}));
+ const t0=performance.now();
+ runJobs(tasks,(d,n)=>{if(t===tok){$('bOpt').firstElementChild.style.width=(d/n*100)+'%';$('tCo').textContent=`simulando ${d}/${n} combinaciones × 10.000…`}},()=>t!==tok).then(out=>{
+  if(!out||t!==tok)return;const res=combos.map((c,i)=>({...c,...out[i],over:c.e>capN}));
+  const obj=$('iObj').value;const curR=res.find(x=>x.e===cur.e&&x.f===cur.f&&x.th===cur.th);
+  let best,why=[],pool;
+  if(obj==='net'){pool=res.slice().sort((a,b)=>b.net-a.net);best=pool[0];
+   why=[['Criterio','máximo neto medio del plan'],['Neto medio óptimo',usd(best.net)],['Neto medio actual',usd(curR.net)],['2.º mejor',`${usd(pool[1].net)} (${pool[1].e}/${pool[1].f} MES)`],['Precio de ese neto: prob. positivo',`${pct(best.pos)} (actual ${pct(curR.pos)})`],['10 % peores',`${usd(best.p10)} (actual ${usd(curR.p10)})`]]}
+  else if(obj==='pos'){pool=res.slice().sort((a,b)=>(b.pos-a.pos)||(b.net-a.net));best=pool[0];
+   why=[['Criterio','máxima probabilidad de acabar el plan en positivo'],['Prob. positivo óptima',pct(best.pos)],['Prob. positivo actual',pct(curR.pos)],['2.º mejor',`${pct(pool[1].pos)} (${pool[1].e}/${pool[1].f} MES)`],['Neto medio',`${usd(best.net)} (actual ${usd(curR.net)})`],['10 % peores',`${usd(best.p10)} (actual ${usd(curR.p10)})`]]}
+  else if(obj==='fast'){pool=res.slice().sort((a,b)=>(b.passX-a.passX)||(a.passD-b.passD)||(b.net-a.net));best=pool[0];
+   const lab=ev?'aprobar':'cobrar el 1.er pago';
+   why=[['Criterio',`máxima probabilidad de ${lab} en ≤ ${X} días (cámbialo en «En días»)`],[`${ev?'Aprueba':'Cobra'} en ≤ ${X} días`,`${pct(best.passX)} (actual ${pct(curR.passX)})`],['Mediana hasta conseguirlo',`${n0(best.passD)} días (actual ${n0(curR.passD)})`],[`Prob. total de ${lab}`,`${pct(best.pass)} (actual ${pct(curR.pass)})`],['Se quema en 2 días',`${pct(best.burn2)} (actual ${pct(curR.burn2)})`],['Neto medio del plan',`${usd(best.net)} (actual ${usd(curR.net)})`]]}
+  else{const mp=Math.max(...res.map(x=>x.pos));pool=res.filter(x=>x.pos>=mp-0.03).sort((a,b)=>b.net-a.net);best=pool[0];
+   why=[['Criterio','de las configuraciones a ≤ 3 puntos de la máxima prob. de acabar en positivo, la de más neto'],['Máxima prob. positivo encontrada',pct(mp)],['Configuraciones dentro del margen',`${pool.length} de ${res.length}`],['Óptima: prob. positivo · neto',`${pct(best.pos)} · ${usd(best.net)}`],['Actual: prob. positivo · neto',`${pct(curR.pos)} · ${usd(curR.net)}`],['Máximo neto sin margen de seguridad',`${usd(Math.max(...res.map(x=>x.net)))}`]]}
+  const top=[best].concat(pool.filter(x=>x!==best).slice(0,3));
+  showOpt(curR,best,top,res,per,obj,why,capN,ev);
+  $('tCo').textContent=`${combos.length} combinaciones × 10.000 simulaciones · ${n1((performance.now()-t0)/1000)} s`})}
+function showOpt(cur,best,top,res,per,obj,why,capN,ev){const gl=ev?'Aprueba':'Cobra',X=Math.max(1,num('iXd')|0||5);
+ const hd=`<tr><th></th><th>Evaluación</th><th>Fondeada</th><th>Pago en</th><th>${gl}</th><th>${gl} ≤ ${X} d</th><th>Mediana</th><th>Quema 2 d</th><th>Neto medio</th><th>Mediana</th><th>Positivo</th><th>Capital</th></tr>`;
+ const row=(l,x,hl)=>`<tr${hl?' class="hl"':''}><td>${l}</td><td>${x.e} MES · ${usd(x.e*per)}${x.over?' <span class="neg">▲</span>':''}</td><td>${x.f} MES · ${usd(x.f*per)}</td><td>${usd(x.th)}</td><td>${pct(x.pass)}</td><td>${pct(x.passX)}</td><td>${n0(x.passD)} d</td><td>${pct(x.burn2)}</td><td class="${x.net>=0?'pos':'neg'}">${usd(x.net)}</td><td>${usd(x.med)}</td><td>${pct(x.pos)}</td><td>${usd(x.cap)}</td></tr>`;
+ $('tOpt').innerHTML=hd+row('Actual',cur,false)+top.map((x,i)=>row(i===0?'Óptima':'Siguiente '+i,x,i===0)).join('');
+ $('tWhy').innerHTML='<tr><th>Por qué esta opción</th><th></th></tr>'+why.map(([a,b])=>`<tr><td>${a}</td><td>${b}</td></tr>`).join('');
+ const same=cur.e===best.e&&cur.f===best.f&&cur.th===best.th;
+ $('nOpt').className='note '+(same?'ok':'w');
+ $('nOpt').innerHTML=(same?'Tu configuración ya es la óptima para este objetivo. ':`Óptimo con stop de ${pts(P().sl)} pts: <b>${best.e} MES en evaluación</b> (${usd(best.e*per)}), <b>${best.f} MES en fondeada</b> (${usd(best.f*per)}) y pedir el pago a <b>${usd(best.th)}</b>. `)+
+  (best.over?`<span class="neg">▲ Supera el tope de seguridad de evaluación (${capN} MES): 3 pérdidas seguidas el mismo día queman la cuenta.</span>`:'');
+ const b=$('bApply');b.hidden=same;b.onclick=()=>{if(best.over)$('iCapOff').checked=true;$('iRE').value=best.e*per;$('iRF').value=best.f*per;$('iThr').value=best.th;quick();schedule()};
+ $('tOptAll').innerHTML=hd.replace('<th></th>','<th>#</th>')+res.slice().sort((a,b)=>b.net-a.net).map((x,i)=>row(i+1,x,x===best)).join('')}
+
+
+// ===== explorador =====
+function renderExplorer(){if(!S.C||!S.E||!S.B)return;const p=S.p,ev=ph==='e';
+ const mode=$('xMode').value,C0=S.C,G=ev?(mode==='d'?C0.pass:C0.passT):(mode==='d'?C0.pay1:C0.pay1T);
+ const Braw=mode==='d'?C0.burn:C0.burnT,Graw=G;const BD=ev?Braw:A2(Braw).map((v,i)=>fin(Graw[i])&&Graw[i]<=v?NaN:v);
+ const maxX=mode==='d'?p.H:Math.max(10,Math.round(q(A2(Braw).concat(A2(Graw)),.99)||p.H*p.mt));
+ const rg=$('xRange');rg.max=maxX;if(+rg.value>maxX)rg.value=maxX;const x=+rg.value;
+ $('hExA').textContent=ev?'Tu evaluación, día a día':'Tu fondeada, día a día';
+ $('xLab').textContent=(mode==='d'?'Día ':'Trade ')+x+' de '+maxX;
+ const N=G.length,by=(a,v)=>{let c=0;for(const z of a)if(z<=v)c++;return c/N},at=(a,v)=>{let c=0;for(const z of a)if(z===v)c++;return c/N};
+ const g=by(G,x),b=by(BD,x),o=Math.max(0,1-g-b),gT=frac(G,fin),bT=frac(BD,fin);
+ const gl=ev?'aprobada':'cobrado el 1.er pago',bl=ev?'quemada':'quemada sin cobrar';
+ $('xBar').innerHTML=`<span style="width:${g*100}%;background:#2E7A57"></span><span style="width:${o*100}%;background:${C.open}"></span><span style="width:${b*100}%;background:#9C3A3E"></span>`;
+ const gd=mode==='d'?at(G,x):NaN,bd=mode==='d'?at(BD,x):NaN;
+ const condG=o>0?(gT-g)/o:NaN,condB=o>0?(bT-b)/o:NaN;
+ $('xK').innerHTML=K(`Ya ${gl}`,pct(g),`antes o en ${mode==='d'?'el día':'el trade'} ${x}`)+K(`Ya ${bl}`,pct(b),'acumulado')+K('Sigue abierta',pct(o),'ni una cosa ni otra')+
+  (mode==='d'?K('Solo ese día',`${pct(gd)}`,`${ev?'aprueba':'cobra'} · se quema ${pct(bd)}`):K('Trades medios / día',n1(mean(A2(C0.passT).concat(A2(C0.burnT)).filter(fin))/Math.max(1,mean(A2(C0.pass).concat(A2(C0.burn)).filter(fin)))),'para pasar de trades a días'))+
+  K('Si sigue abierta: acabará',pct(condG),`${ev?'aprobada':'cobrando'} · ${pct(condB)} ${bl}`)+K('Sigue viva',pct(1-b),`no se ha quemado todavía`);
+ $('xNote').innerHTML=`En ${mode==='d'?x+' días de trading':x+' trades'} (≈ ${n1(mode==='d'?x/p.dpw:x/ (1.9*p.dpw))} semanas): de cada 100 cuentas como la tuya, <b>${Math.round(g*100)}</b> ya habrían ${ev?'aprobado':'cobrado'}, <b>${Math.round(b*100)}</b> estarían quemadas y <b>${Math.round(o*100)}</b> seguirían abiertas. De las abiertas, ${pct(condG)} acabará ${ev?'aprobando':'cobrando'} dentro del horizonte.`;
+ // challenges
+ const pp=frac(S.E.pass,fin),u=unit(S.E,S.F,p.r),Kc=+$('kRange').value;$('kLab').textContent=`${Kc} challenge${Kc>1?'s':''} · ${usd(Kc*p.r.fee)}`;
+ const atLeast1=1-Math.pow(1-pp,Kc),need=k=>Math.ceil(Math.log(1-k)/Math.log(1-pp));
+ $('kK').innerHTML=K('Al menos 1 aprobada',pct(atLeast1),`todas quemadas: ${pct(Math.pow(1-pp,Kc))}`)+K('Aprobadas esperadas',n1(Kc*pp),`de ${Kc}`)+K('Valor esperado',usd(Kc*u.ev),`${usd(u.ev)} por challenge`)+K('Para el 90 %',`${need(.9)} challenges`,`95 %: ${need(.95)} · 99 %: ${need(.99)}`);
+ const binom=(n,k)=>{let c=1;for(let i=1;i<=k;i++)c=c*(n-k+i)/i;return c*Math.pow(pp,k)*Math.pow(1-pp,n-k)};
+ let kt='<tr><th>Aprobadas</th><th>Probabilidad</th><th>Al menos</th></tr>';let cum=1;
+ for(let k=0;k<=Math.min(Kc,8);k++){const pk=binom(Kc,k);kt+=`<tr><td>${k}</td><td>${pct(pk)}</td><td>${pct(cum)}</td></tr>`;cum-=pk}
+ $('kT').innerHTML=kt;
+ // plan por mes
+ const B=S.B,months=B.bmE[0]?B.bmE[0].length:0,ms=$('mSel');if(ms.options.length!==months+1){ms.innerHTML='<option value="all">Cualquier mes</option>'+Array.from({length:months},(_,i)=>`<option value="${i}">Mes ${i+1}</option>`).join('')}
+ const sel=ms.value,pick=arr=>sel==='all'?arr.flat():arr.map(a=>a[+sel]);
+ const eB=pick(B.bmE),fB=pick(B.bmF),aE=pick(B.amE);const d=(a,k)=>k<4?frac(a,v=>v===k):frac(a,v=>v>=4);
+ let mt='<tr><th>Cuentas en el mes</th><th>Evals quemadas</th><th>Evals aprobadas</th><th>Fondeadas quemadas</th></tr>';
+ for(let k=0;k<=4;k++)mt+=`<tr><td>${k<4?k:'4 o más'}</td><td>${pct(d(eB,k))}</td><td>${pct(d(aE,k))}</td><td>${pct(d(fB,k))}</td></tr>`;
+ mt+=`<tr class="tot"><td>Media</td><td>${n1(mean(eB))}</td><td>${n1(mean(aE))}</td><td>${n1(mean(fB))}</td></tr>`;
+ $('mT').innerHTML=mt;$('mNote').textContent=`Con ${p.pm} challenge(s) al mes y ${p.extra} disponible(s) ahora. Quemar 3 o más evaluaciones en un mes solo es posible si tienes crédito acumulado: ${pct(frac(eB,v=>v>=3))}.`}
+['xMode','xRange','kRange','mSel'].forEach(id=>$(id).addEventListener('input',renderExplorer));
+$('xMode').addEventListener('change',()=>{$('xRange').value=$('xMode').value==='d'?5:10;renderExplorer()});
+
+let rT=null;function schedule(){clearTimeout(rT);tok++;rT=setTimeout(render,150)}
+document.querySelectorAll('#sPh button').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('#sPh button').forEach(x=>x.setAttribute('aria-pressed',x===b));ph=b.dataset.v;quick();schedule()}));
+$('iPre').addEventListener('change',()=>{if($('iPre').value!=='custom')loadPreset($('iPre').value);quick();schedule()});
+Object.values(RF).forEach(id=>$(id).addEventListener('input',()=>{$('iPre').value='custom'}));
+$('bRec').addEventListener('click',()=>setRec(true));
+document.querySelectorAll('aside input,aside select').forEach(e=>{if(e.id!=='iPre')e.addEventListener('input',()=>{quick();schedule()})});
+['iXd','iXt','iXm'].forEach(id=>$(id).addEventListener('input',()=>{if(S.C&&ph==='e')cumul('e')}));
+['iXd2','iXm2'].forEach(id=>$(id).addEventListener('input',()=>{if(S.C&&ph==='f')cumul('f')}));
+$('iObj').addEventListener('change',()=>{tok++;optimize(tok)});
+loadPreset('25K');render();
+</script>
+
+</body>
+</html>
