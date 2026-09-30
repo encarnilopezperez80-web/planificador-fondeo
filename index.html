@@ -120,13 +120,51 @@ main{display:flex;flex-direction:column;gap:16px;min-width:0}
 .btn{font:500 12.5px "IBM Plex Sans",sans-serif;padding:8px 12px;border-radius:8px;border:1px solid var(--line2);background:transparent;color:var(--ink);cursor:pointer}.btn:hover{background:var(--s2)}
 .btn[disabled]{color:var(--dim);cursor:default;background:transparent}
 details.more>summary{cursor:pointer;font-size:12.5px;color:var(--mut);padding:4px 0}
+.jw{display:flex;flex-direction:column;gap:14px}
+.jbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.btn.pri{background:var(--ink);color:var(--on);border-color:var(--ink)}.btn.pri:hover{background:var(--ink);opacity:.88}
+.btn.sm{padding:5px 9px;font-size:12px}.btn.dng{color:var(--bad);border-color:var(--bad-d)}
+.jform{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;align-items:end}
+.jlist{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:14px}@media (max-width:420px){.jlist{grid-template-columns:minmax(0,1fr)}}
+.ac{border:1px solid var(--line);border-radius:12px;background:var(--s1);padding:14px;display:flex;flex-direction:column;gap:11px;min-width:0}
+.ac.open{grid-column:1/-1}
+.ah{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.ah b{font-size:15px;font-weight:600}.ah .sub{font-size:11.5px;color:var(--dim);margin-top:2px}
+.chip{font-size:11px;font-weight:500;padding:2px 8px;border-radius:20px;border:1px solid var(--line2);color:var(--mut);white-space:nowrap}
+.chip.e{color:var(--acc);border-color:var(--acc)}.chip.f{color:var(--violet);border-color:var(--violet)}
+.chip.ok{color:var(--good);border-color:var(--good-d)}.chip.bad{color:var(--bad);border-color:var(--bad-d)}.chip.w{color:var(--warn);border-color:var(--warn)}
+.an{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:9px;overflow:hidden}
+.an>div{background:var(--s1);padding:9px 10px;display:flex;flex-direction:column;gap:1px;min-width:0}
+.an .l{font-size:10.5px;color:var(--mut)}.an .v{font-size:17px;font-weight:600}.an .s{font-size:10.5px;color:var(--dim)}
+.cush{display:flex;flex-direction:column;gap:4px}.cush .gl{margin-top:0}
+.pr{font-size:12px;color:var(--mut);border-left:2px solid var(--acc);padding:4px 0 4px 10px}.pr b{color:var(--ink)}
+.qa{display:grid;grid-template-columns:130px 1fr auto;gap:8px;align-items:end}@media (max-width:420px){.qa{grid-template-columns:1fr 1fr}.qa .btn{grid-column:1/-1}}
+.qa input{padding:7px 9px}
+.dots{display:flex;gap:4px}.dots i{width:14px;height:14px;border-radius:50%;border:1px solid var(--line2)}.dots i.on{background:var(--good);border-color:var(--good)}
+.acts{display:flex;gap:6px;flex-wrap:wrap}
+.jd{display:flex;flex-direction:column;gap:10px;border-top:1px solid var(--line);padding-top:10px}
+.jd .jform{grid-template-columns:repeat(auto-fit,minmax(140px,1fr))}
+td .x{background:none;border:0;color:var(--dim);cursor:pointer;font-size:14px;padding:0 4px}td .x:hover{color:var(--bad)}
+.mnav{display:flex;align-items:center;gap:8px}.mnav b{min-width:140px;text-align:center;font-weight:600;text-transform:capitalize}
+.cal{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
+.cal .wd{font-size:10.5px;color:var(--dim);text-align:center;padding-bottom:2px;text-transform:uppercase;letter-spacing:.05em}
+.cal button{all:unset;box-sizing:border-box;cursor:pointer;min-height:66px;border:1px solid var(--line);border-radius:8px;padding:5px 6px;display:flex;flex-direction:column;gap:2px;background:var(--s1);min-width:0}
+.cal button:hover{border-color:var(--line2)}.cal button:focus-visible{outline:1px solid var(--acc)}
+.cal button.sel{border-color:var(--ink)}.cal button.td .dn{color:var(--ink);font-weight:700}
+.cal button.g{background:var(--good-bg);border-color:var(--good-d)}.cal button.b{background:var(--bad-bg);border-color:var(--bad-d)}
+.cal .dn{font-size:11px;color:var(--mut)}.cal .pl{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.cal .nt{font-size:10px;color:var(--dim)}
+.cal .emp{min-height:66px}
+.tg{display:inline-block;font-size:9.5px;font-weight:600;line-height:14px;min-width:14px;text-align:center;border-radius:3px;padding:0 2px;margin-right:2px;color:var(--on)}
+.tg.c{background:var(--acc)}.tg.a{background:var(--good)}.tg.r{background:var(--violet)}.tg.q{background:var(--bad)}
+@media (max-width:520px){.cal{gap:3px}.cal button,.cal .emp{min-height:52px;padding:3px}.cal .pl{font-size:9.5px;letter-spacing:-.02em;text-overflow:clip}.cal .nt{display:none}.mnav b{min-width:110px}}
+.qa.q4{grid-template-columns:130px 1fr 80px 80px auto}@media (max-width:620px){.qa.q4{grid-template-columns:1fr 1fr}.qa.q4 .btn{grid-column:1/-1}}
 footer{font-size:11px;color:var(--dim);border-top:1px solid var(--line);padding-top:12px}
 </style></head><body>
 
 <div class="wrap">
 <div class="topbar">
   <div class="brand">Planificador LucidFlex <span>· ES / MES</span></div>
-  <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><button type="button" class="modeb" id="bMode" aria-pressed="false">Modo día</button><nav class="tabs" aria-label="Páginas"><a href="#calc" id="tCalc" aria-current="page">Calculadora</a><a href="#stats" id="tStats">Estadísticas y horizonte</a></nav></div>
+  <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><button type="button" class="modeb" id="bMode" aria-pressed="false">Modo día</button><nav class="tabs" aria-label="Páginas"><a href="#calc" id="tCalc" aria-current="page">Calculadora</a><a href="#stats" id="tStats">Estadísticas</a><a href="#diario" id="tJour">Diario de cuentas</a></nav></div>
 </div>
 
 <!-- ================= CALCULADORA ================= -->
@@ -138,7 +176,7 @@ footer{font-size:11px;color:var(--dim);border-top:1px solid var(--line);padding-
     <div class="seg" id="cPh" role="group" aria-label="Fase"><button type="button" data-v="e" aria-pressed="true">Evaluación</button><button type="button" data-v="f" aria-pressed="false">Fondeada</button></div>
     <div class="two">
       <label class="f" for="cRisk">Riesgo por trade ($)<input id="cRisk" type="text" inputmode="decimal" value="250"></label>
-      <label class="f" for="cPct">o % del drawdown<input id="cPct" type="text" inputmode="decimal" value="25"></label>
+      <label class="f" for="cPct">o % de la cuenta<input id="cPct" type="text" inputmode="decimal" value="1"></label>
     </div>
     <div class="two">
       <label class="f" for="cRR">RR (TP en R)<input id="cRR" type="text" inputmode="decimal" value="2"></label>
@@ -268,15 +306,61 @@ footer{font-size:11px;color:var(--dim);border-top:1px solid var(--line);padding-
  </div>
 </section>
 
+
+<!-- ================= DIARIO ================= -->
+<section class="view" id="vJour" aria-label="Diario de cuentas" hidden>
+ <div class="jw">
+  <div class="card">
+    <div class="sh"><h2>Resumen de todas tus cuentas</h2><span class="tag" id="jStore"></span></div>
+    <div class="kp" id="jKpi"></div>
+    <div id="jMonth" class="note"></div>
+  </div>
+  <div class="jbar">
+    <button type="button" class="btn pri" id="jNewB">+ Nueva cuenta</button>
+    <div class="seg" id="jFil" role="group" aria-label="Filtro" style="width:auto"><button type="button" data-v="act" aria-pressed="true">Activas</button><button type="button" data-v="all" aria-pressed="false">Todas</button><button type="button" data-v="off" aria-pressed="false">Cerradas</button></div>
+    <span style="flex:1"></span>
+    <button type="button" class="btn" id="jExp">Exportar copia (.json)</button>
+    <button type="button" class="btn" id="jCsv">Exportar trades (.csv)</button>
+    <label class="btn" for="jImp" style="display:inline-flex;align-items:center">Importar copia<input type="file" id="jImp" accept=".json,application/json" style="position:absolute;opacity:0;width:1px;height:1px"></label>
+  </div>
+  <div id="jMsg" class="note" hidden></div>
+  <div class="card" id="jNew" hidden>
+    <div class="sh"><h2>Nueva cuenta</h2><span class="tag">si ya la tienes empezada, pon cómo está hoy</span></div>
+    <div class="jform">
+      <div class="seg" id="jnSize" role="group" aria-label="Tamaño"><button type="button" data-v="25K" aria-pressed="true">25K</button><button type="button" data-v="50K" aria-pressed="false">50K</button><button type="button" data-v="100K" aria-pressed="false">100K</button><button type="button" data-v="150K" aria-pressed="false">150K</button></div>
+      <div class="seg" id="jnPh" role="group" aria-label="Fase"><button type="button" data-v="e" aria-pressed="true">Evaluación</button><button type="button" data-v="f" aria-pressed="false">Fondeada</button></div>
+      <label class="f" for="jnName">Nombre (opcional)<input id="jnName" type="text" autocomplete="off" placeholder="p. ej. 25K #3"></label>
+      <label class="f" for="jnPrice">Precio pagado ($)<input id="jnPrice" type="text" inputmode="decimal" value="89"></label>
+      <label class="f" for="jnDate">Fecha de compra<input id="jnDate" type="date"></label>
+      <label class="f" for="jnBal">Beneficio actual ($)<input id="jnBal" type="text" inputmode="decimal" value="0"></label>
+      <label class="f" for="jnHi">Máximo cierre alcanzado ($)<input id="jnHi" type="text" inputmode="decimal" value="0"></label>
+      <label class="f" for="jnMx" id="jlMx">Mejor día hasta ahora ($)<input id="jnMx" type="text" inputmode="decimal" value="0"></label>
+      <label class="f" for="jnNp" id="jlNp" hidden>Retiros ya cobrados<input id="jnNp" type="text" inputmode="numeric" value="0"></label>
+      <label class="f" for="jnQ" id="jlQ" hidden>Días válidos desde el último retiro<input id="jnQ" type="text" inputmode="numeric" value="0"></label>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap"><button type="button" class="btn pri" id="jnSave">Guardar cuenta</button><button type="button" class="btn" id="jnCancel">Cancelar</button></div>
+  </div>
+  <div id="jList" class="jlist"></div>
+  <div class="card" id="jCal">
+    <div class="sh"><h2>Diario del mes</h2>
+      <div class="mnav"><button type="button" class="btn sm" id="jmPrev" aria-label="Mes anterior">‹</button><b id="jmLbl"></b><button type="button" class="btn sm" id="jmNext" aria-label="Mes siguiente">›</button><button type="button" class="btn sm" id="jmNow">Hoy</button></div></div>
+    <div class="kp" id="jmKpi"></div>
+    <div class="cal" id="jmGrid"></div>
+    <div class="lg"><span><i style="background:var(--good)"></i>día en verde</span><span><i style="background:var(--bad)"></i>día en rojo</span><span><b class="tg c">C</b> compra</span><span><b class="tg a">A</b> aprobada</span><span><b class="tg r">R</b> retiro</span><span><b class="tg q">Q</b> quemada</span></div>
+    <div id="jmDay"></div>
+  </div>
+  <p class="hint">Probabilidades: 10.000 simulaciones por cuenta desde su estado actual, con el win rate, RR, trades/día y costes de la página Estadísticas, y el riesgo del 1 % de la cuenta (o el de Estadísticas si es la misma cuenta). Reglas LucidFlex de cada tamaño.</p>
+ </div>
+</section>
 <footer>Modelo: trades independientes con probabilidad de TP antes que SL igual al win rate (oscilando cada mes), máximo de trades al día y parada tras el primer ganador. Drawdown EOD que se bloquea en el suelo indicado; al retirar, el suelo salta a ese nivel. Consistencia solo en evaluación. El riesgo nunca supera el máximo de MES de la cuenta con el stop habitual (evaluación sin escalado; fondeada según el escalado, que se actualiza al cierre de cada sesión y baja al retirar). Plan: siempre 1 evaluación en marcha si queda crédito, más las fondeadas conseguidas, todas con los mismos trades; los cobros no se reinvierten. Reglas LucidFlex a sept. 2026 (verifícalas en el Help Center de Lucid). No es asesoramiento financiero.</footer>
 </div>
 
 <script>
 const PRESET={
- '25K':{target:1250,mll:1000,lock:100,cons:50,dll:0,pct:50,cap:1000,min:500,split:90,qn:5,qd:100,maxP:5,maxF:5,fee:89,thr:1000,rE:250,rF:125,maxE:20,scale:'0:10, 1000:20'},
- '50K':{target:3000,mll:2000,lock:100,cons:50,dll:0,pct:50,cap:2000,min:500,split:90,qn:5,qd:150,maxP:5,maxF:5,fee:149,thr:3000,rE:600,rF:375,maxE:40,scale:'0:20, 1000:30, 2000:40'},
- '100K':{target:6000,mll:3000,lock:100,cons:50,dll:0,pct:50,cap:2500,min:500,split:90,qn:5,qd:200,maxP:5,maxF:5,fee:307,thr:5000,rE:900,rF:560,maxE:60,scale:'0:30, 1000:40, 2000:50, 3000:60'},
- '150K':{target:9000,mll:4500,lock:100,cons:50,dll:0,pct:50,cap:3000,min:500,split:90,qn:5,qd:250,maxP:5,maxF:5,fee:407,thr:6000,rE:1350,rF:840,maxE:100,scale:'0:40, 1000:50, 2000:60, 3000:80, 4500:100'}};
+ '25K':{target:1250,mll:1000,lock:100,cons:50,dll:0,pct:50,cap:1000,min:500,split:90,qn:5,qd:100,maxP:5,maxF:5,fee:89,thr:1000,rE:250,rF:250,maxE:20,scale:'0:10, 1000:20'},
+ '50K':{target:3000,mll:2000,lock:100,cons:50,dll:0,pct:50,cap:2000,min:500,split:90,qn:5,qd:150,maxP:5,maxF:5,fee:149,thr:3000,rE:500,rF:500,maxE:40,scale:'0:20, 1000:30, 2000:40'},
+ '100K':{target:6000,mll:3000,lock:100,cons:50,dll:0,pct:50,cap:2500,min:500,split:90,qn:5,qd:200,maxP:5,maxF:5,fee:307,thr:5000,rE:1000,rF:1000,maxE:60,scale:'0:30, 1000:40, 2000:50, 3000:60'},
+ '150K':{target:9000,mll:4500,lock:100,cons:50,dll:0,pct:50,cap:3000,min:500,split:90,qn:5,qd:250,maxP:5,maxF:5,fee:407,thr:6000,rE:1500,rF:1500,maxE:100,scale:'0:40, 1000:50, 2000:60, 3000:80, 4500:100'}};
 const SIZE={'25K':25000,'50K':50000,'100K':100000,'150K':150000};
 const RF={target:'rTarget',mll:'rMll',lock:'rLock',cons:'rCons',dll:'rDll',pct:'rPct',cap:'rCap',min:'rMin',split:'rSplit',qn:'rQn',qd:'rQd',maxP:'rMaxP',maxF:'rMaxF',maxE:'rMaxE',scale:'rScale'};
 function parseScale(t){const out=[];String(t||'').split(/[;,\n]+/).forEach(x=>{const m=x.split(':');if(m.length===2){const a=parseFloat(m[0].replace(/[^0-9.\-]/g,'')),b=parseFloat(m[1].replace(/[^0-9.]/g,''));if(isFinite(a)&&b>0)out.push([a,b])}});return out.sort((x,y)=>x[0]-y[0])}
@@ -294,17 +378,19 @@ function segBind(id,cb){const el=$(id);el.querySelectorAll('button').forEach(b=>
 function segSet(id,v){$(id).querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.v===v))}
 
 // ================= navegación =================
-function route(){const st=location.hash==='#stats';$('vCalc').hidden=st;$('vStats').hidden=!st;$('tCalc').setAttribute('aria-current',st?'false':'page');$('tStats').setAttribute('aria-current',st?'page':'false');if(st&&!S.done)schedule()}
+function route(){const h=location.hash,v=h==='#stats'?'s':h==='#diario'?'j':'c';$('vCalc').hidden=v!=='c';$('vStats').hidden=v!=='s';$('vJour').hidden=v!=='j';
+ $('tCalc').setAttribute('aria-current',v==='c'?'page':'false');$('tStats').setAttribute('aria-current',v==='s'?'page':'false');$('tJour').setAttribute('aria-current',v==='j'?'page':'false');
+ if(v==='s'&&!S.done)schedule();if(v==='j')jRender(true)}
 addEventListener('hashchange',route);
 
 // ================= CALCULADORA =================
-let cAcc='25K',cPh='e',lastEdit='risk';
+let cAcc='25K',cPh='e',lastEdit='pct';
 function cMll(){return PRESET[cAcc].mll}
 function cMax(){const X=PRESET[cAcc];return cPh==='e'?X.maxE:tierMax(parseScale(X.scale),num('cBal')||0)}
 function capTxt(){return cPh==='e'?`máximo en evaluación ${cAcc}`:`máximo de la fondeada ${cAcc} con ${usd(num('cBal')||0)} de beneficio`}
 function calc(){const sl=num('cSL'),rr=num('cRR')||2,mll=cMll(),size=SIZE[cAcc];let risk=num('cRisk');
- if(lastEdit==='pct'){const p=num('cPct');risk=isFinite(p)?p/100*mll:NaN;$('cRisk').value=isFinite(risk)?+risk.toFixed(2):''}
- else{$('cPct').value=isFinite(risk)?+(risk/mll*100).toFixed(1):''}
+ if(lastEdit==='pct'){const p=num('cPct');risk=isFinite(p)?p/100*size:NaN;$('cRisk').value=isFinite(risk)?+risk.toFixed(2):''}
+ else{$('cPct').value=isFinite(risk)?+(risk/size*100).toFixed(2):''}
  const mode=$('cRound').value;
  const mx=cMax();$('lcBal').hidden=cPh!=='f';
  if(!(sl>0)||!(risk>0)){$('oN').textContent='–';$('oEq').textContent='';$('oCap').innerHTML='';$('oTiles').innerHTML='';$('oNote').className='note w';$('oNote').textContent='Escribe el stop en puntos y el riesgo en dólares (o en % del drawdown).';table(risk,rr,mll,size,mode,sl);return}
@@ -331,9 +417,9 @@ function table(risk,rr,mll,size,mode,cur){const rows=[4,5,6,7,8,9,10,11,12,13,14
   const col=d>0.34?'var(--bad)':d>0.25?'var(--warn)':'var(--good)';
   h+=`<tr${Math.abs(s-cur)<0.01?' class="hl"':''}><td class="big">${s} pts</td><td class="big">${n} MES${nr>mx?'<span class="tp">tope</span>':''}</td><td>${usd2(real)}</td><td>${pct(d)}<span class="bar" style="width:${Math.round(Math.min(1,d)*60)}px;background:${col}"></span></td><td>${pct(real/size)}</td><td>${pts(s*rr)} pts</td><td class="pos">+${usd2(real*rr)}</td></tr>`}
  $('oTable').innerHTML=h}
-segBind('cAcc',v=>{cAcc=v;if(lastEdit==='pct')calc();else{calc()}});
+segBind('cAcc',v=>{cAcc=v;lastEdit='pct';calc()});
 $('cBal').addEventListener('input',calc);
-segBind('cPh',v=>{cPh=v;const P0=PRESET[cAcc];$('cRisk').value=v==='e'?P0.rE:P0.rF;lastEdit='risk';calc()});
+segBind('cPh',v=>{cPh=v;calc()});
 $('cRisk').addEventListener('input',()=>{lastEdit='risk';calc()});
 $('cPct').addEventListener('input',()=>{lastEdit='pct';calc()});
 ['cSL','cRR','cRound'].forEach(id=>$(id).addEventListener('input',calc));
@@ -362,7 +448,7 @@ function sim(p,o){const r=p.r,rnd=mulberry32(o.seed||20260927),N=o.nsim,H=o.H||p
   const sl=[];for(let i=0;i<M;i++)sl.push({act:false});
   let st;if(o.start==='freshF')st={ph:1,bal:0,hi:0,mx:0,q:0,cyc:0,lk:false,npy:0,paid:false};
   else if(o.start==='freshE')st={ph:0,bal:0,hi:0,mx:0,q:0,cyc:0,lk:false,npy:0,paid:false};
-  else st={ph:p.ph==='e'?0:1,bal:p.bal,hi:p.hi,mx:0,q:0,cyc:0,lk:p.ph==='f'&&p.npay>0,npy:p.ph==='f'?p.npay:0,paid:p.ph==='f'&&p.npay>0};
+  else st={ph:p.ph==='e'?0:1,bal:p.bal,hi:p.hi,mx:p.mx||0,q:p.q||0,cyc:p.cyc||0,lk:p.ph==='f'&&p.npay>0,npy:p.ph==='f'?p.npay:0,paid:p.ph==='f'&&p.npay>0};
   st.fl=st.lk?r.lock:Math.min(st.hi-r.mll,r.lock);st.act=st.npy<r.maxP;st.orig=true;sl[0]=st;
   let bank=o.plan?p.extra:0,nf=0,cob=0,gr=0,npays=0,pass=0,evB=0,fB=0,fPaid=0,fDone=0,wr=p.wr,minC=0,fix=0;
   const mNet=o.plan?new Float64Array(months):null;const pd=[];
@@ -396,19 +482,20 @@ function q(arr,pc){const v=A2(arr).filter(fin).sort((a,b)=>a-b);if(!v.length)ret
 function mean(a){let s=0,n=0;for(const x of a)if(isFinite(x)){s+=x;n++}return n?s/n:NaN}
 function frac(a,f){let c=0;for(const x of a)if(f(x))c++;return c/a.length}
 function medInf(a){const v=A2(a).map(x=>isFinite(x)?x:Infinity).sort((x,y)=>x-y);return v[Math.floor((v.length-1)/2)]}
+function accSum(p,nsim,seed){const B=sim(p,{nsim,seed,start:'state',H:p.Hacc||300});return{pPass:frac(B.pDay,fin),passMed:q(B.pDay,.5),pBurn:frac(B.bDay,fin),pPay:frac(B.pay1,fin),payMed:q(B.pay1,.5),cob:mean(B.cob),pays:mean(B.pays)}}
 function summary(p,nsim,seed){return sumB(sim(p,{nsim,seed,start:'state',plan:true}))}
 function sumB(B){return{fpMed:medInf(B.fp1),pFund:frac(B.fp1,fin),pay1Med:medInf(B.pay1),pPay:frac(B.pay1,fin),evBurn:mean(B.evBurn),med:q(B.net,.5),mean:mean(B.net),pos:frac(B.net,x=>x>0),p10:q(B.net,.1),p90:q(B.net,.9),pass:mean(B.pass),fPaid:mean(B.fPaid),pays:mean(B.pays),cap:-q(B.minCash,.1),bought:mean(B.bought)}}
 
 // ===== pool de workers =====
-const WSRC=Object.entries({mulberry32,tierMax,sim,q,mean,frac,medInf,sumB,summary}).map(([k,f])=>`const ${k}=${f.toString()};`).join('\n')+
- "\nconst A2=a=>Array.from(a),fin=x=>isFinite(x);\nonmessage=e=>{const {id,p,nsim,seed}=e.data;postMessage({id,r:summary(p,nsim,seed)})}";
+const WSRC=Object.entries({mulberry32,tierMax,sim,q,mean,frac,medInf,sumB,summary,accSum}).map(([k,f])=>`const ${k}=${f.toString()};`).join('\n')+
+ "\nconst A2=a=>Array.from(a),fin=x=>isFinite(x);\nonmessage=e=>{const {id,p,nsim,seed,kind}=e.data;postMessage({id,r:kind==='acc'?accSum(p,nsim,seed):summary(p,nsim,seed)})}";
 let POOL=null;const JQ=[],RUN={};let jid=0;
 function pool(){if(POOL)return POOL;POOL=[];try{const url=URL.createObjectURL(new Blob([WSRC],{type:'text/javascript'}));const n=Math.max(2,Math.min(8,navigator.hardwareConcurrency||4));
  for(let i=0;i<n;i++){const w=new Worker(url);w.busy=false;w.onmessage=e=>{const j=RUN[e.data.id];delete RUN[e.data.id];w.busy=false;if(j)j.cb(e.data.r);pump()};
   w.onerror=ev=>{ev.preventDefault&&ev.preventDefault();const j=RUN[w.jid];delete RUN[w.jid];w.busy=false;if(j)j.cb(null);pump()};POOL.push(w)}}catch(e){POOL=[]}return POOL}
 function pump(){for(const w of POOL){if(w.busy)continue;let j;while((j=JQ.shift())&&j.dead())j.cb(null);if(!j)return;const id=++jid;RUN[id]=j;w.busy=true;w.jid=id;w.postMessage({id,...j.task})}}
 function runJobs(tasks,isDead,onEach){return new Promise(res=>{const W=pool(),out=[];let done=0,stop=false;
- if(!W.length){for(const t of tasks){if(isDead()){res(null);return}out.push(summary(t.p,t.nsim,t.seed))}res(out);return}
+ if(!W.length){for(const t of tasks){if(isDead()){res(null);return}out.push(t.kind==='acc'?accSum(t.p,t.nsim,t.seed):summary(t.p,t.nsim,t.seed))}res(out);return}
  tasks.forEach((task,i)=>JQ.push({task,dead:isDead,cb:r=>{if(stop)return;if(r===null||isDead()){stop=true;res(null);return}out[i]=r;onEach&&onEach();if(++done===tasks.length)res(out)}}));pump()})}
 
 // ================= gráficos =================
@@ -430,7 +517,7 @@ function funnel(el,title,rows){el.innerHTML=`<h3>${title}</h3>`+rows.map(r=>`<di
 let tok=0,S={done:false},rT=null;
 function schedule(){clearTimeout(rT);tok++;rT=setTimeout(runStats,200)}
 function setProg(f){$('prog').style.width=Math.round(f*100)+'%'}
-function riskPct(){const r=rules(),mll=r.mll;const e=num('sRE'),f=num('sRF');$('pRE').textContent=isFinite(e)&&mll?`${pct(e/mll)} del drawdown`:'';$('pRF').textContent=isFinite(f)&&mll?`${pct(f/mll)} del drawdown`:'';
+function riskPct(){const r=rules(),mll=r.mll,sz=SIZE[$('sPre').value];const e=num('sRE'),f=num('sRF'),ac=v=>sz?`${pct(v/sz)} de la cuenta · `:'';$('pRE').textContent=isFinite(e)&&mll?`${ac(e)}${pct(e/mll)} del drawdown`:'';$('pRF').textContent=isFinite(f)&&mll?`${ac(f)}${pct(f/mll)} del drawdown`:'';
  const sl=num('sSL');if(sl>0&&mll){const per=sl*5,ti=r.tiers;
   const fr=ti.map((x,i)=>`${x[1]} MES${i<ti.length-1?` (hasta ${usd(ti[i+1][0]-1)})`:ti.length>1?` (desde ${usd(x[0])})`:''}`).join(' · ');
   const ne=Math.floor(num('sRE')/per+1e-9),nf=Math.floor(num('sRF')/per+1e-9);
@@ -534,17 +621,228 @@ function sens(t){S.sensTok=t;const p=S.p,mll=p.r.mll;const rows=[];
 // ================= persistencia y eventos =================
 const SKEYS=['sSL','sPre','sBal','sHi','sNpay','sRE','sRF','sRR','sCost','sWR','sVar','sMT','sPM','sExtra','sThr','sHm','sDpw','sFee','sFix','sTax',...Object.values(RF)];
 function saveStats(){const o={ph:sPh,stopWin:$('sStopWin').checked};SKEYS.forEach(k=>o[k]=$(k).value);store.set('stats',o)}
-function loadAll(){const c=store.get('calc');if(c){$('cSL').value=c.sl;$('cRisk').value=c.risk;$('cRR').value=c.rr;$('cRound').value=c.mode||'floor';cAcc=c.acc||'25K';cPh=c.ph||'e';if(c.bal!=null)$('cBal').value=c.bal;segSet('cAcc',cAcc);segSet('cPh',cPh)}
- loadPreset('25K');const s=store.get('stats');if(s){SKEYS.forEach(k=>{if(s[k]!=null)$(k).value=s[k]});sPh=s.ph||'e';segSet('sPh',sPh);$('sStopWin').checked=s.stopWin!==false}}
+function loadAll(){const c=store.get('calc');if(c){$('cSL').value=c.sl;$('cRR').value=c.rr;$('cRound').value=c.mode||'floor';cAcc=c.acc||'25K';cPh=c.ph||'e';if(c.bal!=null)$('cBal').value=c.bal;segSet('cAcc',cAcc);segSet('cPh',cPh)}
+ loadPreset('25K');const s=store.get('stats');if(s){SKEYS.forEach(k=>{if(s[k]!=null)$(k).value=s[k]});sPh=s.ph||'e';segSet('sPh',sPh);$('sStopWin').checked=s.stopWin!==false}
+ const sz=SIZE[$('sPre').value];if(sz){$('sRE').value=sz/100;$('sRF').value=sz/100}}
 segBind('sPh',v=>{sPh=v;schedule()});
 $('sPre').addEventListener('change',()=>{if($('sPre').value!=='custom')loadPreset($('sPre').value);schedule()});
 Object.values(RF).forEach(id=>$(id).addEventListener('input',()=>{$('sPre').value='custom'}));
 document.querySelectorAll('aside input,aside select').forEach(e=>{if(e.id!=='sPre')e.addEventListener('input',()=>{riskPct();schedule()})});
 
+// ================= DIARIO DE CUENTAS =================
+const J={accs:{},col:null,cloud:false,open:null,fil:'act',probs:{},probKey:{},pend:{},confirmDel:null,nsize:'25K',nph:'e',ptok:0,focus:null};
+const today=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
+const uid_=()=>'a'+Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+const esc=t=>String(t??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fd=d=>{const m=/^(\d{4})-(\d\d)-(\d\d)$/.exec(d||'');return m?`${m[3]}/${m[2]}/${m[1].slice(2)}`:'–'};
+const pnum=v=>{const x=parseFloat(String(v??'').replace(/\s/g,'').replace('−','-').replace(',','.'));return isFinite(x)?x:NaN};
+function jRules(size){const X=PRESET[size];return{target:X.target,mll:X.mll,lock:X.lock,cons:X.cons/100,dll:0,pct:X.pct/100,cap:X.cap,min:X.min,split:X.split/100,qn:X.qn,qd:X.qd,maxP:X.maxP,maxF:X.maxF,maxE:X.maxE,tiers:parseScale(X.scale)}}
+function accState(a){const r=jRules(a.size),I=a.init||{},f=a.phase==='f';
+ let bal=+I.bal||0,hi=Math.max(+I.hi||0,bal,0),best=Math.max(0,+I.mx||0),npay=Math.max(0,+I.np|0),q=f?Math.max(0,+I.q|0):0,lk=f&&npay>0,cyc=lk?bal:0;
+ let fl=lk?r.lock:Math.min(hi-r.mll,r.lock),burn=null,paid=0,gross=0,ndays=0,ntr=0;
+ const ev=[];(a.trades||[]).forEach(t=>ev.push({d:t.d,k:0,n:t.n||0,t}));(a.pays||[]).forEach(p=>ev.push({d:p.d,k:1,n:p.n||0,p}));
+ ev.sort((x,y)=>x.d<y.d?-1:x.d>y.d?1:(x.k-y.k)||(x.n-y.n));
+ const rows=[];let cur=null,day=0;
+ const close=()=>{if(cur===null)return;ndays++;
+  if(!f){if(day>best)best=day;if(bal>hi){hi=bal;fl=Math.min(hi-r.mll,r.lock)}}
+  else{if(day>=r.qd&&day>0)q++;if(!lk&&bal>hi){hi=bal;fl=Math.min(hi-r.mll,r.lock)}}
+  cur=null;day=0};
+ for(const e of ev){
+  if(e.k===0){if(e.d!==cur){close();cur=e.d}const pl=+e.t.pl||0;bal+=pl;day+=pl;ntr++;rows.push({t:e.t,bal,fl});if(!burn&&bal<=fl)burn={d:e.d}}
+  else{close();const amt=+e.p.amt||0;bal-=amt;gross+=amt;paid+=amt*r.split;npay++;lk=true;fl=r.lock;q=0;cyc=bal;rows.push({p:e.p,bal,fl})}}
+ close();
+ const need=Math.max(r.target,best/r.cons),passReady=!f&&!burn&&bal>=r.target&&best<=r.cons*bal;
+ const payMin=r.min/r.pct,payReady=f&&!burn&&q>=r.qn&&bal>=payMin&&bal>cyc,payAmt=Math.min(r.pct*Math.max(bal,0),r.cap);
+ return{r,bal,hi,fl,cush:bal-fl,burn,best,q,npay,lk,cyc,paid,gross,rows,ndays,ntr,need,passReady,payMin,payReady,payAmt,tier:tierMax(r.tiers,bal)}}
+function accStatus(a,st){if(a.status==='cerrada')return'cerrada';if(a.status==='aprobada')return'aprobada';if(a.status==='quemada'||st.burn)return'quemada';if(a.phase==='f'&&st.npay>=st.r.maxP)return'completada';return'activa'}
+const STX={activa:['En curso',''],quemada:['Quemada','bad'],aprobada:['Aprobada','ok'],completada:['5 retiros hechos','ok'],cerrada:['Cerrada','']};
+// ---- guardado ----
+function jSaveLocal(){store.set('journal',{v:1,accs:J.accs})}
+function jPut(a){a.upd=Date.now();J.accs[a.id]=a;jSaveLocal();jRender();
+ if(J.col){const id=a.id,body=JSON.parse(JSON.stringify(a));J.pend[id]=(J.pend[id]||Promise.resolve()).then(()=>J.col.doc(id).set(body)).catch(jErr)}}
+function jDel(id){delete J.accs[id];jSaveLocal();jRender();if(J.col){J.pend[id]=(J.pend[id]||Promise.resolve()).then(()=>J.col.doc(id).delete()).catch(jErr)}}
+function jErr(e){jMsg(e&&e.code==='quota_exceeded'?'No se ha podido guardar en tu cuenta de Claude: el almacenamiento está lleno. Exporta una copia y borra cuentas antiguas.':`No se ha podido guardar en tu cuenta de Claude (${e&&e.code||'error'}). Los datos siguen en este navegador: exporta una copia por si acaso.`,'b')}
+function jMsg(t,c){const m=$('jMsg');m.hidden=!t;m.className='note '+(c||'i');m.textContent=t||'';clearTimeout(jMsg.t);if(t)jMsg.t=setTimeout(()=>{m.hidden=true},9000)}
+async function jInit(){const o=store.get('journal');if(o&&o.accs&&typeof o.accs==='object')J.accs=o.accs;jRender();
+ if(!window.claude||typeof window.claude.use!=='function')return;
+ try{const [db,user]=await Promise.all([window.claude.use('db'),window.claude.use('user')]);if(!db||!user)return;
+  const id=await user.id();if(!id)return;
+  const col=db.collection('data/users/'+id);let first=true;
+  col.onSnapshot(snap=>{const m={};snap.docs.forEach(d=>{const x=d.data();if(x&&x.id)m[x.id]=JSON.parse(JSON.stringify(x))});
+   if(first){first=false;J.col=col;J.cloud=true;const loc=Object.values(J.accs);
+    if(snap.empty&&loc.length){loc.forEach(a=>jPut(a));jMsg('Las cuentas que tenías en este navegador se han copiado a tu cuenta de Claude.','ok');return}}
+   J.accs=m;jSaveLocal();jRender()},()=>{J.col=null;J.cloud=false;jRender()});
+ }catch(e){}}
+// ---- exportar / importar ----
+async function jDownload(name,data,mime){let dl=null;try{if(window.claude&&typeof window.claude.use==='function')dl=await window.claude.use('downloads')}catch(e){}
+ if(dl){try{await dl.save({filename:name,data});jMsg('Archivo guardado: '+name,'ok')}catch(e){if(!e||e.code!=='declined')jMsg(`No se ha podido guardar el archivo (${e&&e.code||'error'}).`,'b')}return}
+ const url=URL.createObjectURL(new Blob([data],{type:mime}));const a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),3000)}
+function jClean(a){if(!a||typeof a!=='object'||!PRESET[a.size])return null;const id=String(a.id||uid_()).replace(/[^A-Za-z0-9_-]/g,'').slice(0,40)||uid_();
+ const dt=d=>/^\d{4}-\d\d-\d\d$/.test(d||'')?d:today(),N=v=>{const x=+v;return isFinite(x)?x:0},I=a.init||{};
+ return{id,name:String(a.name||'').slice(0,60),size:a.size,phase:a.phase==='f'?'f':'e',price:N(a.price),date:dt(a.date),status:['aprobada','quemada','cerrada'].includes(a.status)?a.status:'',parent:a.parent?String(a.parent).slice(0,40):'',
+  init:{bal:N(I.bal),hi:N(I.hi),mx:N(I.mx),np:N(I.np),q:N(I.q)},
+  trades:(Array.isArray(a.trades)?a.trades:[]).slice(0,3000).map(t=>{const o={id:String(t.id||uid_()).slice(0,40),d:dt(t.d),pl:N(t.pl),note:String(t.note||'').slice(0,120),n:N(t.n)};if(t.pts!=null&&isFinite(+t.pts))o.pts=+t.pts;if(+t.mes>0)o.mes=+t.mes|0;return o}),sDate:/^\d{4}-\d\d-\d\d$/.test(a.sDate||'')?a.sDate:'',
+  pays:(Array.isArray(a.pays)?a.pays:[]).slice(0,20).map(p=>({id:String(p.id||uid_()).slice(0,40),d:dt(p.d),amt:N(p.amt),n:N(p.n)})),upd:N(a.upd)}}
+$('jExp').addEventListener('click',()=>{const L=Object.values(J.accs);if(!L.length){jMsg('Todavía no hay cuentas que exportar.','w');return}
+ jDownload(`diario-fondeo-${today()}.json`,JSON.stringify({app:'planificador-lucidflex',v:1,exported:new Date().toISOString(),accounts:L},null,1),'application/json')});
+$('jCsv').addEventListener('click',()=>{const L=Object.values(J.accs);if(!L.length){jMsg('Todavía no hay cuentas que exportar.','w');return}
+ const c=v=>String(v).replace(/;/g,',').replace(/\n/g,' '),nf=v=>String(Math.round(v*100)/100).replace('.',',');
+ let t='﻿Cuenta;Tamaño;Fase;Fecha;Tipo;Importe ($);Saldo ($);Puntos;MES;Nota\n';
+ L.forEach(a=>{const st=accState(a),nm=c(a.name||a.size);t+=`${nm};${a.size};${a.phase==='f'?'Fondeada':'Evaluación'};${a.date};Compra;${nf(-a.price)};;;;\n`;
+  st.rows.forEach(r=>{t+=r.t?`${nm};${a.size};${a.phase==='f'?'Fondeada':'Evaluación'};${r.t.d};Trade;${nf(r.t.pl)};${nf(r.bal)};${r.t.pts!=null?nf(r.t.pts):''};${r.t.mes||''};${c(r.t.note||'')}\n`:`${nm};${a.size};Fondeada;${r.p.d};Retiro (recibes ${nf(r.p.amt*st.r.split)});${nf(r.p.amt)};${nf(r.bal)};;;\n`})});
+ jDownload(`trades-fondeo-${today()}.csv`,t,'text/csv')});
+$('jImp').addEventListener('change',async e=>{const f=e.target.files&&e.target.files[0];e.target.value='';if(!f)return;
+ try{const o=JSON.parse(await f.text());const L=Array.isArray(o)?o:o&&o.accounts;if(!Array.isArray(L))throw 0;let n=0;
+  for(const a of L){const b=jClean(a);if(b){jPut(b);n++}}jMsg(n?`Importadas ${n} cuentas. Las que ya tenías con el mismo identificador se han actualizado con la copia.`:'La copia no tenía cuentas válidas.',n?'ok':'w')}
+ catch(err){jMsg('Ese archivo no es una copia válida del diario (.json exportado desde aquí).','b')}});
+// ---- nueva cuenta ----
+function jnFields(){const f=J.nph==='f';$('jlMx').hidden=f;$('jlNp').hidden=!f;$('jlQ').hidden=!f;$('jnPrice').value=f?0:PRESET[J.nsize].fee}
+segBind('jnSize',v=>{J.nsize=v;jnFields()});segBind('jnPh',v=>{J.nph=v;jnFields()});
+$('jNewB').addEventListener('click',()=>{const n=$('jNew');n.hidden=!n.hidden;if(!n.hidden){$('jnDate').value=today();jnFields();$('jnName').focus()}});
+$('jnCancel').addEventListener('click',()=>{$('jNew').hidden=true});
+$('jnSave').addEventListener('click',()=>{const size=J.nsize,cnt=Object.values(J.accs).filter(a=>a.size===size&&a.phase===J.nph).length+1;
+ const bal=pnum($('jnBal').value)||0;
+ const a={id:uid_(),name:$('jnName').value.trim().slice(0,60)||`${size} ${J.nph==='f'?'fondeada':'eval'} #${cnt}`,size,phase:J.nph,price:Math.max(0,pnum($('jnPrice').value)||0),date:$('jnDate').value||today(),status:'',parent:'',
+  init:{bal,hi:Math.max(bal,pnum($('jnHi').value)||0),mx:J.nph==='e'?Math.max(0,pnum($('jnMx').value)||0):0,np:J.nph==='f'?Math.max(0,pnum($('jnNp').value)|0):0,q:J.nph==='f'?Math.max(0,pnum($('jnQ').value)|0):0},trades:[],pays:[]};
+ ['jnName','jnBal','jnHi','jnMx','jnNp','jnQ'].forEach(k=>$(k).value=k==='jnName'?'':'0');$('jNew').hidden=true;J.fil='act';segSet('jFil','act');jPut(a);jMsg(`Cuenta «${a.name}» guardada.`,'ok')});
+segBind('jFil',v=>{J.fil=v;jRender()});
+// ---- probabilidades (10.000 simulaciones por cuenta) ----
+function jParams(a,st){const base=P();if(!valid(base))return null;const same=$('sPre').value===a.size,sz=SIZE[a.size];
+ return{...base,r:st.r,ph:a.phase,bal:st.bal,hi:st.hi,mx:a.phase==='e'?st.best:0,q:st.q,cyc:st.cyc,npay:st.npay,rE:same?base.rE:sz/100,rF:same?base.rF:sz/100,thr:same?base.thr:PRESET[a.size].thr,Hacc:300,extra:0,pm:0,fix:0,tax:0}}
+function jProbs(list){const t=++J.ptok,todo=[];
+ for(const {a,st} of list){const p=jParams(a,st);if(!p)continue;const k=JSON.stringify(p);if(J.probKey[a.id]===k&&J.probs[a.id])continue;todo.push({a,p,k})}
+ if(!todo.length)return;
+ runJobs(todo.map(x=>({p:x.p,nsim:10000,seed:21,kind:'acc'})),()=>t!==J.ptok).then(out=>{if(!out||t!==J.ptok)return;
+  todo.forEach((x,i)=>{J.probs[x.a.id]=out[i];J.probKey[x.a.id]=x.k;const el=document.getElementById('pr-'+x.a.id);if(el)el.innerHTML=prTxt(x.a,out[i],x.p)})})}
+function prTxt(a,r,p){if(!r)return'Calculando probabilidades con 10.000 simulaciones…';const ses=v=>isFinite(v)?`la sesión ${n0(v)}`:'—';
+ const rk=`riesgo ${usd(a.phase==='e'?p.rE:p.rF)} · WR ${Math.round(p.wr*100)} %`;
+ return a.phase==='e'?`Probabilidad (${rk}): <b>aprueba ${pct(r.pPass)}</b> · se quema ${pct(1-r.pPass)}. Si aprueba, hacia ${ses(r.passMed)} desde hoy. Llegar a cobrar un retiro de la fondeada que saldría: ${pct(r.pPay)}.`
+ :`Probabilidad (${rk}, retiro a ${usd(p.thr)}): <b>cobra el próximo retiro ${pct(r.pPay)}</b> · se quema antes ${pct(1-r.pPay)}. Si cobra, hacia ${ses(r.payMed)} desde hoy. Te llegarían ${usd(r.cob)} de media en total de esta cuenta.`}
+// ---- render ----
+function jRender(force){if($('vJour').hidden&&!force)return;
+ const A=Object.values(J.accs),L=A.map(a=>{const st=accState(a);return{a,st,s:accStatus(a,st)}});
+ $('jStore').textContent=J.cloud?'Guardado en tu cuenta de Claude · se sincroniza entre tus dispositivos':'Guardado solo en este navegador · exporta copias de seguridad';
+ const inv=A.reduce((s,a)=>s+(+a.price||0),0),cob=L.reduce((s,x)=>s+x.st.paid,0),net=cob-inv,nPay=L.reduce((s,x)=>s+(x.a.pays||[]).length,0);
+ const E=L.filter(x=>x.a.phase==='e'),F=L.filter(x=>x.a.phase==='f'),cnt=(X,s)=>X.filter(x=>x.s===s).length;
+ const eA=cnt(E,'aprobada'),eQ=cnt(E,'quemada'),rate=eA+eQ?eA/(eA+eQ):NaN,fAct=cnt(F,'activa'),fQ=cnt(F,'quemada');
+ $('jKpi').innerHTML=K('Invertido en cuentas',usd(inv),`${A.filter(a=>+a.price>0).length} compras`,'big')+K('Cobrado (lo que te llega)',usd(cob),`${nPay} retiros · ${usd(L.reduce((s,x)=>s+x.st.gross,0))} brutos`,'big')+
+  `<div class="big"><span class="l">Balance total</span><span class="v ${net>=0?'pos':'neg'}">${usd(net)}</span><span class="s">cobrado − invertido</span></div>`+
+  K('Evaluaciones',`${E.length}`,`${eA} aprobadas · ${eQ} quemadas · ${cnt(E,'activa')} en curso`)+K('Tu tasa de aprobación',pct(rate),eA+eQ?`de ${eA+eQ} evaluaciones terminadas`:'aún sin evaluaciones terminadas')+
+  K('Fondeadas',`${F.length}`,`${fAct} activas · ${fQ} quemadas · ${cnt(F,'completada')} completas`);
+ const ym=today().slice(0,7),mB=A.filter(a=>(a.date||'').slice(0,7)===ym&&+a.price>0),pm=Math.max(0,num('sPM')|0),mS=mB.reduce((s,a)=>s+(+a.price||0),0);
+ $('jMonth').className='note '+(pm&&mB.length>pm?'w':'i');$('jMonth').innerHTML=`Este mes: <b>${mB.length}</b> ${mB.length===1?'cuenta comprada':'cuentas compradas'} (${usd(mS)})${pm?` · tu plan es ${pm} al mes: ${mB.length>=pm?(mB.length>pm?`te has pasado en ${mB.length-pm}`:'ya las has comprado todas'):`te quedan ${pm-mB.length}`}`:''}.`;
+ const ord={activa:0,aprobada:1,completada:2,quemada:3,cerrada:4};
+ const V=L.filter(x=>J.fil==='all'||(J.fil==='act'?x.s==='activa':x.s!=='activa')).sort((x,y)=>(ord[x.s]-ord[y.s])||((y.a.date||'').localeCompare(x.a.date||''))||((y.a.upd||0)-(x.a.upd||0)));
+ $('jList').innerHTML=V.length?V.map(card).join(''):`<div class="note">${A.length?'No hay cuentas con este filtro.':'Aún no has apuntado ninguna cuenta. Pulsa «+ Nueva cuenta» y añade la que tienes ahora (si ya está empezada, pon su beneficio actual y su máximo cierre).'}</div>`;
+ if(J.focus){const el=document.querySelector(`[data-id="${J.focus}"] input[name=pl]`);if(el)el.focus();J.focus=null}
+ jCal(L);jProbs(L.filter(x=>x.s==='activa'))}
+// ---- diario del mes ----
+const MESES=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+const usdk=v=>{const a=Math.abs(v);return(v<0?'−':'+')+(a>=10000?'$'+Math.round(a/1000)+'k':a>=1000?'$'+(Math.round(a/100)/10).toLocaleString('es-ES')+'k':'$'+Math.round(a))};
+function jEvents(L){const ev=[];for(const {a,st,s} of L){const nm=a.name||a.size;
+  ev.push({d:a.date,k:'c',a,nm,amt:+a.price||0,txt:a.phase==='f'?(+a.price?`Activación fondeada ${a.size}`:`Nueva fondeada ${a.size}`):`Compra evaluación ${a.size}`});
+  (a.trades||[]).forEach(t=>ev.push({d:t.d,k:'t',a,nm,amt:+t.pl||0,t}));
+  (a.pays||[]).forEach(p=>{const rec=(+p.amt||0)*st.r.split;ev.push({d:p.d,k:'r',a,nm,amt:+p.amt||0,rec,txt:`Retiro (te llegan ${usd(rec)})`})});
+  if(s==='aprobada')ev.push({d:a.sDate||'',k:'a',a,nm,txt:'Evaluación aprobada'});
+  if(s==='quemada')ev.push({d:(st.burn&&st.burn.d)||a.sDate||'',k:'q',a,nm,txt:'Cuenta quemada'});
+  if(s==='cerrada'&&a.sDate)ev.push({d:a.sDate,k:'x',a,nm,txt:'Cuenta cerrada'})}
+ return ev.filter(e=>/^\d{4}-\d\d-\d\d$/.test(e.d||''))}
+function jCal(L){if(!J.month)J.month=today().slice(0,7);if(!J.day)J.day=today();const ym=J.month,[Y,M]=ym.split('-').map(Number);
+ $('jmLbl').textContent=`${MESES[M-1]} ${Y}`;
+ const ev=jEvents(L).filter(e=>e.d.slice(0,7)===ym),by={};ev.forEach(e=>(by[e.d]=by[e.d]||[]).push(e));
+ const tr=ev.filter(e=>e.k==='t'),buys=ev.filter(e=>e.k==='c'&&e.amt>0),pays=ev.filter(e=>e.k==='r');
+ const dayPL={};tr.forEach(e=>dayPL[e.d]=(dayPL[e.d]||0)+e.amt);const dv=Object.values(dayPL),green=dv.filter(v=>v>0).length,red=dv.filter(v=>v<0).length;
+ const pl=tr.reduce((s,e)=>s+e.amt,0),wins=tr.filter(e=>e.amt>0).length,spent=buys.reduce((s,e)=>s+e.amt,0),rec=pays.reduce((s,e)=>s+e.rec,0);
+ $('jmKpi').innerHTML=K('Resultado de los trades',`<span class="${pl>=0?'pos':'neg'}">${usd(pl)}</span>`,`${tr.length} trades · ${wins} ganadores${tr.length?' ('+pct(wins/tr.length)+')':''}`)+
+  K('Días operados',`${dv.length}`,`${green} en verde · ${red} en rojo`)+K('Cuentas compradas',`${buys.length}`,`${usd(spent)} gastados`)+
+  K('Retiros cobrados',`${pays.length}`,`te llegan ${usd(rec)}`)+K('Aprobadas / quemadas',`${ev.filter(e=>e.k==='a').length} / ${ev.filter(e=>e.k==='q').length}`,'en este mes')+
+  K('Neto del mes',`<span class="${rec-spent>=0?'pos':'neg'}">${usd(rec-spent)}</span>`,'lo cobrado − lo comprado');
+ const off=(new Date(Y,M-1,1).getDay()+6)%7,nd=new Date(Y,M,0).getDate(),td=today();
+ let h=['L','M','X','J','V','S','D'].map(x=>`<div class="wd">${x}</div>`).join('')+'<div class="emp"></div>'.repeat(off);
+ for(let i=1;i<=nd;i++){const d=`${ym}-${String(i).padStart(2,'0')}`,E=by[d]||[],p=dayPL[d],nt=E.filter(e=>e.k==='t').length;
+  const tags=['c','a','r','q'].filter(k=>E.some(e=>e.k===k)).map(k=>`<b class="tg ${k}">${k.toUpperCase()}</b>`).join('');
+  h+=`<button type="button" data-day="${d}" class="${p>0?'g':p<0?'b':''}${d===J.day?' sel':''}${d===td?' td':''}" aria-label="${i} de ${MESES[M-1]}${p!=null?': '+usd(p):''}"><span class="dn">${i}</span>${p!=null?`<span class="pl ${p>=0?'pos':'neg'}">${usdk(p)}</span><span class="nt">${nt} trade${nt>1?'s':''}</span>`:''}<span>${tags}</span></button>`}
+ $('jmGrid').innerHTML=h;
+ if(J.day.slice(0,7)!==ym){$('jmDay').innerHTML='';return}
+ const sel=(by[J.day]||[]).slice().sort((x,y)=>(x.k==='c'?-1:0)-(y.k==='c'?-1:0)||((x.t&&x.t.n)||0)-((y.t&&y.t.n)||0));
+ $('jmDay').innerHTML=`<h3 style="margin:4px 0 8px">${fd(J.day)}${dayPL[J.day]!=null?` · <span class="${dayPL[J.day]>=0?'pos':'neg'}">${usd(dayPL[J.day])}</span>`:''}</h3>`+(sel.length?`<div class="tw"><table><tr><th>Cuenta</th><th>Qué</th><th>Importe</th><th>Detalle</th></tr>${sel.map(e=>`<tr><td>${esc(e.nm)}</td><td>${e.k==='t'?'Trade':esc(e.txt)}</td><td class="${e.k==='t'?(e.amt>=0?'pos':'neg'):''}">${e.k==='t'?(e.amt>=0?'+':'')+usd2(e.amt):e.k==='c'?(e.amt?'−'+usd(e.amt):'–'):e.k==='r'?usd(e.amt):''}</td><td class="mut" style="white-space:normal">${e.t?`${e.t.pts!=null?`${e.t.pts>0?'+':''}${pts(e.t.pts)} pts `:''}${e.t.mes?e.t.mes+' MES ':''}${esc(e.t.note||'')}`:''}</td></tr>`).join('')}</table></div>`:'<p class="hint">Sin movimientos este día.</p>')}
+$('jmGrid').addEventListener('click',e=>{const b=e.target.closest('[data-day]');if(!b)return;J.day=b.dataset.day;jRender()});
+const shiftM=n=>{const [Y,M]=(J.month||today().slice(0,7)).split('-').map(Number),d=new Date(Y,M-1+n,1);J.month=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');J.day=J.month+'-01';jRender()};
+$('jmPrev').addEventListener('click',()=>shiftM(-1));$('jmNext').addEventListener('click',()=>shiftM(1));$('jmNow').addEventListener('click',()=>{J.month=today().slice(0,7);J.day=today();jRender()});
+function card({a,st,s}){const r=st.r,f=a.phase==='f',sz=SIZE[a.size],risk=sz/100,open=J.open===a.id,[stT,stC]=STX[s],act=s==='activa';
+ const cush=Math.max(0,st.cush),stops=Math.floor(cush/risk);
+ let t3;if(!act){t3=`<div><span class="l">Estado</span><span class="v">${stT}</span><span class="s">${st.burn?'tocó el suelo el '+fd(st.burn.d):s==='aprobada'?'pasó a fondeada':f?`${st.npay} retiros cobrados`:''}</span></div>`}
+ else if(!f){t3=st.passReady?`<div><span class="l">Objetivo</span><span class="v pos">Cumplido</span><span class="s">márcala como aprobada</span></div>`:
+   `<div><span class="l">Falta para aprobar</span><span class="v">${usd(Math.max(0,st.need-st.bal))}</span><span class="s">objetivo ${usd(r.target)}${st.need>r.target?` · consistencia: llega a ${usd(st.need)}`:''}</span></div>`}
+ else{t3=st.payReady?`<div><span class="l">Retiro disponible</span><span class="v pos">${usd(st.payAmt)}</span><span class="s">te llegan ${usd(st.payAmt*r.split)}</span></div>`:
+   `<div><span class="l">Para el próximo retiro</span><span class="v">${Math.min(st.q,r.qn)}/${r.qn} días</span><span class="s">${st.bal<st.payMin?`faltan ${usd(st.payMin-st.bal)} hasta ${usd(st.payMin)}`:st.bal<=st.cyc?'necesitas superar el saldo del último retiro':`días de ≥ ${usd(r.qd)}`}</span></div>`}
+ const cw=Math.min(100,cush/r.mll*100),ccol=cw<25?'var(--bad)':cw<50?'var(--warn)':'var(--good)';
+ let h=`<div class="ac${open?' open':''}" data-id="${a.id}"><div class="ah"><div><b>${esc(a.name||a.size)}</b><div class="sub">${a.size} · ${fd(a.date)} · ${+a.price?usd(a.price):'sin coste'}</div></div>
+  <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end"><span class="chip ${f?'f':'e'}">${f?'Fondeada':'Evaluación'}</span><span class="chip ${stC}">${stT}</span></div></div>
+  <div class="an"><div><span class="l">Beneficio</span><span class="v ${st.bal>=0?'':'neg'}">${usd(st.bal)}</span><span class="s">${st.ntr} trades · ${st.ndays} días${f?` · máx. ${st.tier} MES`:''}</span></div>
+  <div><span class="l">Te queda hasta quemar</span><span class="v" style="color:${act?ccol:'inherit'}">${usd(cush)}</span><span class="s">suelo ${usd(st.fl)}${act?` · ${stops} stops de ${usd(risk)}`:''}</span></div>${t3}</div>`;
+ if(act)h+=`<div class="cush"><div class="gauge"><span style="width:${cw}%;background:${ccol}"></span></div><div class="gl"><span>colchón hasta el suelo: ${pct(cush/r.mll)} del drawdown</span><span>${st.lk?'suelo bloqueado en +'+usd(r.lock):st.fl>=r.lock?'suelo ya bloqueado':'suelo sube con el máximo cierre'}</span></div></div>`;
+ if(f&&act)h+=`<div style="display:flex;align-items:center;gap:10px;font-size:11.5px;color:var(--mut)"><span class="dots">${Array.from({length:r.qn},(_,i)=>`<i class="${i<st.q?'on':''}"></i>`).join('')}</span>días de ≥ ${usd(r.qd)} desde el último retiro · retiros ${st.npay}/${r.maxP}</div>`;
+ const pp=act?jParams(a,st):null,pk=pp&&JSON.stringify(pp);
+ if(act)h+=`<div class="pr" id="pr-${a.id}">${pp?prTxt(a,J.probKey[a.id]===pk?J.probs[a.id]:null,pp):'Revisa los parámetros de Estadísticas para calcular las probabilidades.'}</div>
+  <div class="qa q4"><label class="f">Fecha<input type="date" name="d" value="${J.lastD&&J.lastD[a.id]||today()}"></label><label class="f">Resultado ($, con signo)<input name="pl" type="text" inputmode="decimal" placeholder="−250  ó  500" autocomplete="off"></label><label class="f">Puntos<input name="pts" type="text" inputmode="decimal" placeholder="−10 / 20" autocomplete="off"></label><label class="f">MES<input name="mes" type="text" inputmode="numeric" placeholder="5" autocomplete="off"></label><button type="button" class="btn pri" data-act="add">Añadir trade</button></div>
+  <p class="hint" style="margin-top:-4px">Pon el resultado en $, o los puntos (con signo) y los MES y lo calculo (1 MES = $5/punto).</p>`;
+ else if(st.burn)h+=`<div class="note b" style="font-size:12px">Tocó el suelo el ${fd(st.burn.d)}.</div>`;
+ h+=`<div class="acts"><button type="button" class="btn sm" data-act="toggle">${open?'Ocultar detalle':'Detalle y trades'}</button>`;
+ if(act&&!f)h+=`<button type="button" class="btn sm${st.passReady?' pri':''}" data-act="appr">Marcar aprobada → crear fondeada</button>`;
+ if(act)h+=`<button type="button" class="btn sm" data-act="burn">Marcar quemada</button><button type="button" class="btn sm" data-act="close">Cerrar</button>`;
+ else h+=`<button type="button" class="btn sm" data-act="reopen">Reabrir</button>`;
+ h+='</div>';
+ if(open)h+=detail(a,st,s);
+ return h+'</div>'}
+function detail(a,st,s){const r=st.r,f=a.phase==='f',I=a.init||{};
+ let rows='';const hasI=(+I.bal||0)!==0||(+I.hi||0)!==0||(+I.np||0)>0;
+ if(hasI)rows+=`<tr><td>—</td><td>Estado inicial</td><td></td><td>${usd(+I.bal||0)}</td><td></td><td class="mut">máx. cierre ${usd(+I.hi||0)}${f?` · ${+I.np||0} retiros previos`:''}</td><td></td></tr>`;
+ st.rows.forEach(x=>{if(x.t)rows+=`<tr><td>${fd(x.t.d)}</td><td>Trade${x.t.pts!=null?` <span class="mut">${x.t.pts>0?'+':''}${pts(x.t.pts)} pts${x.t.mes?' · '+x.t.mes+' MES':''}</span>`:x.t.mes?` <span class="mut">${x.t.mes} MES</span>`:''}</td><td class="${x.t.pl>=0?'pos':'neg'}">${x.t.pl>=0?'+':''}${usd2(x.t.pl)}</td><td>${usd(x.bal)}</td><td>${usd(x.fl)}</td><td class="mut" style="white-space:normal;max-width:220px">${esc(x.t.note)}</td><td><button type="button" class="x" data-act="deltr" data-tid="${esc(x.t.id)}" aria-label="Borrar trade">✕</button></td></tr>`;
+  else rows+=`<tr><td>${fd(x.p.d)}</td><td>Retiro</td><td class="neg">−${usd(x.p.amt)}</td><td>${usd(x.bal)}</td><td>${usd(x.fl)}</td><td class="mut">te llegan ${usd(x.p.amt*r.split)}</td><td><button type="button" class="x" data-act="delpay" data-tid="${esc(x.p.id)}" aria-label="Borrar retiro">✕</button></td></tr>`});
+ let h=`<div class="jd"><div class="small mut">${st.ndays} días operados · ${!f?`mejor día ${usd(st.best)}${st.bal>0?` = ${pct(st.best/st.bal)} del beneficio (máx. ${pct(r.cons)})`:''}`:`días válidos (≥ ${usd(r.qd)}) desde el último retiro: ${st.q} de ${r.qn}`} · el suelo se recalcula al cierre de cada día</div>
+  <div class="tw"><table><tr><th>Fecha</th><th>Tipo</th><th>Importe</th><th>Saldo</th><th>Suelo</th><th>Nota</th><th></th></tr>${rows||'<tr><td colspan="7" class="mut">Sin movimientos todavía.</td></tr>'}</table></div>`;
+ if(f&&s==='activa')h+=`<div><h3 style="margin-bottom:8px">Registrar retiro</h3><div class="qa"><label class="f">Fecha<input type="date" name="pd" value="${today()}"></label><label class="f">Importe pedido ($)<input name="pamt" type="text" inputmode="decimal" value="${st.payAmt>=r.min?Math.round(st.payAmt):''}"></label><button type="button" class="btn" data-act="pay">Registrar retiro</button></div>
+  <p class="hint" style="margin-top:6px">${st.payReady?`Puedes pedir hasta ${usd(st.payAmt)} (${pct(r.pct)} del beneficio, máx. ${usd(r.cap)}); te llega el ${pct(r.split)}.`:`Todavía no cumples las condiciones: ${r.qn} días de ≥ ${usd(r.qd)}, beneficio ≥ ${usd(st.payMin)} y por encima del último retiro.`}</p></div>`;
+ h+=`<div><h3 style="margin-bottom:8px">Nota para el próximo trade que añadas</h3><input name="note" type="text" maxlength="120" placeholder="opcional: setup, contexto, error…" value="${esc(J.note&&J.note[a.id]||'')}"></div>
+  <details class="more"><summary>Editar datos de la cuenta</summary><div class="jform" style="margin-top:8px">
+  <label class="f">Nombre<input name="e_name" type="text" value="${esc(a.name)}"></label><label class="f">Precio pagado ($)<input name="e_price" type="text" inputmode="decimal" value="${+a.price||0}"></label><label class="f">Fecha de compra<input name="e_date" type="date" value="${a.date||''}"></label>
+  <label class="f">Beneficio inicial ($)<input name="e_bal" type="text" inputmode="decimal" value="${+I.bal||0}"></label><label class="f">Máximo cierre inicial ($)<input name="e_hi" type="text" inputmode="decimal" value="${+I.hi||0}"></label>
+  ${f?`<label class="f">Retiros previos<input name="e_np" type="text" inputmode="numeric" value="${+I.np||0}"></label><label class="f">Días válidos iniciales<input name="e_q" type="text" inputmode="numeric" value="${+I.q||0}"></label>`:`<label class="f">Mejor día inicial ($)<input name="e_mx" type="text" inputmode="decimal" value="${+I.mx||0}"></label>`}
+  </div><div class="acts" style="margin-top:8px"><button type="button" class="btn sm" data-act="save">Guardar cambios</button>
+  ${J.confirmDel===a.id?`<span class="small" style="align-self:center">¿Borrar la cuenta y todos sus trades?</span><button type="button" class="btn sm dng" data-act="delyes">Sí, borrar</button><button type="button" class="btn sm" data-act="delno">No</button>`:`<button type="button" class="btn sm dng" data-act="del">Borrar cuenta</button>`}</div></details></div>`;
+ return h}
+$('jList').addEventListener('input',e=>{if(e.target.name==='note'){const c=e.target.closest('[data-id]');J.note=J.note||{};J.note[c.dataset.id]=e.target.value}});
+$('jList').addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.name==='pl'){e.preventDefault();e.target.closest('[data-id]').querySelector('[data-act=add]').click()}});
+$('jList').addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(!b)return;const c=b.closest('[data-id]'),id=c&&c.dataset.id,a0=J.accs[id];if(!a0)return;
+ const a=JSON.parse(JSON.stringify(a0)),q=n=>c.querySelector(`[name=${n}]`),act=b.dataset.act,before=accState(a0);
+ if(act==='toggle'){J.open=J.open===id?null:id;J.confirmDel=null;jRender();return}
+ if(act==='add'){let pl=pnum(q('pl').value);const pts=pnum(q('pts').value),mes=pnum(q('mes').value);if((!isFinite(pl)||pl===0)&&isFinite(pts)&&mes>0)pl=Math.round(pts*mes*5*100)/100;
+  if(!isFinite(pl)||pl===0){jMsg('Escribe el resultado del trade en dólares con signo (−250 si perdiste, 500 si ganaste), o los puntos con signo y los MES.','w');q('pl').focus();return}
+  const d=q('d').value||today();J.lastD=J.lastD||{};J.lastD[id]=d;
+  a.trades=a.trades||[];const tr={id:uid_(),d,pl,note:(J.note&&J.note[id]||'').slice(0,120),n:Date.now()};if(isFinite(pts))tr.pts=pts;if(mes>0)tr.mes=Math.round(mes);a.trades.push(tr);if(J.note)J.note[id]='';J.focus=id;jPut(a);
+  const st=accState(a);if(st.burn&&!before.burn)jMsg(`«${a.name}» ha tocado el suelo (${usd(st.fl)}): queda como quemada. Si fue un error, borra el trade en el detalle.`,'b');
+  else if(st.passReady&&!before.passReady)jMsg(`«${a.name}» ha cumplido el objetivo y la consistencia: márcala como aprobada para crear la fondeada.`,'ok');
+  else if(st.payReady&&!before.payReady)jMsg(`«${a.name}» ya puede pedir retiro: ${usd(st.payAmt)} (te llegan ${usd(st.payAmt*st.r.split)}).`,'ok');return}
+ if(act==='appr'){a.status='aprobada';a.sDate=today();const nf={id:uid_(),name:(a.name||a.size)+' · fondeada',size:a.size,phase:'f',price:0,date:today(),status:'',parent:a.id,init:{bal:0,hi:0,mx:0,np:0,q:0},trades:[],pays:[]};
+  jPut(a);jPut(nf);J.open=null;jMsg(`Aprobada. He creado «${nf.name}» como cuenta fondeada nueva (si pagaste activación, ponla en «Editar datos»).`,'ok');return}
+ if(act==='burn'){a.status='quemada';a.sDate=today();jPut(a);return}
+ if(act==='close'){a.status='cerrada';a.sDate=today();jPut(a);return}
+ if(act==='reopen'){a.status='';a.sDate='';jPut(a);if(before.burn)jMsg('Reabierta, pero sus trades siguen tocando el suelo: borra el trade erróneo en el detalle si fue un error.','w');return}
+ if(act==='deltr'){a.trades=(a.trades||[]).filter(t=>t.id!==b.dataset.tid);jPut(a);return}
+ if(act==='delpay'){a.pays=(a.pays||[]).filter(p=>p.id!==b.dataset.tid);jPut(a);return}
+ if(act==='pay'){const amt=pnum(q('pamt').value);if(!(amt>0)){jMsg('Escribe el importe del retiro que has pedido.','w');return}
+  a.pays=a.pays||[];a.pays.push({id:uid_(),d:q('pd').value||today(),amt,n:Date.now()});jPut(a);jMsg(`Retiro de ${usd(amt)} registrado: te llegan ${usd(amt*before.r.split)}. El suelo queda fijo en +${usd(before.r.lock)} y el contador de días vuelve a 0.`,'ok');return}
+ if(act==='save'){const N=n=>{const v=pnum(q(n)&&q(n).value);return isFinite(v)?v:0};a.name=q('e_name').value.trim().slice(0,60)||a.name;a.price=Math.max(0,N('e_price'));a.date=q('e_date').value||a.date;
+  a.init={bal:N('e_bal'),hi:Math.max(N('e_hi'),N('e_bal')),mx:a.phase==='e'?Math.max(0,N('e_mx')):0,np:a.phase==='f'?Math.max(0,N('e_np')|0):0,q:a.phase==='f'?Math.max(0,N('e_q')|0):0};jPut(a);jMsg('Cambios guardados.','ok');return}
+ if(act==='del'){J.confirmDel=id;jRender();return}
+ if(act==='delno'){J.confirmDel=null;jRender();return}
+ if(act==='delyes'){J.confirmDel=null;J.open=null;jDel(id);jMsg('Cuenta borrada.','i');return}});
+
 function applyMode(m){document.documentElement.setAttribute('data-mode',m);$('bMode').textContent=m==='light'?'Modo noche':'Modo día';$('bMode').setAttribute('aria-pressed',m==='light');refreshC();store.set('mode',m);
  if(S.done){renderAccounts();renderGL();renderEvo()}}
 $('bMode').addEventListener('click',()=>applyMode(document.documentElement.getAttribute('data-mode')==='light'?'dark':'light'));
 applyMode(store.get('mode')==='light'?'light':'dark');
-loadAll();calc();riskPct();route();
+loadAll();calc();riskPct();route();jInit();
 </script>
 </body></html>
