@@ -219,6 +219,10 @@ footer{font-size:11px;color:var(--dim);border-top:1px solid var(--line);padding-
       </div>
       <label class="f" for="sNpay" id="lNpay" hidden>Pagos ya cobrados<input id="sNpay" type="text" inputmode="numeric" value="0"></label>
     </div></details>
+    <details class="g" open><summary>Datos de partida</summary><div class="gb">
+      <div class="seg" id="sSrc" role="group" aria-label="Origen de los datos"><button type="button" data-v="man" aria-pressed="true">Mis ajustes</button><button type="button" data-v="real" aria-pressed="false">Mis datos reales</button></div>
+      <p class="hint" id="hSrc" style="font-size:11.5px"></p>
+    </div></details>
     <details class="g" open><summary>Riesgo y estrategia</summary><div class="gb">
       <label class="f" for="sRE">Riesgo evaluación ($) <span class="rp" id="pRE"></span><input id="sRE" type="text" inputmode="decimal" value="250"></label>
       <label class="f" for="sRF">Riesgo fondeada ($) <span class="rp" id="pRF"></span><input id="sRF" type="text" inputmode="decimal" value="125"></label>
@@ -275,6 +279,12 @@ footer{font-size:11px;color:var(--dim);border-top:1px solid var(--line);padding-
       <div class="sh"><h2 id="h1">Resultado del plan</h2><span class="tag" id="tagH"></span></div>
       <div class="kp" id="kHero"></div>
       <div id="nHero" class="note i"></div>
+    </section>
+
+    <section class="card" aria-labelledby="hC" id="cmpC" hidden>
+      <div class="sh"><h2 id="hC">Tus ajustes frente a tus datos reales</h2><span class="tag">mismo plan · 10.000 simulaciones cada fila</span></div>
+      <div class="tw"><table id="tCmp"></table></div>
+      <div id="nCmp" class="note"></div>
     </section>
 
     <section class="card" aria-labelledby="h2">
@@ -546,7 +556,7 @@ async function runStats(){const t=tok;riskPct();const p=P();if(!valid(p)){$('nHe
  await later(()=>{if(t!==tok)return;S.B=sim(p,{nsim:10000,seed:14,start:'state',plan:true})});if(t!==tok)return;setProg(.45);
  await later(()=>{if(t!==tok)return;S.E=sim(p,{nsim:10000,seed:11,start:'freshE',H:400})});if(t!==tok)return;setProg(.6);
  await later(()=>{if(t!==tok)return;S.F=sim(p,{nsim:10000,seed:12,start:'freshF',H:400})});if(t!==tok)return;setProg(.7);
- S.p=p;S.done=true;S.sensTok=-1;renderHero();renderAccounts();renderGL();renderEvo();renderUnit();setProg(0);
+ S.p=p;S.done=true;S.sensTok=-1;renderHero();renderAccounts();renderGL();renderEvo();renderUnit();setProg(0);cmp(t);
  opt(t)}
 function renderHero(){const B=S.B,p=S.p;const med=q(B.net,.5),pos=frac(B.net,x=>x>0);
  $('tagH').textContent=`${p.months} meses · ${p.H} sesiones · 10.000 simulaciones`;
@@ -632,6 +642,38 @@ function sens(t){S.sensTok=t;const p=S.p,mll=p.r.mll;const rows=[];
   rows.forEach((r,i)=>{const x=out[i];h+=`<tr${i===0?' class="hl"':''}><td>${r.g!==lastG?r.g:''}</td><td>${r.l}</td><td class="${x.med>=0?'pos':'neg'}">${usd(x.med)}</td><td>${pct(x.pos)}</td><td class="${x.p10<0?'neg':''}">${usd(x.p10)}</td><td>${usd(x.p90)}</td><td>${n1(x.pass)}</td><td>${n1(x.fPaid)}</td><td>${usd(x.cap)}</td></tr>`;lastG=r.g});
   $('tSens').innerHTML=h})}
 
+
+// ---- datos reales del diario → estadísticas ----
+let SRC='man';const SRCF=['sWR','sRR','sSL','sCost'];
+function realData(filter){const T=[];Object.values(J.accs).forEach(a=>{if(filter&&!filter(a))return;const est=estStop(a.trades||[]);(a.trades||[]).forEach(t=>T.push({...t,est}))});
+ const scr=t=>t.pts!=null?Math.abs(t.pts)<=0.5:Math.abs(t.pl)<3*(t.mes||1);const S0=T.filter(t=>!scr(t)),W=S0.filter(t=>t.pl>0),Lo=S0.filter(t=>t.pl<0);
+ if(S0.length<5||!W.length||!Lo.length)return{n:S0.length,ok:false};
+ const sm=a=>a.reduce((x,t)=>x+t.pl,0),aw=sm(W)/W.length,al=Math.abs(sm(Lo)/Lo.length),eff=T.map(t=>t.stop>0?t.stop:t.est).filter(v=>v>0);
+ const days={};T.forEach(t=>{days[t.d]=(days[t.d]||0)+1});const dv=Object.values(days);
+ return{ok:true,n:S0.length,wr:W.length/S0.length,payoff:aw/al,stop:eff.length?eff.reduce((a,b)=>a+b,0)/eff.length:NaN,tpd:T.length/dv.length,maxd:Math.max(...dv),real:T.filter(t=>t.stop>0).length}}
+function srcVals(R){return{sWR:String(Math.max(25,Math.min(65,Math.round(R.wr*100)))),sRR:String(Math.round(R.payoff*100)/100),sSL:isFinite(R.stop)?String(Math.round(R.stop*4)/4):$('sSL').value,sCost:'0'}}
+function srcHint(){const R=SRC==='real'&&S.R?S.R:realData();const h=$('hSrc');
+ if(SRC==='real'&&R&&R.ok)h.innerHTML=`Usando tu Diario: <b>WR ${pct(R.wr)}</b> · <b>RR 1:${n1(R.payoff)}</b> · stop ${pts(Math.round(R.stop*4)/4)} pts · ${n1(R.tpd)} trades/día, de ${R.n} trades${R.real<R.n?` (stop ${R.real?'real en '+R.real+', el resto ':''}estimado)`:''}. Costes a 0: ya van dentro de tus resultados.${R.wr*100<25||R.wr*100>65?' El win rate se ha limitado al rango 25–65 %.':''}${R.n<30?' Muestra pequeña: tómalo como orientación.':''}`;
+ else h.innerHTML=R&&R.ok?`Valores que eliges tú. «Mis datos reales» carga los de tu Diario (${R.n} trades: WR ${pct(R.wr)}, RR 1:${n1(R.payoff)}).`:`Valores que eliges tú. Para usar tus datos reales necesitas al menos 5 trades con ganadores y perdedores en el Diario${R&&R.n?` (ahora ${R.n})`:''}.`}
+function setSrc(v,R){if(v==='real'){R=R||realData();if(!R||!R.ok){segSet('sSrc','man');SRC='man';srcHint();return false}
+  if(SRC!=='real'){const m={};SRCF.forEach(k=>m[k]=$(k).value);store.set('manual',m)}
+  const V=srcVals(R);SRCF.forEach(k=>$(k).value=V[k]);S.R=R;SRC='real'}
+ else{const m=store.get('manual');if(SRC==='real'&&m)SRCF.forEach(k=>{if(m[k]!=null)$(k).value=m[k]});SRC='man'}
+ segSet('sSrc',SRC);store.set('src',SRC);srcHint();riskPct();schedule();return true}
+function refreshReal(){if(SRC!=='real'){if(typeof S!=='undefined')srcHint();return}const R=realData();if(!R.ok)return;const V=srcVals(R),ch=SRCF.some(k=>$(k).value!==V[k]);S.R=R;if(ch){SRCF.forEach(k=>$(k).value=V[k]);riskPct();schedule()}srcHint()}
+segBind('sSrc',v=>{if(!setSrc(v))$('hSrc').innerHTML='<span class="neg">Aún no hay suficientes trades en el Diario (mínimo 5, con ganadores y perdedores).</span>'});
+SRCF.forEach(k=>$(k).addEventListener('input',()=>{if(SRC==='real'){SRC='man';segSet('sSrc','man');store.set('src','man');const m={};SRCF.forEach(x=>m[x]=$(x).value);store.set('manual',m);srcHint()}}));
+function cmp(t){const R=realData(),C=$('cmpC');if(!R.ok){C.hidden=true;return}C.hidden=false;const p=S.p,m=store.get('manual')||{};
+ const pm=SRC==='man'?p:{...p,wr:(+m.sWR||40)/100,rr:+m.sRR||2,sl:+m.sSL>0?+m.sSL:p.sl,cost:(+m.sCost||0)/100};
+ const V=srcVals(R),pr=SRC==='real'?p:{...p,wr:+V.sWR/100,rr:+V.sRR,sl:+V.sSL>0?+V.sSL:p.sl,cost:0};
+ const cur=sumB(S.B),other=SRC==='man'?pr:pm;$('tCmp').innerHTML='<tr><td class="mut">calculando…</td></tr>';
+ runJobs([{p:other,nsim:10000,seed:14}],()=>t!==tok).then(o=>{if(!o||t!==tok)return;const rm=SRC==='man'?cur:o[0],rr=SRC==='real'?cur:o[0];
+  const row=(l,pp,x,hl)=>`<tr${hl?' class="hl"':''}><td>${l}</td><td>${pct(pp.wr)}</td><td>1:${n1(pp.rr)}</td><td>${isFinite(pp.sl)?pts(pp.sl)+' pts':'–'}</td><td class="${x.med>=0?'pos':'neg'}">${usd(x.med)}</td><td>${pct(x.pos)}</td><td>${n1(x.pass)}</td><td>${n1(x.pays)}</td><td>${usd(x.p10)}</td></tr>`;
+  $('tCmp').innerHTML='<tr><th></th><th>Win rate</th><th>RR</th><th>Stop</th><th>Neto típico</th><th>Positivo</th><th>Aprobadas</th><th>Retiros</th><th>10 % peor</th></tr>'+row('Mis ajustes',pm,rm,SRC==='man')+row(`Mis datos reales (${R.n} trades)`,pr,rr,SRC==='real');
+  const be=1/(1+R.payoff),d=rr.med-rm.med;
+  $('nCmp').className='note '+(rr.med>=0?'ok':'w');
+  $('nCmp').innerHTML=`Si sigues operando como hasta ahora, el plan típico acaba en <b>${usd(rr.med)}</b> (${pct(rr.pos)} de acabar en positivo), frente a <b>${usd(rm.med)}</b> con tus ajustes: ${d>=0?'+':'−'}${usd(Math.abs(d))}. Con tu RR real de 1:${n1(R.payoff)} el punto de equilibrio está en un ${pct(be)} de acierto y tú aciertas el ${pct(R.wr)}. ${R.n<30?`<span class="mut">Con ${R.n} trades el win rate real puede variar ±${Math.round(196*Math.sqrt(R.wr*(1-R.wr)/R.n))} puntos: repásalo cuando tengas 30–50.</span>`:''}`})}
+
 // ================= persistencia y eventos =================
 const SKEYS=['sSL','sPre','sBal','sHi','sNpay','sRE','sRF','sRR','sCost','sWR','sVar','sMT','sPM','sExtra','sThr','sHm','sDpw','sFee','sFix','sTax',...Object.values(RF)];
 function saveStats(){const o={ph:sPh,stopWin:$('sStopWin').checked};SKEYS.forEach(k=>o[k]=$(k).value);store.set('stats',o)}
@@ -671,7 +713,7 @@ function accState(a){const r=jRules(a.size),I=a.init||{},f=a.phase==='f';
 function accStatus(a,st){if(a.status==='cerrada')return'cerrada';if(a.status==='aprobada')return'aprobada';if(a.status==='quemada'||st.burn)return'quemada';if(a.phase==='f'&&st.npay>=st.r.maxP)return'completada';return'activa'}
 const STX={activa:['En curso',''],quemada:['Quemada','bad'],aprobada:['Aprobada','ok'],completada:['5 retiros hechos','ok'],cerrada:['Cerrada','']};
 // ---- guardado ----
-function jSaveLocal(){store.set('journal',{v:1,accs:J.accs})}
+function jSaveLocal(){store.set('journal',{v:1,accs:J.accs});refreshReal()}
 function jPut(a){a.upd=Date.now();J.accs[a.id]=a;jSaveLocal();jRender();
  if(J.col){const id=a.id,body=JSON.parse(JSON.stringify(a));J.pend[id]=(J.pend[id]||Promise.resolve()).then(()=>J.col.doc(id).set(body)).catch(jErr)}}
 function jDel(id){delete J.accs[id];jSaveLocal();jRender();if(J.col){J.pend[id]=(J.pend[id]||Promise.resolve()).then(()=>J.col.doc(id).delete()).catch(jErr)}}
@@ -834,8 +876,9 @@ function jStats(L){const sel=$('jsAcc'),cur=sel.value||'all';
  J.real={wr,payoff,stop:stopRef,n:S0.length};$('jsApply').disabled=!(isFinite(wr)&&isFinite(payoff));
  $('jsApplyH').textContent=isFinite(wr)&&isFinite(payoff)?`WR ${Math.round(wr*100)} %, RR ${n1(payoff)}${isFinite(stopRef)?`, stop ${pts(Math.round(stopRef*4)/4)} pts`:''} (${S0.length} trades)`:''}
 $('jsAcc').addEventListener('change',()=>jRender());segBind('jsPer',v=>{J.per=v;jRender()});
-$('jsApply').addEventListener('click',()=>{const R=J.real;if(!R)return;$('sWR').value=Math.max(25,Math.min(65,Math.round(R.wr*100)));$('sRR').value=Math.round(R.payoff*10)/10;if(isFinite(R.stop))$('sSL').value=Math.round(R.stop*4)/4;riskPct();schedule();
- jMsg(`Aplicado en Estadísticas: win rate ${$('sWR').value} %, RR ${$('sRR').value}${isFinite(R.stop)?`, stop ${$('sSL').value} pts`:''}. Las probabilidades de tus cuentas se recalculan con estos valores.`,'ok');J.probKey={};jRender()});
+$('jsApply').addEventListener('click',()=>{const R=J.real;if(!R)return;const sel=$('jsAcc').value;
+ const RD=realData(a=>sel==='all'||a.id===sel);setSrc('real',RD.ok?RD:null);
+ jMsg(`Aplicado en Estadísticas («Mis datos reales»): win rate ${$('sWR').value} %, RR ${$('sRR').value}, stop ${$('sSL').value} pts, costes 0 (ya incluidos). Puedes volver a tus ajustes con «Mis ajustes».`,'ok');J.probKey={};jRender()});
 function card({a,st,s}){const r=st.r,f=a.phase==='f',sz=SIZE[a.size],risk=sz/100,open=J.open===a.id,[stT,stC]=STX[s],act=s==='activa';
  const cush=Math.max(0,st.cush),stops=Math.floor(cush/risk);
  let t3;if(!act){t3=`<div><span class="l">Estado</span><span class="v">${stT}</span><span class="s">${st.burn?'tocó el suelo el '+fd(st.burn.d):s==='aprobada'?'pasó a fondeada':f?`${st.npay} retiros cobrados`:''}</span></div>`}
@@ -911,6 +954,6 @@ function applyMode(m){document.documentElement.setAttribute('data-mode',m);$('bM
  if(S.done){renderAccounts();renderGL();renderEvo()}}
 $('bMode').addEventListener('click',()=>applyMode(document.documentElement.getAttribute('data-mode')==='light'?'dark':'light'));
 applyMode(store.get('mode')==='light'?'light':'dark');
-loadAll();calc();riskPct();route();jInit();
+loadAll();calc();riskPct();jInit();if(store.get('src')==='real'){const m=store.get('manual');SRC='real';segSet('sSrc','real');if(!realData().ok){SRC='man';segSet('sSrc','man');if(m)SRCF.forEach(k=>{if(m[k]!=null)$(k).value=m[k]})}else refreshReal()}srcHint();route();
 </script>
 </body></html>
