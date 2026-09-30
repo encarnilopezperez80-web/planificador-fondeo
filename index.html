@@ -158,6 +158,10 @@ td .x{background:none;border:0;color:var(--dim);cursor:pointer;font-size:14px;pa
 .tg.c{background:var(--acc)}.tg.a{background:var(--good)}.tg.r{background:var(--violet)}.tg.q{background:var(--bad)}
 @media (max-width:520px){.cal{gap:3px}.cal button,.cal .emp{min-height:52px;padding:3px}.cal .pl{font-size:9.5px;letter-spacing:-.02em;text-overflow:clip}.cal .nt{display:none}.mnav b{min-width:110px}}
 .qa.q4{grid-template-columns:130px 1fr 80px 80px auto}@media (max-width:620px){.qa.q4{grid-template-columns:1fr 1fr}.qa.q4 .btn{grid-column:1/-1}}
+.qa.q6{grid-template-columns:130px minmax(110px,1fr) 80px 70px 80px 90px auto}@media (max-width:760px){.qa.q6{grid-template-columns:1fr 1fr 1fr}.qa.q6 .btn{grid-column:1/-1}}
+.qa select{padding:7px 9px}
+input.sti{width:62px;padding:3px 6px;font-size:12px;text-align:right}
+.st2{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
 footer{font-size:11px;color:var(--dim);border-top:1px solid var(--line);padding-top:12px}
 </style></head><body>
 
@@ -348,6 +352,14 @@ footer{font-size:11px;color:var(--dim);border-top:1px solid var(--line);padding-
     <div class="cal" id="jmGrid"></div>
     <div class="lg"><span><i style="background:var(--good)"></i>día en verde</span><span><i style="background:var(--bad)"></i>día en rojo</span><span><b class="tg c">C</b> compra</span><span><b class="tg a">A</b> aprobada</span><span><b class="tg r">R</b> retiro</span><span><b class="tg q">Q</b> quemada</span></div>
     <div id="jmDay"></div>
+  </div>
+  <div class="card" id="jSt">
+    <div class="sh"><h2>Estadísticas de tus trades</h2>
+      <div style="display:flex;gap:8px;flex-wrap:wrap"><select id="jsAcc" aria-label="Cuenta" style="width:auto"></select><div class="seg" id="jsPer" role="group" aria-label="Periodo"><button type="button" data-v="all" aria-pressed="true">Todo</button><button type="button" data-v="m" aria-pressed="false">Mes del calendario</button></div></div></div>
+    <div class="kp" id="jsKpi"></div>
+    <div id="jsNote" class="note"></div>
+    <div class="st2"><div class="tw"><table id="jsT1"></table></div><div class="tw"><table id="jsT2"></table></div></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"><button type="button" class="btn" id="jsApply">Usar mi win rate, RR y stop reales en Estadísticas</button><span class="hint" id="jsApplyH"></span></div>
   </div>
   <p class="hint">Probabilidades: 10.000 simulaciones por cuenta desde su estado actual, con el win rate, RR, trades/día y costes de la página Estadísticas, y el riesgo del 1 % de la cuenta (o el de Estadísticas si es la misma cuenta). Reglas LucidFlex de cada tamaño.</p>
  </div>
@@ -681,7 +693,7 @@ function jClean(a){if(!a||typeof a!=='object'||!PRESET[a.size])return null;const
  const dt=d=>/^\d{4}-\d\d-\d\d$/.test(d||'')?d:today(),N=v=>{const x=+v;return isFinite(x)?x:0},I=a.init||{};
  return{id,name:String(a.name||'').slice(0,60),size:a.size,phase:a.phase==='f'?'f':'e',price:N(a.price),date:dt(a.date),status:['aprobada','quemada','cerrada'].includes(a.status)?a.status:'',parent:a.parent?String(a.parent).slice(0,40):'',
   init:{bal:N(I.bal),hi:N(I.hi),mx:N(I.mx),np:N(I.np),q:N(I.q)},
-  trades:(Array.isArray(a.trades)?a.trades:[]).slice(0,3000).map(t=>{const o={id:String(t.id||uid_()).slice(0,40),d:dt(t.d),pl:N(t.pl),note:String(t.note||'').slice(0,120),n:N(t.n)};if(t.pts!=null&&isFinite(+t.pts))o.pts=+t.pts;if(+t.mes>0)o.mes=+t.mes|0;return o}),sDate:/^\d{4}-\d\d-\d\d$/.test(a.sDate||'')?a.sDate:'',
+  trades:(Array.isArray(a.trades)?a.trades:[]).slice(0,3000).map(t=>{const o={id:String(t.id||uid_()).slice(0,40),d:dt(t.d),pl:N(t.pl),note:String(t.note||'').slice(0,120),n:N(t.n)};if(t.pts!=null&&isFinite(+t.pts))o.pts=+t.pts;if(+t.mes>0)o.mes=+t.mes|0;if(+t.stop>0)o.stop=+t.stop;if(t.dir==='L'||t.dir==='S')o.dir=t.dir;if(/^\d\d:\d\d$/.test(t.h||''))o.h=t.h;return o}),sDate:/^\d{4}-\d\d-\d\d$/.test(a.sDate||'')?a.sDate:'',
   pays:(Array.isArray(a.pays)?a.pays:[]).slice(0,20).map(p=>({id:String(p.id||uid_()).slice(0,40),d:dt(p.d),amt:N(p.amt),n:N(p.n)})),upd:N(a.upd)}}
 $('jExp').addEventListener('click',()=>{const L=Object.values(J.accs);if(!L.length){jMsg('Todavía no hay cuentas que exportar.','w');return}
  jDownload(`diario-fondeo-${today()}.json`,JSON.stringify({app:'planificador-lucidflex',v:1,exported:new Date().toISOString(),accounts:L},null,1),'application/json')});
@@ -720,7 +732,7 @@ function prTxt(a,r,p){if(!r)return'Calculando probabilidades con 10.000 simulaci
  :`Probabilidad (${rk}, retiro a ${usd(p.thr)}): <b>cobra el próximo retiro ${pct(r.pPay)}</b> · se quema antes ${pct(1-r.pPay)}. Si cobra, hacia ${ses(r.payMed)} desde hoy. Te llegarían ${usd(r.cob)} de media en total de esta cuenta.`}
 // ---- render ----
 function jRender(force){if($('vJour').hidden&&!force)return;
- const A=Object.values(J.accs),L=A.map(a=>{const st=accState(a);return{a,st,s:accStatus(a,st)}});
+ const A=Object.values(J.accs),L=A.map(a=>{const st=accState(a);return{a,st,s:accStatus(a,st)}});J.estStop={};L.forEach(x=>J.estStop[x.a.id]=estStop(x.a.trades||[]));
  $('jStore').textContent=J.cloud?'Guardado en tu cuenta de Claude · se sincroniza entre tus dispositivos':'Guardado solo en este navegador · exporta copias de seguridad';
  const inv=A.reduce((s,a)=>s+(+a.price||0),0),cob=L.reduce((s,x)=>s+x.st.paid,0),net=cob-inv,nPay=L.reduce((s,x)=>s+(x.a.pays||[]).length,0);
  const E=L.filter(x=>x.a.phase==='e'),F=L.filter(x=>x.a.phase==='f'),cnt=(X,s)=>X.filter(x=>x.s===s).length;
@@ -735,7 +747,7 @@ function jRender(force){if($('vJour').hidden&&!force)return;
  const V=L.filter(x=>J.fil==='all'||(J.fil==='act'?x.s==='activa':x.s!=='activa')).sort((x,y)=>(ord[x.s]-ord[y.s])||((y.a.date||'').localeCompare(x.a.date||''))||((y.a.upd||0)-(x.a.upd||0)));
  $('jList').innerHTML=V.length?V.map(card).join(''):`<div class="note">${A.length?'No hay cuentas con este filtro.':'Aún no has apuntado ninguna cuenta. Pulsa «+ Nueva cuenta» y añade la que tienes ahora (si ya está empezada, pon su beneficio actual y su máximo cierre).'}</div>`;
  if(J.focus){const el=document.querySelector(`[data-id="${J.focus}"] input[name=pl]`);if(el)el.focus();J.focus=null}
- jCal(L);jProbs(L.filter(x=>x.s==='activa'))}
+ jCal(L);jStats(L);jProbs(L.filter(x=>x.s==='activa'))}
 // ---- diario del mes ----
 const MESES=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
 const usdk=v=>{const a=Math.abs(v);return(v<0?'−':'+')+(a>=10000?'$'+Math.round(a/1000)+'k':a>=1000?'$'+(Math.round(a/100)/10).toLocaleString('es-ES')+'k':'$'+Math.round(a))};
@@ -769,6 +781,59 @@ function jCal(L){if(!J.month)J.month=today().slice(0,7);if(!J.day)J.day=today();
 $('jmGrid').addEventListener('click',e=>{const b=e.target.closest('[data-day]');if(!b)return;J.day=b.dataset.day;jRender()});
 const shiftM=n=>{const [Y,M]=(J.month||today().slice(0,7)).split('-').map(Number),d=new Date(Y,M-1+n,1);J.month=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');J.day=J.month+'-01';jRender()};
 $('jmPrev').addEventListener('click',()=>shiftM(-1));$('jmNext').addEventListener('click',()=>shiftM(1));$('jmNow').addEventListener('click',()=>{J.month=today().slice(0,7);J.day=today();jRender()});
+
+// ---- estadísticas de trades ----
+function estStop(trs){const v=trs.filter(t=>t.pl<0&&t.pts!=null&&Math.abs(t.pts)>=2).map(t=>Math.abs(t.pts)).sort((a,b)=>a-b);if(!v.length)return null;const m=v.length>>1;return v.length%2?v[m]:(v[m-1]+v[m])/2}
+function tradeR(t,est){const st=t.stop>0?t.stop:est;if(!(st>0))return null;const mes=t.mes>0?t.mes:null;let r;
+ if(mes)r=t.pl/(st*mes*5);else if(t.pts!=null)r=t.pts/st;else return null;return{r,est:!(t.stop>0),risk:mes?st*mes*5:null}}
+function jStats(L){const sel=$('jsAcc'),cur=sel.value||'all';
+ sel.innerHTML='<option value="all">Todas las cuentas</option>'+L.map(x=>`<option value="${x.a.id}">${esc(x.a.name||x.a.size)}</option>`).join('');sel.value=L.some(x=>x.a.id===cur)?cur:'all';
+ J.estStop={};L.forEach(x=>J.estStop[x.a.id]=estStop(x.a.trades||[]));
+ let T=[];L.filter(x=>sel.value==='all'||x.a.id===sel.value).forEach(x=>(x.a.trades||[]).forEach(t=>T.push({...t,acc:x.a,est:J.estStop[x.a.id]})));
+ if(J.per==='m')T=T.filter(t=>t.d.slice(0,7)===J.month);
+ T.sort((x,y)=>x.d<y.d?-1:x.d>y.d?1:(x.n||0)-(y.n||0));
+ if(!T.length){$('jsKpi').innerHTML='';$('jsT1').innerHTML='';$('jsT2').innerHTML='';$('jsNote').className='note';$('jsNote').textContent='Todavía no hay trades en esta selección.';$('jsApply').disabled=true;return}
+ const scr=t=>t.pts!=null?Math.abs(t.pts)<=0.5:Math.abs(t.pl)<3*(t.mes||1);
+ const S0=T.filter(t=>!scr(t)),W=S0.filter(t=>t.pl>0),Lo=S0.filter(t=>t.pl<0),sum=a=>a.reduce((s,t)=>s+t.pl,0);
+ const net=sum(T),aw=W.length?sum(W)/W.length:NaN,al=Lo.length?sum(Lo)/Lo.length:NaN,wr=S0.length?W.length/S0.length:NaN,payoff=aw/Math.abs(al),pf=sum(W)/Math.abs(sum(Lo)||NaN);
+ const Rs=T.map(t=>({t,R:tradeR(t,t.est)})).filter(x=>x.R),Rw=Rs.filter(x=>x.t.pl>0&&!scr(x.t)),Rl=Rs.filter(x=>x.t.pl<0&&!scr(x.t)),mR=a=>a.length?a.reduce((s,x)=>s+x.R.r,0)/a.length:NaN;
+ const avg=a=>a.length?a.reduce((x,y)=>x+y,0)/a.length:NaN;const estUsed=Rs.some(x=>x.R.est),realStops=T.filter(t=>t.stop>0).map(t=>t.stop),stopAvg=realStops.length?realStops.reduce((a,b)=>a+b,0)/realStops.length:NaN;
+ const est=estStop(T),effS=T.map(t=>t.stop>0?t.stop:t.est).filter(v=>v>0),stopRef=effS.length?avg(effS):NaN;
+ const pw=W.filter(t=>t.pts!=null).map(t=>t.pts),pl_=Lo.filter(t=>t.pts!=null).map(t=>Math.abs(t.pts));
+ const mesA=avg(T.filter(t=>t.mes>0).map(t=>t.mes)),riskA=avg(Rs.map(x=>x.R.risk).filter(v=>v>0));
+ const full=Lo.filter(t=>t.pts!=null&&stopRef>0&&Math.abs(t.pts)>=0.8*stopRef).length,cut=Lo.filter(t=>t.pts!=null&&stopRef>0&&Math.abs(t.pts)<0.8*stopRef).length;
+ let cw=0,cl=0,mw=0,ml=0,eq=0,pk=0,dd=0;for(const t of T){if(scr(t))continue;if(t.pl>0){cw++;cl=0}else{cl++;cw=0}mw=Math.max(mw,cw);ml=Math.max(ml,cl)}
+ for(const t of T){eq+=t.pl;pk=Math.max(pk,eq);dd=Math.min(dd,eq-pk)}
+ const days={};T.forEach(t=>{(days[t.d]=days[t.d]||[]).push(t)});const dv=Object.values(days),dp=dv.map(a=>sum(a));
+ const expR=mR(Rs.filter(x=>!scr(x.t))),expU=S0.length?sum(S0)/S0.length:NaN;
+ $('jsKpi').innerHTML=K('Win rate',pct(wr),`${W.length} ganadores · ${Lo.length} perdedores${T.length-S0.length?` · ${T.length-S0.length} a cero`:''}`,'big')+
+  K('RR real medio',isFinite(payoff)?`1 : ${n1(payoff)}`:'–',`ganancia media ${usd(aw)} · pérdida media ${usd(al)}`,'big')+
+  K('Esperanza por trade',`<span class="${expU>=0?'pos':'neg'}">${usd(expU)}</span>`,isFinite(expR)?`${expR>=0?'+':'−'}${n1(Math.abs(expR))}R por trade si arriesgas siempre lo mismo${estUsed?' (stop estimado)':''}`:'pon el stop para verlo en R','big')+
+  K('Resultado neto',`<span class="${net>=0?'pos':'neg'}">${usd(net)}</span>`,`${T.length} trades · ${dv.length} días`)+
+  K('Profit factor',isFinite(pf)?(Math.round(pf*100)/100).toLocaleString('es-ES'):'–',pf>=1?'ganas más de lo que pierdes':'pierdes más de lo que ganas')+
+  K('Stop medio',isFinite(stopRef)?`${pts(Math.round(stopRef*100)/100)} pts`:'–',realStops.length?`real en ${realStops.length} de ${T.length} trades${realStops.length<T.length?', el resto estimado':''}`:est?'estimado con tus pérdidas':'sin datos');
+ const needWR=isFinite(payoff)?1/(1+payoff):NaN;
+ $('jsNote').className='note '+(expU>=0?'ok':'w');
+ $('jsNote').innerHTML=`Con un RR real de <b>1 : ${n1(payoff)}</b> necesitas acertar más del <b>${pct(needWR)}</b> para ganar dinero; ahora aciertas el <b>${pct(wr)}</b>${isFinite(wr)&&isFinite(needWR)?(wr>needWR?' → estás por encima del punto de equilibrio.':' → estás por debajo del punto de equilibrio: o subes el acierto o dejas correr más los ganadores.'):'.'} ${isFinite(stopRef)&&pw.length?`Tus ganadores recorren de media ${pts(Math.round(avg(pw)*100)/100)} pts (${n1(avg(pw)/stopRef)}R) y tus perdedores ${pts(Math.round(avg(pl_)*100)/100)} pts (${n1(avg(pl_)/stopRef)}R)${estUsed?'; el stop se ha estimado como la mediana de tus pérdidas (≥ 2 pts): pon el real en el detalle de cada trade para afinarlo':''}.`:''} ${T.length<30?`<span class="mut">Con ${T.length} trades la muestra es pequeña: el win rate real puede estar ±${Math.round(100*1.96*Math.sqrt(Math.max(.01,wr*(1-wr))/Math.max(1,S0.length)))} puntos arriba o abajo.</span>`:''}`;
+ const row=(l,v)=>`<tr><td>${l}</td><td>${v}</td></tr>`;
+ $('jsT1').innerHTML='<tr><th>Tus trades</th><th>Valor</th></tr>'+row('Ganancia media / pérdida media',`${usd(aw)} / ${usd(al)}`)+row('R medio ganado / perdido',`${isFinite(mR(Rw))?'+'+n1(mR(Rw))+'R':'–'} / ${isFinite(mR(Rl))?'−'+n1(Math.abs(mR(Rl)))+'R':'–'}`)+
+  row('Puntos medios ganadores / perdedores',`${pw.length?'+'+pts(Math.round(avg(pw)*100)/100):'–'} / ${pl_.length?'−'+pts(Math.round(avg(pl_)*100)/100):'–'} pts`)+
+  row('Pérdidas con stop completo / cortadas antes',isFinite(stopRef)?`${full} / ${cut}`:'–')+row('MES medios · riesgo medio',`${isFinite(mesA)?n1(mesA):'–'} MES · ${usd(riskA)}`)+
+  row('Mejor / peor trade',`${usd(Math.max(...T.map(t=>t.pl)))} / ${usd(Math.min(...T.map(t=>t.pl)))}`)+row('Racha máx. ganadores / perdedores',`${mw} / ${ml}`)+row('Máxima caída desde un pico',usd(dd));
+ const grp=(f)=>{const g={};T.forEach(t=>{const k=f(t);if(k==null)return;(g[k]=g[k]||[]).push(t)});return g};
+ const line=(l,a)=>{const s0=a.filter(t=>!scr(t)),w=s0.filter(t=>t.pl>0).length;return`<tr><td>${l}</td><td>${a.length}</td><td>${s0.length?pct(w/s0.length):'–'}</td><td class="${sum(a)>=0?'pos':'neg'}">${usd(sum(a))}</td></tr>`};
+ const byN={};dv.forEach(a=>a.forEach((t,i)=>{const k=Math.min(i,2);(byN[k]=byN[k]||[]).push(t)}));
+ const byD=grp(t=>t.dir||null);
+ let h2='<tr><th>Por grupo</th><th>Trades</th><th>Win rate</th><th>Neto</th></tr>';
+ [['1.er trade del día',0],['2.º trade del día',1],['3.º o más',2]].forEach(([l,k])=>{if(byN[k])h2+=line(l,byN[k])});
+ if(byD.L)h2+=line('Largos',byD.L);if(byD.S)h2+=line('Cortos',byD.S);
+ h2+=`<tr><td>Días en verde / rojo</td><td colspan="3">${dp.filter(v=>v>0).length} / ${dp.filter(v=>v<0).length} · media ${n1(T.length/dv.length)} trades/día · mejor día ${usd(Math.max(...dp))} · peor ${usd(Math.min(...dp))}</td></tr>`;
+ $('jsT2').innerHTML=h2;
+ J.real={wr,payoff,stop:stopRef,n:S0.length};$('jsApply').disabled=!(isFinite(wr)&&isFinite(payoff));
+ $('jsApplyH').textContent=isFinite(wr)&&isFinite(payoff)?`WR ${Math.round(wr*100)} %, RR ${n1(payoff)}${isFinite(stopRef)?`, stop ${pts(Math.round(stopRef*4)/4)} pts`:''} (${S0.length} trades)`:''}
+$('jsAcc').addEventListener('change',()=>jRender());segBind('jsPer',v=>{J.per=v;jRender()});
+$('jsApply').addEventListener('click',()=>{const R=J.real;if(!R)return;$('sWR').value=Math.max(25,Math.min(65,Math.round(R.wr*100)));$('sRR').value=Math.round(R.payoff*10)/10;if(isFinite(R.stop))$('sSL').value=Math.round(R.stop*4)/4;riskPct();schedule();
+ jMsg(`Aplicado en Estadísticas: win rate ${$('sWR').value} %, RR ${$('sRR').value}${isFinite(R.stop)?`, stop ${$('sSL').value} pts`:''}. Las probabilidades de tus cuentas se recalculan con estos valores.`,'ok');J.probKey={};jRender()});
 function card({a,st,s}){const r=st.r,f=a.phase==='f',sz=SIZE[a.size],risk=sz/100,open=J.open===a.id,[stT,stC]=STX[s],act=s==='activa';
  const cush=Math.max(0,st.cush),stops=Math.floor(cush/risk);
  let t3;if(!act){t3=`<div><span class="l">Estado</span><span class="v">${stT}</span><span class="s">${st.burn?'tocó el suelo el '+fd(st.burn.d):s==='aprobada'?'pasó a fondeada':f?`${st.npay} retiros cobrados`:''}</span></div>`}
@@ -785,8 +850,8 @@ function card({a,st,s}){const r=st.r,f=a.phase==='f',sz=SIZE[a.size],risk=sz/100
  if(f&&act)h+=`<div style="display:flex;align-items:center;gap:10px;font-size:11.5px;color:var(--mut)"><span class="dots">${Array.from({length:r.qn},(_,i)=>`<i class="${i<st.q?'on':''}"></i>`).join('')}</span>días de ≥ ${usd(r.qd)} desde el último retiro · retiros ${st.npay}/${r.maxP}</div>`;
  const pp=act?jParams(a,st):null,pk=pp&&JSON.stringify(pp);
  if(act)h+=`<div class="pr" id="pr-${a.id}">${pp?prTxt(a,J.probKey[a.id]===pk?J.probs[a.id]:null,pp):'Revisa los parámetros de Estadísticas para calcular las probabilidades.'}</div>
-  <div class="qa q4"><label class="f">Fecha<input type="date" name="d" value="${J.lastD&&J.lastD[a.id]||today()}"></label><label class="f">Resultado ($, con signo)<input name="pl" type="text" inputmode="decimal" placeholder="−250  ó  500" autocomplete="off"></label><label class="f">Puntos<input name="pts" type="text" inputmode="decimal" placeholder="−10 / 20" autocomplete="off"></label><label class="f">MES<input name="mes" type="text" inputmode="numeric" placeholder="5" autocomplete="off"></label><button type="button" class="btn pri" data-act="add">Añadir trade</button></div>
-  <p class="hint" style="margin-top:-4px">Pon el resultado en $, o los puntos (con signo) y los MES y lo calculo (1 MES = $5/punto).</p>`;
+  <div class="qa q6"><label class="f">Fecha<input type="date" name="d" value="${J.lastD&&J.lastD[a.id]||today()}"></label><label class="f">Resultado ($, con signo)<input name="pl" type="text" inputmode="decimal" placeholder="−250  ó  500" autocomplete="off"></label><label class="f">Puntos<input name="pts" type="text" inputmode="decimal" placeholder="−10 / 20" autocomplete="off"></label><label class="f">MES<input name="mes" type="text" inputmode="numeric" placeholder="5" autocomplete="off"></label><label class="f">Stop (pts)<input name="stop" type="text" inputmode="decimal" placeholder="10" value="${J.lastStop&&J.lastStop[a.id]||''}" autocomplete="off"></label><label class="f">Lado<select name="dir"><option value="">–</option><option value="L">Largo</option><option value="S">Corto</option></select></label><button type="button" class="btn pri" data-act="add">Añadir trade</button></div>
+  <p class="hint" style="margin-top:-4px">Pon el resultado en $, o los puntos (con signo) y los MES y lo calculo (1 MES = $5/punto). El stop en puntos sirve para medir tu R real; si no lo pones, lo estimo con tus pérdidas.</p>`;
  else if(st.burn)h+=`<div class="note b" style="font-size:12px">Tocó el suelo el ${fd(st.burn.d)}.</div>`;
  h+=`<div class="acts"><button type="button" class="btn sm" data-act="toggle">${open?'Ocultar detalle':'Detalle y trades'}</button>`;
  if(act&&!f)h+=`<button type="button" class="btn sm${st.passReady?' pri':''}" data-act="appr">Marcar aprobada → crear fondeada</button>`;
@@ -797,11 +862,11 @@ function card({a,st,s}){const r=st.r,f=a.phase==='f',sz=SIZE[a.size],risk=sz/100
  return h+'</div>'}
 function detail(a,st,s){const r=st.r,f=a.phase==='f',I=a.init||{};
  let rows='';const hasI=(+I.bal||0)!==0||(+I.hi||0)!==0||(+I.np||0)>0;
- if(hasI)rows+=`<tr><td>—</td><td>Estado inicial</td><td></td><td>${usd(+I.bal||0)}</td><td></td><td class="mut">máx. cierre ${usd(+I.hi||0)}${f?` · ${+I.np||0} retiros previos`:''}</td><td></td></tr>`;
- st.rows.forEach(x=>{if(x.t)rows+=`<tr><td>${fd(x.t.d)}</td><td>Trade${x.t.pts!=null?` <span class="mut">${x.t.pts>0?'+':''}${pts(x.t.pts)} pts${x.t.mes?' · '+x.t.mes+' MES':''}</span>`:x.t.mes?` <span class="mut">${x.t.mes} MES</span>`:''}</td><td class="${x.t.pl>=0?'pos':'neg'}">${x.t.pl>=0?'+':''}${usd2(x.t.pl)}</td><td>${usd(x.bal)}</td><td>${usd(x.fl)}</td><td class="mut" style="white-space:normal;max-width:220px">${esc(x.t.note)}</td><td><button type="button" class="x" data-act="deltr" data-tid="${esc(x.t.id)}" aria-label="Borrar trade">✕</button></td></tr>`;
-  else rows+=`<tr><td>${fd(x.p.d)}</td><td>Retiro</td><td class="neg">−${usd(x.p.amt)}</td><td>${usd(x.bal)}</td><td>${usd(x.fl)}</td><td class="mut">te llegan ${usd(x.p.amt*r.split)}</td><td><button type="button" class="x" data-act="delpay" data-tid="${esc(x.p.id)}" aria-label="Borrar retiro">✕</button></td></tr>`});
+ if(hasI)rows+=`<tr><td>—</td><td>Estado inicial</td><td></td><td></td><td></td><td>${usd(+I.bal||0)}</td><td></td><td class="mut">máx. cierre ${usd(+I.hi||0)}${f?` · ${+I.np||0} retiros previos`:''}</td><td></td></tr>`;
+ st.rows.forEach(x=>{if(x.t)rows+=`<tr><td>${fd(x.t.d)}</td><td>Trade${x.t.pts!=null?` <span class="mut">${x.t.pts>0?'+':''}${pts(x.t.pts)} pts${x.t.mes?' · '+x.t.mes+' MES':''}</span>`:x.t.mes?` <span class="mut">${x.t.mes} MES</span>`:''}</td><td class="${x.t.pl>=0?'pos':'neg'}">${x.t.pl>=0?'+':''}${usd2(x.t.pl)}</td><td><input class="sti" data-tid="${esc(x.t.id)}" type="text" inputmode="decimal" value="${x.t.stop||''}" placeholder="${J.estStop&&J.estStop[a.id]?pts(J.estStop[a.id])+'?':'–'}" aria-label="Stop en puntos"></td><td>${(()=>{const R=tradeR(x.t,J.estStop&&J.estStop[a.id]);return R==null?'–':`<span class="${R.r>=0?'pos':'neg'}">${R.r>=0?'+':''}${n1(R.r).replace(/^-/,'−')}R</span>${R.est?'<span class="mut">*</span>':''}`})()}</td><td>${usd(x.bal)}</td><td>${usd(x.fl)}</td><td class="mut" style="white-space:normal;max-width:220px">${esc(x.t.note)}</td><td><button type="button" class="x" data-act="deltr" data-tid="${esc(x.t.id)}" aria-label="Borrar trade">✕</button></td></tr>`;
+  else rows+=`<tr><td>${fd(x.p.d)}</td><td>Retiro</td><td class="neg">−${usd(x.p.amt)}</td><td></td><td></td><td>${usd(x.bal)}</td><td>${usd(x.fl)}</td><td class="mut">te llegan ${usd(x.p.amt*r.split)}</td><td><button type="button" class="x" data-act="delpay" data-tid="${esc(x.p.id)}" aria-label="Borrar retiro">✕</button></td></tr>`});
  let h=`<div class="jd"><div class="small mut">${st.ndays} días operados · ${!f?`mejor día ${usd(st.best)}${st.bal>0?` = ${pct(st.best/st.bal)} del beneficio (máx. ${pct(r.cons)})`:''}`:`días válidos (≥ ${usd(r.qd)}) desde el último retiro: ${st.q} de ${r.qn}`} · el suelo se recalcula al cierre de cada día</div>
-  <div class="tw"><table><tr><th>Fecha</th><th>Tipo</th><th>Importe</th><th>Saldo</th><th>Suelo</th><th>Nota</th><th></th></tr>${rows||'<tr><td colspan="7" class="mut">Sin movimientos todavía.</td></tr>'}</table></div>`;
+  <div class="tw"><table><tr><th>Fecha</th><th>Tipo</th><th>Importe</th><th>Stop (pts)</th><th>R</th><th>Saldo</th><th>Suelo</th><th>Nota</th><th></th></tr>${rows||'<tr><td colspan="9" class="mut">Sin movimientos todavía.</td></tr>'}</table></div>`;
  if(f&&s==='activa')h+=`<div><h3 style="margin-bottom:8px">Registrar retiro</h3><div class="qa"><label class="f">Fecha<input type="date" name="pd" value="${today()}"></label><label class="f">Importe pedido ($)<input name="pamt" type="text" inputmode="decimal" value="${st.payAmt>=r.min?Math.round(st.payAmt):''}"></label><button type="button" class="btn" data-act="pay">Registrar retiro</button></div>
   <p class="hint" style="margin-top:6px">${st.payReady?`Puedes pedir hasta ${usd(st.payAmt)} (${pct(r.pct)} del beneficio, máx. ${usd(r.cap)}); te llega el ${pct(r.split)}.`:`Todavía no cumples las condiciones: ${r.qn} días de ≥ ${usd(r.qd)}, beneficio ≥ ${usd(st.payMin)} y por encima del último retiro.`}</p></div>`;
  h+=`<div><h3 style="margin-bottom:8px">Nota para el próximo trade que añadas</h3><input name="note" type="text" maxlength="120" placeholder="opcional: setup, contexto, error…" value="${esc(J.note&&J.note[a.id]||'')}"></div>
@@ -812,6 +877,7 @@ function detail(a,st,s){const r=st.r,f=a.phase==='f',I=a.init||{};
   </div><div class="acts" style="margin-top:8px"><button type="button" class="btn sm" data-act="save">Guardar cambios</button>
   ${J.confirmDel===a.id?`<span class="small" style="align-self:center">¿Borrar la cuenta y todos sus trades?</span><button type="button" class="btn sm dng" data-act="delyes">Sí, borrar</button><button type="button" class="btn sm" data-act="delno">No</button>`:`<button type="button" class="btn sm dng" data-act="del">Borrar cuenta</button>`}</div></details></div>`;
  return h}
+$('jList').addEventListener('change',e=>{if(!e.target.classList.contains('sti'))return;const c=e.target.closest('[data-id]'),a0=J.accs[c.dataset.id];if(!a0)return;const a=JSON.parse(JSON.stringify(a0)),t=(a.trades||[]).find(x=>x.id===e.target.dataset.tid);if(!t)return;const v=pnum(e.target.value),nv=v>0?v:undefined;if(nv===t.stop)return;if(nv)t.stop=nv;else delete t.stop;setTimeout(()=>jPut(a),0)});
 $('jList').addEventListener('input',e=>{if(e.target.name==='note'){const c=e.target.closest('[data-id]');J.note=J.note||{};J.note[c.dataset.id]=e.target.value}});
 $('jList').addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.name==='pl'){e.preventDefault();e.target.closest('[data-id]').querySelector('[data-act=add]').click()}});
 $('jList').addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(!b)return;const c=b.closest('[data-id]'),id=c&&c.dataset.id,a0=J.accs[id];if(!a0)return;
@@ -820,7 +886,7 @@ $('jList').addEventListener('click',e=>{const b=e.target.closest('[data-act]');i
  if(act==='add'){let pl=pnum(q('pl').value);const pts=pnum(q('pts').value),mes=pnum(q('mes').value);if((!isFinite(pl)||pl===0)&&isFinite(pts)&&mes>0)pl=Math.round(pts*mes*5*100)/100;
   if(!isFinite(pl)||pl===0){jMsg('Escribe el resultado del trade en dólares con signo (−250 si perdiste, 500 si ganaste), o los puntos con signo y los MES.','w');q('pl').focus();return}
   const d=q('d').value||today();J.lastD=J.lastD||{};J.lastD[id]=d;
-  a.trades=a.trades||[];const tr={id:uid_(),d,pl,note:(J.note&&J.note[id]||'').slice(0,120),n:Date.now()};if(isFinite(pts))tr.pts=pts;if(mes>0)tr.mes=Math.round(mes);a.trades.push(tr);if(J.note)J.note[id]='';J.focus=id;jPut(a);
+  a.trades=a.trades||[];const tr={id:uid_(),d,pl,note:(J.note&&J.note[id]||'').slice(0,120),n:Date.now()};if(isFinite(pts))tr.pts=pts;if(mes>0)tr.mes=Math.round(mes);const stp=pnum(q('stop').value);if(stp>0){tr.stop=stp;J.lastStop=J.lastStop||{};J.lastStop[id]=q('stop').value}const dr=q('dir').value;if(dr)tr.dir=dr;a.trades.push(tr);if(J.note)J.note[id]='';J.focus=id;jPut(a);
   const st=accState(a);if(st.burn&&!before.burn)jMsg(`«${a.name}» ha tocado el suelo (${usd(st.fl)}): queda como quemada. Si fue un error, borra el trade en el detalle.`,'b');
   else if(st.passReady&&!before.passReady)jMsg(`«${a.name}» ha cumplido el objetivo y la consistencia: márcala como aprobada para crear la fondeada.`,'ok');
   else if(st.payReady&&!before.payReady)jMsg(`«${a.name}» ya puede pedir retiro: ${usd(st.payAmt)} (te llegan ${usd(st.payAmt*st.r.split)}).`,'ok');return}
