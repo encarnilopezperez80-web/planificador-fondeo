@@ -1,4 +1,4 @@
-<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="robots" content="noindex"><title>Planificador LucidFlex</title>
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="robots" content="noindex"><title>Planificador de fondeo</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
 <style>
@@ -169,7 +169,7 @@ footer{font-size:11px;color:var(--dim);border-top:1px solid var(--line);padding-
 
 <div class="wrap">
 <div class="topbar">
-  <div class="brand">Planificador LucidFlex <span>· ES / MES</span></div>
+  <div class="brand">Planificador de fondeo <span>· ES / MES</span></div>
   <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><button type="button" class="modeb" id="bMode" aria-pressed="false">Modo día</button><nav class="tabs" aria-label="Páginas"><a href="#calc" id="tCalc" aria-current="page">Calculadora</a><a href="#stats" id="tStats">Estadísticas</a><a href="#diario" id="tJour">Diario de cuentas</a></nav></div>
 </div>
 
@@ -178,6 +178,7 @@ footer{font-size:11px;color:var(--dim);border-top:1px solid var(--line);padding-
  <div class="calc">
   <div class="card">
     <label class="f" for="cSL">Stop (puntos)<input id="cSL" class="bigin" type="text" inputmode="decimal" value="10" autocomplete="off"></label>
+    <label class="f" for="cFirm">Empresa<select id="cFirm"></select></label>
     <div class="seg" id="cAcc" role="group" aria-label="Cuenta"><button type="button" data-v="25K" aria-pressed="true">25K</button><button type="button" data-v="50K" aria-pressed="false">50K</button><button type="button" data-v="100K" aria-pressed="false">100K</button><button type="button" data-v="150K" aria-pressed="false">150K</button></div>
     <div class="seg" id="cPh" role="group" aria-label="Fase"><button type="button" data-v="e" aria-pressed="true">Evaluación</button><button type="button" data-v="f" aria-pressed="false">Fondeada</button></div>
     <div class="two">
@@ -189,7 +190,7 @@ footer{font-size:11px;color:var(--dim);border-top:1px solid var(--line);padding-
       <label class="f" for="cRound">Redondeo<select id="cRound"><option value="floor" selected>Hacia abajo</option><option value="round">Al más cercano</option></select></label>
     </div>
     <label class="f" for="cBal" id="lcBal" hidden>Beneficio actual de la fondeada ($) · decide el tope del escalado<input id="cBal" type="text" inputmode="decimal" value="0"></label>
-    <p class="hint">1 MES = $5 por punto. Todo se calcula solo en MES y nunca pasa del máximo de contratos de la cuenta (evaluación: 20 / 40 / 60 / 100 MES; fondeada: según el escalado de LucidFlex). «Hacia abajo» nunca supera el riesgo que pones.</p>
+    <p class="hint">1 MES = $5 por punto. Todo se calcula solo en MES y nunca pasa del máximo de contratos de la cuenta según la empresa elegida (en fondeada, según su escalado). «Hacia abajo» nunca supera el riesgo que pones.</p>
   </div>
   <div style="display:flex;flex-direction:column;gap:18px;min-width:0">
     <div class="hero" aria-live="polite">
@@ -211,7 +212,7 @@ footer{font-size:11px;color:var(--dim);border-top:1px solid var(--line);padding-
  <div class="stats">
   <aside aria-label="Parámetros">
     <details class="g" open><summary>Cuenta</summary><div class="gb">
-      <label class="f" for="sPre">Cuenta y reglas<select id="sPre"><option value="25K" selected>LucidFlex 25K</option><option value="50K">LucidFlex 50K</option><option value="100K">LucidFlex 100K</option><option value="150K">LucidFlex 150K</option><option value="custom">Personalizada</option></select></label>
+      <label class="f" for="sPre">Cuenta y reglas<select id="sPre"></select></label>
       <div class="seg" id="sPh" role="group" aria-label="Tu cuenta actual"><button type="button" data-v="e" aria-pressed="true">En evaluación</button><button type="button" data-v="f" aria-pressed="false">Fondeada</button></div>
       <div class="two">
         <label class="f" for="sBal">Beneficio actual ($)<input id="sBal" type="text" inputmode="decimal" value="0"></label>
@@ -253,7 +254,9 @@ footer{font-size:11px;color:var(--dim);border-top:1px solid var(--line);padding-
       <div class="two"><label class="f" for="rMaxE">Máx. MES evaluación<input id="rMaxE" type="text" inputmode="numeric"></label><label class="f" for="rMaxF">Fondeadas máx. a la vez<input id="rMaxF" type="text" inputmode="numeric"></label></div>
       <label class="f" for="rScale">Escalado fondeada (beneficio:MES)<input id="rScale" type="text" autocomplete="off"></label>
       <label class="f" for="rDll">Pérdida diaria máx. ($, 0 = sin límite)<input id="rDll" type="text" inputmode="decimal"></label>
-      <p class="hint">LucidFlex a sept. 2026 (Help Center de Lucid). Escalado «0:10, 1000:20» = hasta $999 de beneficio 10 MES, desde $1.000 20 MES. Si cambias una regla, la cuenta pasa a «Personalizada».</p>
+      <div class="two"><label class="f" for="rElock">Bloqueo en evaluación (+$, vacío = nunca)<input id="rElock" type="text" inputmode="decimal"></label><label class="f" for="rPmin">Beneficio mín. para retirar ($)<input id="rPmin" type="text" inputmode="decimal"></label></div>
+      <label class="f" for="rFcons">Consistencia en fondeada (%, 0 = sin regla)<input id="rFcons" type="text" inputmode="decimal"></label>
+      <p class="hint"><span id="hPre"></span>. Escalado «0:10, 1000:20» = hasta $999 de beneficio 10 MES, desde $1.000 20 MES. Si cambias una regla, la cuenta pasa a «Personalizada».</p>
     </div></details>
     <details class="g"><summary>Plan y costes</summary><div class="gb">
       <div class="two">
@@ -343,11 +346,14 @@ footer{font-size:11px;color:var(--dim);border-top:1px solid var(--line);padding-
   <div class="card" id="jNew" hidden>
     <div class="sh"><h2>Nueva cuenta</h2><span class="tag">si ya la tienes empezada, pon cómo está hoy</span></div>
     <div class="jform">
+      <label class="f" for="jnFirm">Empresa y plan<select id="jnFirm"></select></label>
       <div class="seg" id="jnSize" role="group" aria-label="Tamaño"><button type="button" data-v="25K" aria-pressed="true">25K</button><button type="button" data-v="50K" aria-pressed="false">50K</button><button type="button" data-v="100K" aria-pressed="false">100K</button><button type="button" data-v="150K" aria-pressed="false">150K</button></div>
       <div class="seg" id="jnPh" role="group" aria-label="Fase"><button type="button" data-v="e" aria-pressed="true">Evaluación</button><button type="button" data-v="f" aria-pressed="false">Fondeada</button></div>
       <label class="f" for="jnName">Nombre (opcional)<input id="jnName" type="text" autocomplete="off" placeholder="p. ej. 25K #3"></label>
       <label class="f" for="jnPrice">Precio pagado ($)<input id="jnPrice" type="text" inputmode="decimal" value="89"></label>
       <label class="f" for="jnDate">Fecha de compra<input id="jnDate" type="date"></label>
+      <label class="f" for="jnTarget" id="jlTarget">Objetivo para aprobar ($)<input id="jnTarget" type="text" inputmode="decimal" value="1250"></label>
+      <label class="f" for="jnMll">Drawdown ($)<input id="jnMll" type="text" inputmode="decimal" value="1000"></label>
       <label class="f" for="jnBal">Beneficio actual ($)<input id="jnBal" type="text" inputmode="decimal" value="0"></label>
       <label class="f" for="jnHi">Máximo cierre alcanzado ($)<input id="jnHi" type="text" inputmode="decimal" value="0"></label>
       <label class="f" for="jnMx" id="jlMx">Mejor día hasta ahora ($)<input id="jnMx" type="text" inputmode="decimal" value="0"></label>
@@ -373,10 +379,10 @@ footer{font-size:11px;color:var(--dim);border-top:1px solid var(--line);padding-
     <div class="st2"><div class="tw"><table id="jsT1"></table></div><div class="tw"><table id="jsT2"></table></div></div>
     <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"><button type="button" class="btn" id="jsApply">Usar mi win rate, RR y stop reales en Estadísticas</button><span class="hint" id="jsApplyH"></span></div>
   </div>
-  <p class="hint">Probabilidades: 10.000 simulaciones por cuenta desde su estado actual, con el win rate, RR, trades/día y costes de la página Estadísticas, y el riesgo del 1 % de la cuenta (o el de Estadísticas si es la misma cuenta). Reglas LucidFlex de cada tamaño.</p>
+  <p class="hint">Probabilidades: 10.000 simulaciones por cuenta desde su estado actual, con el win rate, RR, trades/día y costes de la página Estadísticas, y el riesgo del 1 % de la cuenta (o el de Estadísticas si es la misma cuenta). Reglas de la empresa, plan y tamaño de cada cuenta.</p>
  </div>
 </section>
-<footer>Modelo: trades independientes con probabilidad de TP antes que SL igual al win rate (oscilando cada mes), máximo de trades al día y parada tras el primer ganador. Drawdown EOD que se bloquea en el suelo indicado; al retirar, el suelo salta a ese nivel. Consistencia solo en evaluación. El riesgo nunca supera el máximo de MES de la cuenta con el stop habitual (evaluación sin escalado; fondeada según el escalado, que se actualiza al cierre de cada sesión y baja al retirar). Plan: siempre 1 evaluación en marcha si queda crédito, más las fondeadas conseguidas, todas con los mismos trades; los cobros no se reinvierten. Reglas LucidFlex a sept. 2026 (verifícalas en el Help Center de Lucid). No es asesoramiento financiero.</footer>
+<footer>Modelo: trades independientes con probabilidad de TP antes que SL igual al win rate (oscilando cada mes), máximo de trades al día y parada tras el primer ganador. Drawdown EOD que se bloquea en el suelo indicado; al retirar, el suelo salta a ese nivel. Consistencia solo en evaluación. El riesgo nunca supera el máximo de MES de la cuenta con el stop habitual (evaluación sin escalado; fondeada según el escalado, que se actualiza al cierre de cada sesión y baja al retirar). Plan: siempre 1 evaluación en marcha si queda crédito, más las fondeadas conseguidas, todas con los mismos trades; los cobros no se reinvierten. Reglas de cada empresa según su Help Center (LucidFlex sept. 2026, Tradeify oct. 2026): verifícalas antes de operar. No es asesoramiento financiero.</footer>
 </div>
 
 <script>
@@ -385,8 +391,22 @@ const PRESET={
  '50K':{target:3000,mll:2000,lock:100,cons:50,dll:0,pct:50,cap:2000,min:500,split:90,qn:5,qd:150,maxP:5,maxF:5,fee:149,thr:3000,rE:500,rF:500,maxE:40,scale:'0:20, 1000:30, 2000:40'},
  '100K':{target:6000,mll:3000,lock:100,cons:50,dll:0,pct:50,cap:2500,min:500,split:90,qn:5,qd:200,maxP:5,maxF:5,fee:307,thr:5000,rE:1000,rF:1000,maxE:60,scale:'0:30, 1000:40, 2000:50, 3000:60'},
  '150K':{target:9000,mll:4500,lock:100,cons:50,dll:0,pct:50,cap:3000,min:500,split:90,qn:5,qd:250,maxP:5,maxF:5,fee:407,thr:6000,rE:1500,rF:1500,maxE:100,scale:'0:40, 1000:50, 2000:60, 3000:80, 4500:100'}};
+Object.values(PRESET).forEach(x=>{x.elock=100;x.pmin=0;x.fcons=0;x.mdays=0});
+const TG=(t,m,dll,cap,qd,fee,mx,pmin)=>({target:t,mll:m,lock:100,elock:Infinity,cons:0,dll,pct:50,cap,min:250,split:90,qn:5,qd,maxP:10,maxF:5,fee,thr:pmin,rE:t/6,rF:t/6,maxE:mx,scale:'0:'+mx,pmin,fcons:35,mdays:1});
+const TS=(t,m,cap,qd,fee,mx,sc,thr)=>({target:t,mll:m,lock:100,elock:100,cons:40,dll:0,pct:50,cap,min:250,split:90,qn:5,qd,maxP:10,maxF:5,fee,thr,rE:t/6,rF:t/6,maxE:mx,scale:sc,pmin:0,fcons:0,mdays:3});
+const FIRMS={
+ lucid:{name:'Lucid · LucidFlex',short:'LucidFlex',src:'Lucid, LucidFlex (Help Center, sept. 2026)',sizes:PRESET},
+ tfyg:{name:'Tradeify · Growth',short:'Tradeify Growth',src:'Tradeify Growth (Help Center, oct. 2026). Drawdown EOD que no se bloquea en evaluación; pérdida diaria «soft»; retiro con 35 % de consistencia y beneficio mínimo. El % de retiro (50 %) y el mínimo ($250) son estimados: compruébalos',
+  sizes:{'25K':TG(1500,1000,600,1000,100,99,10,1500),'50K':TG(3000,2000,1250,1500,150,145,40,3000),'100K':TG(6000,3500,2500,2000,200,255,80,4500),'150K':TG(9000,5000,3750,2500,250,369,120,6500)}},
+ tfys:{name:'Tradeify · Select Flex',short:'Tradeify Select',src:'Tradeify Select con fondeada Flex (Help Center, oct. 2026). Consistencia 40 % y mínimo 3 días en evaluación; retiro 50 % del beneficio cada 5 días ganadores. Escalado de contratos y mínimo de retiro estimados: compruébalos',
+  sizes:{'25K':TS(1500,1000,1250,100,109,10,'0:10, 1000:20',1500),'50K':TS(3000,2000,3000,150,165,40,'0:20, 1000:30, 2000:40',3000),'100K':TS(6000,3000,4000,200,265,80,'0:30, 1500:50, 3000:80',4000),'150K':TS(9000,4500,5000,250,369,120,'0:30, 2000:60, 4500:120',5000)}},
+ custom:{name:'Otra empresa (reglas a mano)',short:'Otra',src:'Reglas a mano: parten de LucidFlex; ajústalas a tu empresa',sizes:Object.fromEntries(Object.entries(PRESET).map(([k,v])=>[k,{...v}]))}};
+const PR=(f,s)=>((FIRMS[f]||FIRMS.lucid).sizes[s])||PRESET[s]||PRESET['25K'];
+const FN=f=>(FIRMS[f]||FIRMS.lucid);
+const sizeOf=v=>String(v||'').split('|')[1]||(SIZEK.includes(v)?v:null),firmOf=v=>String(v||'').includes('|')?v.split('|')[0]:'lucid';
+const SIZEK=['25K','50K','100K','150K'];
 const SIZE={'25K':25000,'50K':50000,'100K':100000,'150K':150000};
-const RF={target:'rTarget',mll:'rMll',lock:'rLock',cons:'rCons',dll:'rDll',pct:'rPct',cap:'rCap',min:'rMin',split:'rSplit',qn:'rQn',qd:'rQd',maxP:'rMaxP',maxF:'rMaxF',maxE:'rMaxE',scale:'rScale'};
+const RF={target:'rTarget',mll:'rMll',lock:'rLock',elock:'rElock',pmin:'rPmin',fcons:'rFcons',cons:'rCons',dll:'rDll',pct:'rPct',cap:'rCap',min:'rMin',split:'rSplit',qn:'rQn',qd:'rQd',maxP:'rMaxP',maxF:'rMaxF',maxE:'rMaxE',scale:'rScale'};
 function parseScale(t){const out=[];String(t||'').split(/[;,\n]+/).forEach(x=>{const m=x.split(':');if(m.length===2){const a=parseFloat(m[0].replace(/[^0-9.\-]/g,'')),b=parseFloat(m[1].replace(/[^0-9.]/g,''));if(isFinite(a)&&b>0)out.push([a,b])}});return out.sort((x,y)=>x[0]-y[0])}
 function tierMax(tiers,bal){if(!tiers||!tiers.length)return Infinity;let n=tiers[0][1];for(const t of tiers)if(bal>=t[0])n=t[1];return n}
 const $=id=>document.getElementById(id);
@@ -409,9 +429,9 @@ addEventListener('hashchange',route);
 
 // ================= CALCULADORA =================
 let cAcc='25K',cPh='e',lastEdit='pct';
-function cMll(){return PRESET[cAcc].mll}
-function cMax(){const X=PRESET[cAcc];return cPh==='e'?X.maxE:tierMax(parseScale(X.scale),num('cBal')||0)}
-function capTxt(){return cPh==='e'?`máximo en evaluación ${cAcc}`:`máximo de la fondeada ${cAcc} con ${usd(num('cBal')||0)} de beneficio`}
+let cFirm='lucid';function cMll(){return PR(cFirm,cAcc).mll}
+function cMax(){const X=PR(cFirm,cAcc);return cPh==='e'?X.maxE:tierMax(parseScale(X.scale),num('cBal')||0)}
+function capTxt(){return cPh==='e'?`máximo en evaluación ${FN(cFirm).short} ${cAcc}`:`máximo de la fondeada ${FN(cFirm).short} ${cAcc} con ${usd(num('cBal')||0)} de beneficio`}
 function calc(){const sl=num('cSL'),rr=num('cRR')||2,mll=cMll(),size=SIZE[cAcc];let risk=num('cRisk');
  if(lastEdit==='pct'){const p=num('cPct');risk=isFinite(p)?p/100*size:NaN;$('cRisk').value=isFinite(risk)?+risk.toFixed(2):''}
  else{$('cPct').value=isFinite(risk)?+(risk/size*100).toFixed(2):''}
@@ -432,7 +452,7 @@ function calc(){const sl=num('cSL'),rr=num('cRR')||2,mll=cMll(),size=SIZE[cAcc];
  else if(ddp>0.25){nt.className='note w';nt.textContent=`Arriesgas el ${pct(ddp)} del drawdown por trade. Aguantas ${Math.floor((mll-1)/real)} stops seguidos desde el inicio.`}
  else{nt.className='note ok';nt.textContent=`Aguantas ${Math.floor((mll-1)/real)} stops seguidos desde el inicio. ${mode==='floor'&&real<risk?`Te sobran ${usd2(risk-real)} por el redondeo.`:''}`}
  table(risk,rr,mll,size,mode,sl);
- store.set('calc',{sl:$('cSL').value,risk:$('cRisk').value,rr:$('cRR').value,acc:cAcc,ph:cPh,mode,bal:$('cBal').value})}
+ store.set('calc',{firm:cFirm,sl:$('cSL').value,risk:$('cRisk').value,rr:$('cRR').value,acc:cAcc,ph:cPh,mode,bal:$('cBal').value})}
 function table(risk,rr,mll,size,mode,cur){const rows=[4,5,6,7,8,9,10,11,12,13,14,15,16,18,20,22,25];
  let h='<tr><th>Stop</th><th>Contratos</th><th>Riesgo real</th><th>% drawdown</th><th>% cuenta</th><th>TP</th><th>Si toca TP</th></tr>';
  if(!(risk>0)){$('oTable').innerHTML=h;return}
@@ -442,6 +462,7 @@ function table(risk,rr,mll,size,mode,cur){const rows=[4,5,6,7,8,9,10,11,12,13,14
   h+=`<tr${Math.abs(s-cur)<0.01?' class="hl"':''}><td class="big">${s} pts</td><td class="big">${n} MES${nr>mx?'<span class="tp">tope</span>':''}</td><td>${usd2(real)}</td><td>${pct(d)}<span class="bar" style="width:${Math.round(Math.min(1,d)*60)}px;background:${col}"></span></td><td>${pct(real/size)}</td><td>${pts(s*rr)} pts</td><td class="pos">+${usd2(real*rr)}</td></tr>`}
  $('oTable').innerHTML=h}
 segBind('cAcc',v=>{cAcc=v;lastEdit='pct';calc()});
+$('cFirm').innerHTML=Object.entries(FIRMS).filter(([f])=>f!=='custom').map(([f,F])=>`<option value="${f}">${F.name}</option>`).join('');$('cFirm').addEventListener('change',()=>{cFirm=$('cFirm').value;calc()});
 $('cBal').addEventListener('input',calc);
 segBind('cPh',v=>{cPh=v;calc()});
 $('cRisk').addEventListener('input',()=>{lastEdit='risk';calc()});
@@ -450,8 +471,8 @@ $('cPct').addEventListener('input',()=>{lastEdit='pct';calc()});
 
 // ================= ESTADÍSTICAS: parámetros =================
 let sPh='e';
-function loadPreset(k){const X=PRESET[k];if(!X)return;for(const f in RF)$(RF[f]).value=X[f];$('sThr').value=X.thr;$('sFee').value=X.fee;$('sRE').value=X.rE;$('sRF').value=X.rF}
-function rules(){const r={};for(const f in RF)if(f!=='scale')r[f]=num(RF[f]);r.tiers=parseScale($('rScale').value);if(!(r.maxE>0))r.maxE=Infinity;for(const k of ['lock','dll','min','qn','qd'])if(!isFinite(r[k]))r[k]=0;
+function loadPreset(k){const s0=sizeOf(k);if(!s0)return;const X=PR(firmOf(k),s0);for(const f in RF)$(RF[f]).value=X[f]===Infinity?'':X[f];$('hPre').textContent=FN(firmOf(k)).src;$('sThr').value=X.thr;$('sFee').value=X.fee;$('sRE').value=SIZE[s0]/100;$('sRF').value=SIZE[s0]/100}
+function rules(){const r={};for(const f in RF)if(f!=='scale')r[f]=num(RF[f]);if(!isFinite(r.elock))r.elock=Infinity;r.pmin=r.pmin>0?r.pmin:0;r.fcons=(r.fcons>0?r.fcons:0)/100;r.tiers=parseScale($('rScale').value);if(!(r.maxE>0))r.maxE=Infinity;for(const k of ['lock','dll','min','qn','qd'])if(!isFinite(r[k]))r[k]=0;
  if(!isFinite(r.cap))r.cap=1e9;if(!(r.maxP>=1))r.maxP=5;if(!(r.maxF>=1))r.maxF=5;r.cons=(r.cons||0)/100;r.pct=(isFinite(r.pct)?r.pct:50)/100;r.split=(isFinite(r.split)?r.split:90)/100;return r}
 function P(){const r=rules(),dpw=+$('sDpw').value,L=Math.round(dpw*4.2),months=+$('sHm').value;
  return{r,rE:num('sRE'),rF:num('sRF'),rr:num('sRR'),sl:num('sSL')>0?num('sSL'):Infinity,cost:(num('sCost')||0)/100,wr:+$('sWR').value/100,vr:+$('sVar').value/100,mt:+$('sMT').value,stopWin:$('sStopWin').checked,
@@ -473,7 +494,7 @@ function sim(p,o){const r=p.r,rnd=mulberry32(o.seed||20260927),N=o.nsim,H=o.H||p
   let st;if(o.start==='freshF')st={ph:1,bal:0,hi:0,mx:0,q:0,cyc:0,lk:false,npy:0,paid:false};
   else if(o.start==='freshE')st={ph:0,bal:0,hi:0,mx:0,q:0,cyc:0,lk:false,npy:0,paid:false};
   else st={ph:p.ph==='e'?0:1,bal:p.bal,hi:p.hi,mx:p.mx||0,q:p.q||0,cyc:p.cyc||0,lk:p.ph==='f'&&p.npay>0,npy:p.ph==='f'?p.npay:0,paid:p.ph==='f'&&p.npay>0};
-  st.fl=st.lk?r.lock:Math.min(st.hi-r.mll,r.lock);st.act=st.npy<r.maxP;st.orig=true;sl[0]=st;
+  st.fl=st.lk?r.lock:Math.min(st.hi-r.mll,st.ph===0?(r.elock??r.lock):r.lock);st.act=st.npy<r.maxP;st.orig=true;sl[0]=st;
   let bank=o.plan?p.extra:0,nf=0,cob=0,gr=0,npays=0,pass=0,evB=0,fB=0,fPaid=0,fDone=0,wr=p.wr,minC=0,fix=0;
   const mNet=o.plan?new Float64Array(months):null;const pd=[];
   for(let d=1;d<=H;d++){const m=Math.ceil(d/L)-1;
@@ -490,11 +511,11 @@ function sim(p,o){const r=p.r,rnd=mulberry32(o.seed||20260927),N=o.nsim,H=o.H||p
       if(r.dll>0&&x.day<=-r.dll)x.alive=false}
      if(!traded)break;if(win&&p.stopWin)break}
     for(const x of sl){if(!x.act)continue;
-     if(x.ph===0){if(x.day>x.mx)x.mx=x.day;if(x.bal>x.hi){x.hi=x.bal;x.fl=Math.min(x.hi-r.mll,r.lock)}}
-     else{if(x.day>=r.qd&&x.day>0)x.q++;if(!x.lk&&x.bal>x.hi){x.hi=x.bal;x.fl=Math.min(x.hi-r.mll,r.lock)}
-      if(x.q>=r.qn&&x.bal>x.cyc&&x.bal>=p.thr){const amt=Math.min(r.pct*x.bal,r.cap);
+     if(x.ph===0){if(x.day>x.mx)x.mx=x.day;if(x.bal>x.hi){x.hi=x.bal;x.fl=Math.min(x.hi-r.mll,r.elock??r.lock)}}
+     else{if(x.day>=r.qd&&x.day>0)x.q++;if(x.day>(x.cb||0))x.cb=x.day;if(!x.lk&&x.bal>x.hi){x.hi=x.bal;x.fl=Math.min(x.hi-r.mll,r.lock)}
+      if(x.q>=r.qn&&x.bal>x.cyc&&x.bal>=Math.max(p.thr,r.pmin||0)&&!(r.fcons>0&&(x.cb||0)>r.fcons*(x.bal-x.cyc))){const amt=Math.min(r.pct*x.bal,r.cap);
        if(amt>=r.min&&amt>0){x.bal-=amt;gr+=amt;cob+=r.split*amt;npays++;if(o.plan)res.mStat[m*6+3]++;if(!x.paid){x.paid=true;fPaid++}if(isNaN(res.pay1[s]))res.pay1[s]=d;if(x.orig)pd.push(d);
-        x.fl=r.lock;x.lk=true;x.q=0;x.cyc=x.bal;x.npy++;if(x.npy>=r.maxP){x.act=false;fDone++}}}}}}
+        x.fl=r.lock;x.lk=true;x.q=0;x.cb=0;x.cyc=x.bal;x.npy++;if(x.npy>=r.maxP){x.act=false;fDone++}}}}}}
    if(o.plan){const cash=cob*(1-p.tax)-nf*p.fee-fix;if(cash<minC)minC=cash;if(d%L===0||d===H){mNet[m]=cash;let fa=0;for(const x of sl)if(x.act&&x.ph===1)fa++;res.mStat[m*6+5]+=fa}}
    if(!o.plan&&!sl[0].act)break}
   let fa=0;for(const x of sl)if(x.act&&x.ph===1)fa++;
@@ -541,7 +562,7 @@ function funnel(el,title,rows){el.innerHTML=`<h3>${title}</h3>`+rows.map(r=>`<di
 let tok=0,S={done:false},rT=null;
 function schedule(){clearTimeout(rT);tok++;rT=setTimeout(runStats,200)}
 function setProg(f){$('prog').style.width=Math.round(f*100)+'%'}
-function riskPct(){const r=rules(),mll=r.mll,sz=SIZE[$('sPre').value];const e=num('sRE'),f=num('sRF'),ac=v=>sz?`${pct(v/sz)} de la cuenta · `:'';$('pRE').textContent=isFinite(e)&&mll?`${ac(e)}${pct(e/mll)} del drawdown`:'';$('pRF').textContent=isFinite(f)&&mll?`${ac(f)}${pct(f/mll)} del drawdown`:'';
+function riskPct(){const r=rules(),mll=r.mll,sz=SIZE[sizeOf($('sPre').value)];const e=num('sRE'),f=num('sRF'),ac=v=>sz?`${pct(v/sz)} de la cuenta · `:'';$('pRE').textContent=isFinite(e)&&mll?`${ac(e)}${pct(e/mll)} del drawdown`:'';$('pRF').textContent=isFinite(f)&&mll?`${ac(f)}${pct(f/mll)} del drawdown`:'';
  const sl=num('sSL');if(sl>0&&mll){const per=sl*5,ti=r.tiers;
   const fr=ti.map((x,i)=>`${x[1]} MES${i<ti.length-1?` (hasta ${usd(ti[i+1][0]-1)})`:ti.length>1?` (desde ${usd(x[0])})`:''}`).join(' · ');
   const ne=Math.floor(num('sRE')/per+1e-9),nf=Math.floor(num('sRF')/per+1e-9);
@@ -677,9 +698,10 @@ function cmp(t){const R=realData(),C=$('cmpC');if(!R.ok){C.hidden=true;return}C.
 // ================= persistencia y eventos =================
 const SKEYS=['sSL','sPre','sBal','sHi','sNpay','sRE','sRF','sRR','sCost','sWR','sVar','sMT','sPM','sExtra','sThr','sHm','sDpw','sFee','sFix','sTax',...Object.values(RF)];
 function saveStats(){const o={ph:sPh,stopWin:$('sStopWin').checked};SKEYS.forEach(k=>o[k]=$(k).value);store.set('stats',o)}
-function loadAll(){const c=store.get('calc');if(c){$('cSL').value=c.sl;$('cRR').value=c.rr;$('cRound').value=c.mode||'floor';cAcc=c.acc||'25K';cPh=c.ph||'e';if(c.bal!=null)$('cBal').value=c.bal;segSet('cAcc',cAcc);segSet('cPh',cPh)}
- loadPreset('25K');const s=store.get('stats');if(s){SKEYS.forEach(k=>{if(s[k]!=null)$(k).value=s[k]});sPh=s.ph||'e';segSet('sPh',sPh);$('sStopWin').checked=s.stopWin!==false}
- const sz=SIZE[$('sPre').value];if(sz){$('sRE').value=sz/100;$('sRF').value=sz/100}}
+function loadAll(){const c=store.get('calc');if(c){$('cSL').value=c.sl;$('cRR').value=c.rr;$('cRound').value=c.mode||'floor';cAcc=c.acc||'25K';cPh=c.ph||'e';if(FIRMS[c.firm])cFirm=c.firm;if(c.bal!=null)$('cBal').value=c.bal;segSet('cAcc',cAcc);segSet('cPh',cPh)}
+ $('sPre').innerHTML=Object.entries(FIRMS).filter(([f])=>f!=='custom').map(([f,F])=>`<optgroup label="${F.name}">${SIZEK.map(z=>`<option value="${f}|${z}">${F.short} ${z}</option>`).join('')}</optgroup>`).join('')+'<option value="custom">Personalizada (reglas a mano)</option>';$('sPre').value='lucid|25K';
+ loadPreset('lucid|25K');const s=store.get('stats');if(s){if(s.sPre&&!String(s.sPre).includes('|')&&s.sPre!=='custom')s.sPre='lucid|'+s.sPre;SKEYS.forEach(k=>{if(s[k]!=null)$(k).value=s[k]});if(!$('sPre').value)$('sPre').value='lucid|25K';sPh=s.ph||'e';segSet('sPh',sPh);$('sStopWin').checked=s.stopWin!==false}
+ const sz=SIZE[sizeOf($('sPre').value)];if(sz){$('sRE').value=sz/100;$('sRF').value=sz/100}if($('sPre').value!=='custom')$('hPre').textContent=FN(firmOf($('sPre').value)).src}
 segBind('sPh',v=>{sPh=v;schedule()});
 $('sPre').addEventListener('change',()=>{if($('sPre').value!=='custom')loadPreset($('sPre').value);schedule()});
 Object.values(RF).forEach(id=>$(id).addEventListener('input',()=>{$('sPre').value='custom'}));
@@ -692,24 +714,24 @@ const uid_=()=>'a'+Date.now().toString(36)+Math.random().toString(36).slice(2,7)
 const esc=t=>String(t??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fd=d=>{const m=/^(\d{4})-(\d\d)-(\d\d)$/.exec(d||'');return m?`${m[3]}/${m[2]}/${m[1].slice(2)}`:'–'};
 const pnum=v=>{const x=parseFloat(String(v??'').replace(/\s/g,'').replace('−','-').replace(',','.'));return isFinite(x)?x:NaN};
-function jRules(size){const X=PRESET[size];return{target:X.target,mll:X.mll,lock:X.lock,cons:X.cons/100,dll:0,pct:X.pct/100,cap:X.cap,min:X.min,split:X.split/100,qn:X.qn,qd:X.qd,maxP:X.maxP,maxF:X.maxF,maxE:X.maxE,tiers:parseScale(X.scale)}}
-function accState(a){const r=jRules(a.size),I=a.init||{},f=a.phase==='f';
+function jRules(a){const X=PR(a.firm,a.size),o=a.rules||{};const g=(k,d)=>isFinite(+o[k])&&o[k]!==''&&o[k]!=null?+o[k]:d;return{target:g('target',X.target),mll:g('mll',X.mll),lock:g('lock',X.lock),elock:X.elock===Infinity?Infinity:g('lock',X.elock),cons:g('cons',X.cons)/100,dll:X.dll||0,pct:g('pct',X.pct)/100,cap:g('cap',X.cap),min:g('min',X.min),split:g('split',X.split)/100,qn:g('qn',X.qn),qd:g('qd',X.qd),pmin:g('pmin',X.pmin||0),fcons:g('fcons',X.fcons||0)/100,mdays:g('mdays',X.mdays||0),maxP:X.maxP,maxF:X.maxF,maxE:X.maxE,tiers:parseScale(X.scale)}}
+function accState(a){const r=jRules(a),I=a.init||{},f=a.phase==='f';
  let bal=+I.bal||0,hi=Math.max(+I.hi||0,bal,0),best=Math.max(0,+I.mx||0),npay=Math.max(0,+I.np|0),q=f?Math.max(0,+I.q|0):0,lk=f&&npay>0,cyc=lk?bal:0;
- let fl=lk?r.lock:Math.min(hi-r.mll,r.lock),burn=null,paid=0,gross=0,ndays=0,ntr=0;
+ let fl=lk?r.lock:Math.min(hi-r.mll,f?r.lock:r.elock),cb=0,burn=null,paid=0,gross=0,ndays=0,ntr=0;
  const ev=[];(a.trades||[]).forEach(t=>ev.push({d:t.d,k:0,n:t.n||0,t}));(a.pays||[]).forEach(p=>ev.push({d:p.d,k:1,n:p.n||0,p}));
  ev.sort((x,y)=>x.d<y.d?-1:x.d>y.d?1:(x.k-y.k)||(x.n-y.n));
  const rows=[];let cur=null,day=0;
  const close=()=>{if(cur===null)return;ndays++;
-  if(!f){if(day>best)best=day;if(bal>hi){hi=bal;fl=Math.min(hi-r.mll,r.lock)}}
-  else{if(day>=r.qd&&day>0)q++;if(!lk&&bal>hi){hi=bal;fl=Math.min(hi-r.mll,r.lock)}}
+  if(!f){if(day>best)best=day;if(bal>hi){hi=bal;fl=Math.min(hi-r.mll,r.elock)}}
+  else{if(day>=r.qd&&day>0)q++;if(day>cb)cb=day;if(!lk&&bal>hi){hi=bal;fl=Math.min(hi-r.mll,r.lock)}}
   cur=null;day=0};
  for(const e of ev){
   if(e.k===0){if(e.d!==cur){close();cur=e.d}const pl=+e.t.pl||0;bal+=pl;day+=pl;ntr++;rows.push({t:e.t,bal,fl});if(!burn&&bal<=fl)burn={d:e.d}}
-  else{close();const amt=+e.p.amt||0;bal-=amt;gross+=amt;paid+=amt*r.split;npay++;lk=true;fl=r.lock;q=0;cyc=bal;rows.push({p:e.p,bal,fl})}}
+  else{close();const amt=+e.p.amt||0;bal-=amt;gross+=amt;paid+=amt*r.split;npay++;lk=true;fl=r.lock;q=0;cb=0;cyc=bal;rows.push({p:e.p,bal,fl})}}
  close();
- const need=Math.max(r.target,best/r.cons),passReady=!f&&!burn&&bal>=r.target&&best<=r.cons*bal;
- const payMin=r.min/r.pct,payReady=f&&!burn&&q>=r.qn&&bal>=payMin&&bal>cyc,payAmt=Math.min(r.pct*Math.max(bal,0),r.cap);
- return{r,bal,hi,fl,cush:bal-fl,burn,best,q,npay,lk,cyc,paid,gross,rows,ndays,ntr,need,passReady,payMin,payReady,payAmt,tier:tierMax(r.tiers,bal)}}
+ const need=Math.max(r.target,r.cons>0?best/r.cons:0),daysOk=ndays>=(r.mdays||0),passReady=!f&&!burn&&bal>=r.target&&(r.cons<=0||best<=r.cons*bal)&&daysOk;
+ const payMin=Math.max(r.min/r.pct,r.pmin||0),fconsOk=!(r.fcons>0)||cb<=r.fcons*(bal-cyc),payReady=f&&!burn&&q>=r.qn&&bal>=payMin&&bal>cyc&&fconsOk,payAmt=Math.min(r.pct*Math.max(bal,0),r.cap);
+ return{r,bal,hi,fl,cush:bal-fl,burn,best,q,npay,lk,cyc,cb,fconsOk,daysOk,paid,gross,rows,ndays,ntr,need,passReady,payMin,payReady,payAmt,tier:tierMax(r.tiers,bal)}}
 function accStatus(a,st){if(a.status==='cerrada')return'cerrada';if(a.status==='aprobada')return'aprobada';if(a.status==='quemada'||st.burn)return'quemada';if(a.phase==='f'&&st.npay>=st.r.maxP)return'completada';return'activa'}
 const STX={activa:['En curso',''],quemada:['Quemada','bad'],aprobada:['Aprobada','ok'],completada:['5 retiros hechos','ok'],cerrada:['Cerrada','']};
 // ---- guardado ----
@@ -733,10 +755,11 @@ async function jInit(){const o=store.get('journal');if(o&&o.accs&&typeof o.accs=
 async function jDownload(name,data,mime){let dl=null;try{if(window.claude&&typeof window.claude.use==='function')dl=await window.claude.use('downloads')}catch(e){}
  if(dl){try{await dl.save({filename:name,data});jMsg('Archivo guardado: '+name,'ok')}catch(e){if(!e||e.code!=='declined')jMsg(`No se ha podido guardar el archivo (${e&&e.code||'error'}).`,'b')}return}
  const url=URL.createObjectURL(new Blob([data],{type:mime}));const a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),3000)}
-function jClean(a){if(!a||typeof a!=='object'||!PRESET[a.size])return null;const id=String(a.id||uid_()).replace(/[^A-Za-z0-9_-]/g,'').slice(0,40)||uid_();
+function cleanRules(o){if(!o||typeof o!=='object')return undefined;const r={};['target','mll','cons','lock','pct','cap','min','pmin','qn','qd','fcons','mdays','split'].forEach(k=>{const v=+o[k];if(o[k]!==''&&o[k]!=null&&isFinite(v)&&v>=0)r[k]=v});return Object.keys(r).length?r:undefined}
+function jClean(a){if(!a||typeof a!=='object'||!SIZE[a.size])return null;const id=String(a.id||uid_()).replace(/[^A-Za-z0-9_-]/g,'').slice(0,40)||uid_();
  const dt=d=>/^\d{4}-\d\d-\d\d$/.test(d||'')?d:today(),N=v=>{const x=+v;return isFinite(x)?x:0},I=a.init||{};
- return{id,name:String(a.name||'').slice(0,60),size:a.size,phase:a.phase==='f'?'f':'e',price:N(a.price),date:dt(a.date),status:['aprobada','quemada','cerrada'].includes(a.status)?a.status:'',parent:a.parent?String(a.parent).slice(0,40):'',
-  init:{bal:N(I.bal),hi:N(I.hi),mx:N(I.mx),np:N(I.np),q:N(I.q)},
+ return{id,firm:FIRMS[a.firm]?a.firm:'lucid',name:String(a.name||'').slice(0,60),size:a.size,phase:a.phase==='f'?'f':'e',price:N(a.price),date:dt(a.date),status:['aprobada','quemada','cerrada'].includes(a.status)?a.status:'',parent:a.parent?String(a.parent).slice(0,40):'',
+  init:{bal:N(I.bal),hi:N(I.hi),mx:N(I.mx),np:N(I.np),q:N(I.q)},rules:cleanRules(a.rules),
   trades:(Array.isArray(a.trades)?a.trades:[]).slice(0,3000).map(t=>{const o={id:String(t.id||uid_()).slice(0,40),d:dt(t.d),pl:N(t.pl),note:String(t.note||'').slice(0,120),n:N(t.n)};if(t.pts!=null&&isFinite(+t.pts))o.pts=+t.pts;if(+t.mes>0)o.mes=+t.mes|0;if(+t.stop>0)o.stop=+t.stop;if(t.dir==='L'||t.dir==='S')o.dir=t.dir;if(/^\d\d:\d\d$/.test(t.h||''))o.h=t.h;return o}),sDate:/^\d{4}-\d\d-\d\d$/.test(a.sDate||'')?a.sDate:'',
   pays:(Array.isArray(a.pays)?a.pays:[]).slice(0,20).map(p=>({id:String(p.id||uid_()).slice(0,40),d:dt(p.d),amt:N(p.amt),n:N(p.n)})),upd:N(a.upd)}}
 $('jExp').addEventListener('click',()=>{const L=Object.values(J.accs);if(!L.length){jMsg('Todavía no hay cuentas que exportar.','w');return}
@@ -752,19 +775,21 @@ $('jImp').addEventListener('change',async e=>{const f=e.target.files&&e.target.f
   for(const a of L){const b=jClean(a);if(b){jPut(b);n++}}jMsg(n?`Importadas ${n} cuentas. Las que ya tenías con el mismo identificador se han actualizado con la copia.`:'La copia no tenía cuentas válidas.',n?'ok':'w')}
  catch(err){jMsg('Ese archivo no es una copia válida del diario (.json exportado desde aquí).','b')}});
 // ---- nueva cuenta ----
-function jnFields(){const f=J.nph==='f';$('jlMx').hidden=f;$('jlNp').hidden=!f;$('jlQ').hidden=!f;$('jnPrice').value=f?0:PRESET[J.nsize].fee}
+function jnFields(){const f=J.nph==='f',X=PR(J.nfirm,J.nsize);$('jlTarget').hidden=f;$('jnTarget').value=X.target;$('jnMll').value=X.mll;$('jlMx').hidden=f;$('jlNp').hidden=!f;$('jlQ').hidden=!f;$('jnPrice').value=f?0:X.fee}
+J.nfirm='lucid';$('jnFirm').innerHTML=Object.entries(FIRMS).map(([k,F])=>`<option value="${k}"${k==='lucid'?' selected':''}>${F.name}</option>`).join('');$('jnFirm').addEventListener('change',()=>{J.nfirm=$('jnFirm').value;jnFields()});
 segBind('jnSize',v=>{J.nsize=v;jnFields()});segBind('jnPh',v=>{J.nph=v;jnFields()});
 $('jNewB').addEventListener('click',()=>{const n=$('jNew');n.hidden=!n.hidden;if(!n.hidden){$('jnDate').value=today();jnFields();$('jnName').focus()}});
 $('jnCancel').addEventListener('click',()=>{$('jNew').hidden=true});
-$('jnSave').addEventListener('click',()=>{const size=J.nsize,cnt=Object.values(J.accs).filter(a=>a.size===size&&a.phase===J.nph).length+1;
+$('jnSave').addEventListener('click',()=>{const size=J.nsize,cnt=Object.values(J.accs).filter(a=>a.size===size&&a.phase===J.nph&&(a.firm||'lucid')===J.nfirm).length+1;
  const bal=pnum($('jnBal').value)||0;
- const a={id:uid_(),name:$('jnName').value.trim().slice(0,60)||`${size} ${J.nph==='f'?'fondeada':'eval'} #${cnt}`,size,phase:J.nph,price:Math.max(0,pnum($('jnPrice').value)||0),date:$('jnDate').value||today(),status:'',parent:'',
+ const a={id:uid_(),firm:J.nfirm,name:$('jnName').value.trim().slice(0,60)||`${FN(J.nfirm).short} ${size} ${J.nph==='f'?'fondeada':'eval'} #${cnt}`,size,phase:J.nph,price:Math.max(0,pnum($('jnPrice').value)||0),date:$('jnDate').value||today(),status:'',parent:'',
   init:{bal,hi:Math.max(bal,pnum($('jnHi').value)||0),mx:J.nph==='e'?Math.max(0,pnum($('jnMx').value)||0):0,np:J.nph==='f'?Math.max(0,pnum($('jnNp').value)|0):0,q:J.nph==='f'?Math.max(0,pnum($('jnQ').value)|0):0},trades:[],pays:[]};
+ {const X=PR(J.nfirm,size),rv={},t=pnum($('jnTarget').value),m=pnum($('jnMll').value);if(J.nph==='e'&&t>0&&t!==X.target)rv.target=t;if(m>0&&m!==X.mll)rv.mll=m;if(Object.keys(rv).length)a.rules=rv}
  ['jnName','jnBal','jnHi','jnMx','jnNp','jnQ'].forEach(k=>$(k).value=k==='jnName'?'':'0');$('jNew').hidden=true;J.fil='act';segSet('jFil','act');jPut(a);jMsg(`Cuenta «${a.name}» guardada.`,'ok')});
 segBind('jFil',v=>{J.fil=v;jRender()});
 // ---- probabilidades (10.000 simulaciones por cuenta) ----
-function jParams(a,st){const base=P();if(!valid(base))return null;const same=$('sPre').value===a.size,sz=SIZE[a.size];
- return{...base,r:st.r,ph:a.phase,bal:st.bal,hi:st.hi,mx:a.phase==='e'?st.best:0,q:st.q,cyc:st.cyc,npay:st.npay,rE:same?base.rE:sz/100,rF:same?base.rF:sz/100,thr:same?base.thr:PRESET[a.size].thr,Hacc:300,extra:0,pm:0,fix:0,tax:0}}
+function jParams(a,st){const base=P();if(!valid(base))return null;const same=$('sPre').value===`${a.firm||'lucid'}|${a.size}`,sz=SIZE[a.size];
+ return{...base,r:st.r,ph:a.phase,bal:st.bal,hi:st.hi,mx:a.phase==='e'?st.best:0,q:st.q,cyc:st.cyc,npay:st.npay,rE:same?base.rE:sz/100,rF:same?base.rF:sz/100,thr:same?base.thr:PR(a.firm,a.size).thr,Hacc:300,extra:0,pm:0,fix:0,tax:0}}
 function jProbs(list){const t=++J.ptok,todo=[];
  for(const {a,st} of list){const p=jParams(a,st);if(!p)continue;const k=JSON.stringify(p);if(J.probKey[a.id]===k&&J.probs[a.id])continue;todo.push({a,p,k})}
  if(!todo.length)return;
@@ -887,7 +912,7 @@ function card({a,st,s}){const r=st.r,f=a.phase==='f',sz=SIZE[a.size],risk=sz/100
  else{t3=st.payReady?`<div><span class="l">Retiro disponible</span><span class="v pos">${usd(st.payAmt)}</span><span class="s">te llegan ${usd(st.payAmt*r.split)}</span></div>`:
    `<div><span class="l">Para el próximo retiro</span><span class="v">${Math.min(st.q,r.qn)}/${r.qn} días</span><span class="s">${st.bal<st.payMin?`faltan ${usd(st.payMin-st.bal)} hasta ${usd(st.payMin)}`:st.bal<=st.cyc?'necesitas superar el saldo del último retiro':`días de ≥ ${usd(r.qd)}`}</span></div>`}
  const cw=Math.min(100,cush/r.mll*100),ccol=cw<25?'var(--bad)':cw<50?'var(--warn)':'var(--good)';
- let h=`<div class="ac${open?' open':''}" data-id="${a.id}"><div class="ah"><div><b>${esc(a.name||a.size)}</b><div class="sub">${a.size} · ${fd(a.date)} · ${+a.price?usd(a.price):'sin coste'}</div></div>
+ let h=`<div class="ac${open?' open':''}" data-id="${a.id}"><div class="ah"><div><b>${esc(a.name||a.size)}</b><div class="sub">${FN(a.firm).short} ${a.size} · ${fd(a.date)} · ${+a.price?usd(a.price):'sin coste'}</div></div>
   <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end"><span class="chip ${f?'f':'e'}">${f?'Fondeada':'Evaluación'}</span><span class="chip ${stC}">${stT}</span></div></div>
   <div class="an"><div><span class="l">Beneficio</span><span class="v ${st.bal>=0?'':'neg'}">${usd(st.bal)}</span><span class="s">${st.ntr} trades · ${st.ndays} días${f?` · máx. ${st.tier} MES`:''}</span></div>
   <div><span class="l">Te queda hasta quemar</span><span class="v" style="color:${act?ccol:'inherit'}">${usd(cush)}</span><span class="s">suelo ${usd(st.fl)}${act?` · ${stops} stops de ${usd(risk)}`:''}</span></div>${t3}</div>`;
@@ -918,8 +943,11 @@ function detail(a,st,s){const r=st.r,f=a.phase==='f',I=a.init||{};
   <details class="more"><summary>Editar datos de la cuenta</summary><div class="jform" style="margin-top:8px">
   <label class="f">Nombre<input name="e_name" type="text" value="${esc(a.name)}"></label><label class="f">Precio pagado ($)<input name="e_price" type="text" inputmode="decimal" value="${+a.price||0}"></label><label class="f">Fecha de compra<input name="e_date" type="date" value="${a.date||''}"></label>
   <label class="f">Beneficio inicial ($)<input name="e_bal" type="text" inputmode="decimal" value="${+I.bal||0}"></label><label class="f">Máximo cierre inicial ($)<input name="e_hi" type="text" inputmode="decimal" value="${+I.hi||0}"></label>
+  <label class="f">Empresa y plan<select name="e_firm">${Object.entries(FIRMS).map(([k,F])=>`<option value="${k}"${k===(a.firm||'lucid')?' selected':''}>${F.name}</option>`).join('')}</select></label><label class="f">Tamaño<select name="e_size">${SIZEK.map(k=>`<option${k===a.size?' selected':''}>${k}</option>`).join('')}</select></label>
+  ${!f?`<label class="f">Objetivo para aprobar ($)<input name="e_target" type="text" inputmode="decimal" value="${r.target}"></label><label class="f">Consistencia (%, 0 = sin regla)<input name="e_cons" type="text" inputmode="decimal" value="${Math.round(r.cons*100)}"></label><label class="f">Días mínimos para aprobar<input name="e_mdays" type="text" inputmode="numeric" value="${r.mdays||0}"></label>`:`<label class="f">Retiro (% del beneficio)<input name="e_pct" type="text" inputmode="decimal" value="${Math.round(r.pct*100)}"></label><label class="f">Retiro máximo ($)<input name="e_cap" type="text" inputmode="decimal" value="${r.cap}"></label><label class="f">Retiro mínimo ($)<input name="e_min" type="text" inputmode="decimal" value="${r.min}"></label><label class="f">Beneficio mín. para retirar ($)<input name="e_pmin" type="text" inputmode="decimal" value="${r.pmin||0}"></label><label class="f">Días ganadores por retiro<input name="e_qn" type="text" inputmode="numeric" value="${r.qn}"></label><label class="f">Mínimo por día ganador ($)<input name="e_qd" type="text" inputmode="decimal" value="${r.qd}"></label><label class="f">Consistencia fondeada (%, 0 = sin regla)<input name="e_fcons" type="text" inputmode="decimal" value="${Math.round((r.fcons||0)*100)}"></label><label class="f">Te quedas (split %)<input name="e_split" type="text" inputmode="decimal" value="${Math.round(r.split*100)}"></label>`}
+  <label class="f">Drawdown ($)<input name="e_mll" type="text" inputmode="decimal" value="${r.mll}"></label><label class="f">Suelo se bloquea en (+$)<input name="e_lock" type="text" inputmode="decimal" value="${r.lock}"></label>
   ${f?`<label class="f">Retiros previos<input name="e_np" type="text" inputmode="numeric" value="${+I.np||0}"></label><label class="f">Días válidos iniciales<input name="e_q" type="text" inputmode="numeric" value="${+I.q||0}"></label>`:`<label class="f">Mejor día inicial ($)<input name="e_mx" type="text" inputmode="decimal" value="${+I.mx||0}"></label>`}
-  </div><div class="acts" style="margin-top:8px"><button type="button" class="btn sm" data-act="save">Guardar cambios</button>
+  </div><p class="hint" style="margin-top:6px">Las reglas vienen de ${FN(a.firm).name} ${a.size}${a.rules?' — <b>esta cuenta tiene reglas propias</b>':''}. Cámbialos si tu cuenta tiene otras condiciones; «Restablecer reglas» vuelve a las de LucidFlex.</p><div class="acts" style="margin-top:8px"><button type="button" class="btn sm" data-act="save">Guardar cambios</button>${a.rules?'<button type="button" class="btn sm" data-act="rreset">Restablecer reglas</button>':''}
   ${J.confirmDel===a.id?`<span class="small" style="align-self:center">¿Borrar la cuenta y todos sus trades?</span><button type="button" class="btn sm dng" data-act="delyes">Sí, borrar</button><button type="button" class="btn sm" data-act="delno">No</button>`:`<button type="button" class="btn sm dng" data-act="del">Borrar cuenta</button>`}</div></details></div>`;
  return h}
 $('jList').addEventListener('change',e=>{if(!e.target.classList.contains('sti'))return;const c=e.target.closest('[data-id]'),a0=J.accs[c.dataset.id];if(!a0)return;const a=JSON.parse(JSON.stringify(a0)),t=(a.trades||[]).find(x=>x.id===e.target.dataset.tid);if(!t)return;const v=pnum(e.target.value),nv=v>0?v:undefined;if(nv===t.stop)return;if(nv)t.stop=nv;else delete t.stop;setTimeout(()=>jPut(a),0)});
@@ -935,7 +963,7 @@ $('jList').addEventListener('click',e=>{const b=e.target.closest('[data-act]');i
   const st=accState(a);if(st.burn&&!before.burn)jMsg(`«${a.name}» ha tocado el suelo (${usd(st.fl)}): queda como quemada. Si fue un error, borra el trade en el detalle.`,'b');
   else if(st.passReady&&!before.passReady)jMsg(`«${a.name}» ha cumplido el objetivo y la consistencia: márcala como aprobada para crear la fondeada.`,'ok');
   else if(st.payReady&&!before.payReady)jMsg(`«${a.name}» ya puede pedir retiro: ${usd(st.payAmt)} (te llegan ${usd(st.payAmt*st.r.split)}).`,'ok');return}
- if(act==='appr'){a.status='aprobada';a.sDate=today();const nf={id:uid_(),name:(a.name||a.size)+' · fondeada',size:a.size,phase:'f',price:0,date:today(),status:'',parent:a.id,init:{bal:0,hi:0,mx:0,np:0,q:0},trades:[],pays:[]};
+ if(act==='appr'){a.status='aprobada';a.sDate=today();const rr=a.rules&&cleanRules({mll:a.rules.mll,lock:a.rules.lock});const nf={id:uid_(),firm:a.firm||'lucid',name:(a.name||a.size)+' · fondeada',size:a.size,phase:'f',price:0,date:today(),status:'',parent:a.id,...(rr?{rules:rr}:{}),init:{bal:0,hi:0,mx:0,np:0,q:0},trades:[],pays:[]};
   jPut(a);jPut(nf);J.open=null;jMsg(`Aprobada. He creado «${nf.name}» como cuenta fondeada nueva (si pagaste activación, ponla en «Editar datos»).`,'ok');return}
  if(act==='burn'){a.status='quemada';a.sDate=today();jPut(a);return}
  if(act==='close'){a.status='cerrada';a.sDate=today();jPut(a);return}
@@ -945,7 +973,12 @@ $('jList').addEventListener('click',e=>{const b=e.target.closest('[data-act]');i
  if(act==='pay'){const amt=pnum(q('pamt').value);if(!(amt>0)){jMsg('Escribe el importe del retiro que has pedido.','w');return}
   a.pays=a.pays||[];a.pays.push({id:uid_(),d:q('pd').value||today(),amt,n:Date.now()});jPut(a);jMsg(`Retiro de ${usd(amt)} registrado: te llegan ${usd(amt*before.r.split)}. El suelo queda fijo en +${usd(before.r.lock)} y el contador de días vuelve a 0.`,'ok');return}
  if(act==='save'){const N=n=>{const v=pnum(q(n)&&q(n).value);return isFinite(v)?v:0};a.name=q('e_name').value.trim().slice(0,60)||a.name;a.price=Math.max(0,N('e_price'));a.date=q('e_date').value||a.date;
-  a.init={bal:N('e_bal'),hi:Math.max(N('e_hi'),N('e_bal')),mx:a.phase==='e'?Math.max(0,N('e_mx')):0,np:a.phase==='f'?Math.max(0,N('e_np')|0):0,q:a.phase==='f'?Math.max(0,N('e_q')|0):0};jPut(a);jMsg('Cambios guardados.','ok');return}
+  a.init={bal:N('e_bal'),hi:Math.max(N('e_hi'),N('e_bal')),mx:a.phase==='e'?Math.max(0,N('e_mx')):0,np:a.phase==='f'?Math.max(0,N('e_np')|0):0,q:a.phase==='f'?Math.max(0,N('e_q')|0):0};
+  const ns=q('e_size').value,nfm=q('e_firm').value;if(SIZE[ns])a.size=ns;if(FIRMS[nfm])a.firm=nfm;const chg=ns!==a0.size||nfm!==(a0.firm||'lucid'),X=PR(a.firm,a.size),rv={};const put=(k,n,def,mul)=>{const el=q(n);if(!el)return;const v=pnum(el.value);if(isFinite(v)&&v>=0&&Math.abs(v-def)>1e-9)rv[k]=v};
+  if(!chg){put('target','e_target',X.target);put('cons','e_cons',X.cons);put('mll','e_mll',X.mll);put('lock','e_lock',X.lock);put('mdays','e_mdays',X.mdays||0);put('pct','e_pct',X.pct);put('cap','e_cap',X.cap);put('min','e_min',X.min);put('pmin','e_pmin',X.pmin||0);put('qn','e_qn',X.qn);put('qd','e_qd',X.qd);put('fcons','e_fcons',X.fcons||0);put('split','e_split',X.split)}
+  if(Object.keys(rv).length){if(rv.mll===0){jMsg('El drawdown tiene que ser mayor que 0.','w');return}a.rules=rv}else delete a.rules;
+  jPut(a);jMsg(chg?`Cambiada a ${FN(a.firm).name} ${a.size}: reglas de esa empresa aplicadas (puedes ajustarlas de nuevo).`:a.rules?'Cambios guardados con reglas propias para esta cuenta.':'Cambios guardados.','ok');return}
+ if(act==='rreset'){delete a.rules;jPut(a);jMsg('Reglas restablecidas a las de '+FN(a.firm).name+' '+a.size+'.','ok');return}
  if(act==='del'){J.confirmDel=id;jRender();return}
  if(act==='delno'){J.confirmDel=null;jRender();return}
  if(act==='delyes'){J.confirmDel=null;J.open=null;jDel(id);jMsg('Cuenta borrada.','i');return}});
@@ -954,6 +987,6 @@ function applyMode(m){document.documentElement.setAttribute('data-mode',m);$('bM
  if(S.done){renderAccounts();renderGL();renderEvo()}}
 $('bMode').addEventListener('click',()=>applyMode(document.documentElement.getAttribute('data-mode')==='light'?'dark':'light'));
 applyMode(store.get('mode')==='light'?'light':'dark');
-loadAll();calc();riskPct();jInit();if(store.get('src')==='real'){const m=store.get('manual');SRC='real';segSet('sSrc','real');if(!realData().ok){SRC='man';segSet('sSrc','man');if(m)SRCF.forEach(k=>{if(m[k]!=null)$(k).value=m[k]})}else refreshReal()}srcHint();route();
+loadAll();$('cFirm').value=cFirm;calc();riskPct();jInit();if(store.get('src')==='real'){const m=store.get('manual');SRC='real';segSet('sSrc','real');if(!realData().ok){SRC='man';segSet('sSrc','man');if(m)SRCF.forEach(k=>{if(m[k]!=null)$(k).value=m[k]})}else refreshReal()}srcHint();route();
 </script>
 </body></html>
