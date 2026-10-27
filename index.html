@@ -288,13 +288,21 @@ footer{font-size:11px;color:var(--dim);border-top:1px solid var(--line);padding-
 
   <div class="card">
     <div class="sh"><h2>Tus cuentas mes a mes</h2><span class="tag">cada barra es una cuenta: desde que la compras hasta que se aprueba, se quema o hoy</span></div>
-    <div class="chartbox"><div class="lg" id="mLeg"></div><div id="mChart" class="chart" style="position:relative"></div></div>
+    <div class="chartbox"><div class="sh"><h3>Cuentas cada mes: lo real y lo previsto</h3></div><div class="lg" id="cLeg"></div><div id="mCnt" class="chart" style="position:relative"></div></div>
+    <div class="chartbox"><div class="sh"><h3>Cada cuenta en el tiempo</h3></div><div class="lg" id="mLeg"></div><div id="mChart" class="chart" style="position:relative"></div></div>
     <div id="mCards" class="mcs"></div>
     <details class="more"><summary>Ver en tabla</summary><div class="tw" id="fMonths" style="margin-top:8px"></div></details>
   </div>
 
   <div class="card">
-    <div class="sh"><h2>Impuestos</h2><span class="tag">reserva orientativa en euros · <span id="fTaxY"></span></span></div>
+    <div class="sh"><h2>Impuestos y autónomos</h2><span class="tag">IRPF 2026 (escala estatal + Región de Murcia) y cuotas RETA 2026 · <span id="fTaxY"></span></span></div>
+    <div class="fset">
+      <label class="f" for="txSal">Tu sueldo bruto anual como asalariada (€)<input id="txSal" type="text" inputmode="decimal" placeholder="p. ej. 22000"></label>
+      <label class="f" for="txReta">Autónomos<select id="txReta"><option value="plana">Alta con tarifa plana (80 €/mes)</option><option value="pluri">Alta con reducción por pluriactividad (50 %)</option><option value="tramos">Alta con cuota por ingresos reales</option><option value="no">Sin alta (ingresos esporádicos)</option></select></label>
+    </div>
+    <div class="kp" id="txKpi"></div>
+    <div class="chartbox"><div class="sh"><h3>Cada mes: lo que ganas, lo que pagas y lo que te queda</h3></div><div class="lg" id="txLeg"></div><div id="txChart" class="chart" style="position:relative"></div></div>
+    <div class="tw" id="txTable"></div>
     <div class="kp" id="fTaxK"></div>
     <div class="tw" id="fTaxT"></div>
     <div class="note i" id="fTaxN"></div>
@@ -1475,7 +1483,7 @@ function jStats2(T){const box=$('js2');if(!T||!T.length){box.innerHTML='';return
  box.innerHTML=h;
  J2.series=rows;drawJ2();
  $('j2c').querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{J2.chart=b.dataset.v;$('j2c').querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b));drawJ2()}))}
-let j2rt;addEventListener('resize',()=>{clearTimeout(j2rt);j2rt=setTimeout(()=>{if($('j2svg')&&$('j2svg').offsetParent)drawJ2();if(!$('vFin').hidden){drawFin();drawMonths()}if(S.evo&&!$('vStats').hidden)drawEvo()},150)});
+let j2rt;addEventListener('resize',()=>{clearTimeout(j2rt);j2rt=setTimeout(()=>{if($('j2svg')&&$('j2svg').offsetParent)drawJ2();if(!$('vFin').hidden){drawFin();drawMonths();drawCounts();finTaxPlan()}if(S.evo&&!$('vStats').hidden)drawEvo()},150)});
 function drawJ2(){const el=$('j2svg');if(!el||!J2.series)return;const R=J2.series;let pts_=[],lab='',fmt=v=>v,zero=true;
  if(J2.chart==='r'||J2.chart==='dd'){let c=0,pk=0;R.forEach(x=>{c+=x.r||0;pk=Math.max(pk,c);pts_.push({x,v:J2.chart==='r'?c:c-pk})});lab=J2.chart==='r'?'resultado acumulado (R)':'caída desde el máximo (R)';fmt=v=>(v>=0?'+':'−')+n1(Math.abs(v))+'R'}
  else if(J2.chart==='d'){let c=0;R.forEach(x=>{c+=x.t.pl;pts_.push({x,v:c})});lab='resultado acumulado ($)';fmt=v=>usd(v)}
@@ -1507,11 +1515,11 @@ function applyMode(m){document.documentElement.setAttribute('data-mode',m);$('bM
 $('bMode').addEventListener('click',()=>applyMode(document.documentElement.getAttribute('data-mode')==='light'?'dark':'light'));
 applyMode(store.get('mode')==='light'?'light':'dark');
 // ================= FINANZAS (fase 3) =================
-const FIN0={id:'_fin',kind:'fin',rate:1.12,tax:30,cur:'usd',exp:[],pFund:20,pSave:20,goal:1000,seed:0};
+const FIN0={id:'_fin',kind:'fin',rate:1.12,tax:30,cur:'usd',exp:[],pFund:20,pSave:20,goal:1000,seed:0,sal:0,reta:'plana'};
 let FIN=Object.assign({},FIN0,{exp:[]}),FV={y:'all',ptok:0,ntok:0,proj:null,pkey:'',xcur:'usd'};
 function cleanFin(o){o=o&&typeof o==='object'?o:{};const dt=d=>/^\d{4}-\d\d-\d\d$/.test(d||'')?d:'';
  const pc=(v,d)=>isFinite(+v)&&+v>=0&&+v<=100?+v:d;
- return{id:'_fin',kind:'fin',rate:+o.rate>0.5&&+o.rate<3?+o.rate:1.12,tax:+o.tax>=0&&+o.tax<=60?+o.tax:30,cur:o.cur==='eur'?'eur':'usd',pFund:pc(o.pFund,20),pSave:pc(o.pSave,20),goal:+o.goal>=0?+o.goal:1000,seed:+o.seed>=0?+o.seed:0,
+ return{id:'_fin',kind:'fin',rate:+o.rate>0.5&&+o.rate<3?+o.rate:1.12,tax:+o.tax>=0&&+o.tax<=60?+o.tax:30,cur:o.cur==='eur'?'eur':'usd',pFund:pc(o.pFund,20),pSave:pc(o.pSave,20),goal:+o.goal>=0?+o.goal:1000,seed:+o.seed>=0?+o.seed:0,sal:+o.sal>=0?+o.sal:0,reta:['plana','pluri','tramos','no'].includes(o.reta)?o.reta:'plana',
   exp:(Array.isArray(o.exp)?o.exp:[]).slice(0,400).map(e=>({id:String(e.id||uid_()).replace(/[^A-Za-z0-9_-]/g,'').slice(0,40)||uid_(),d:dt(e.d)||today(),c:String(e.c||'').slice(0,60),amt:Math.max(0,+e.amt||0),cur:e.cur==='eur'?'eur':'usd',m:!!e.m,end:dt(e.end),cat:['op','aut','tax'].includes(e.cat)?e.cat:'op'})).filter(e=>e.amt>0),upd:+o.upd||0}}
 function finPut(){FIN.upd=Date.now();store.set('fin',FIN);if(J.col){const body=JSON.parse(JSON.stringify(FIN));J.pend._fin=(J.pend._fin||Promise.resolve()).then(()=>J.col.doc('_fin').set(body)).catch(jErr)}finRender()}
 {const o=store.get('fin');if(o)FIN=cleanFin(o)}
@@ -1550,11 +1558,11 @@ function finRender(){if($('vFin').hidden)return;
  const fixU=fixMonthly();
  $('fNote').className='note '+(net<0?'w':'ok');$('fNote').innerHTML=net<0?`Todavía vas en negativo: es normal al principio, porque el dinero de los challenges sale antes que el primer retiro. ${fixU>0?`Tus gastos fijos son ${money(toCur(fixU))} al mes. `:''}Mira abajo cuándo es probable que llegue el primer cobro.`
   :`Vas en positivo. Separa ya ${money(res)} para Hacienda (cuenta aparte) y no cuentes con ese dinero.`;
- finMonths(F);finSplit(F);finBiz(F);finTax(F);finExp();projRun()}
+ finMonths(F);finSplit(F);finBiz(F);finTax(F);finTaxPlan();finExp();projRun()}
 function finMonths(F){if(!F.length){$('fMonths').innerHTML='<p class="hint" style="padding:10px">Sin movimientos todavía.</p>';FV.real=[];return}
  const first=F[0].d.slice(0,7),last=today().slice(0,7),M=[];let ym=first;while(ym<=last&&M.length<240){M.push(ym);const [y,m]=ym.split('-').map(Number);ym=m===12?`${y+1}-01`:`${y}-${String(m+1).padStart(2,'0')}`}
  let acc=0;const rows=M.map(m=>{const X=F.filter(x=>x.d.startsWith(m)),s=k=>X.filter(x=>x.k===k).reduce((t,x)=>t+fv(x),0),b=-s('buy'),e=-s('exp'),c=s('pay'),n=c-b-e;acc+=n;return{m,b,e,c,n,acc}});
- FV.real=rows;setTimeout(drawMonths,0);
+ FV.real=rows;setTimeout(()=>{drawMonths();drawCounts()},0);
  $('fMonths').innerHTML=`<table><tr><th>Mes</th><th>Cuentas</th><th>Otros gastos</th><th>Cobros</th><th>Neto del mes</th><th>Acumulado</th></tr>${rows.slice().reverse().map(r=>{const [y,m]=r.m.split('-');return`<tr><td>${MESES[+m-1]} ${y}</td><td>${r.b?'−'+money(r.b).replace('−',''):'–'}</td><td>${r.e?'−'+money(r.e).replace('−',''):'–'}</td><td class="${r.c>0?'pos':''}">${r.c?money(r.c):'–'}</td><td class="${r.n>=0?'pos':'neg'}">${money(r.n)}</td><td class="${r.acc>=0?'pos':'neg'}"><b>${money(r.acc)}</b></td></tr>`}).join('')}</table>`}
 function finTax(F){const y=FV.y==='all'?today().slice(0,4):FV.y;$('fTaxY').textContent='año '+y;
  const Y=F.filter(x=>x.d.startsWith(y)&&x.k!=='taxpaid'),Q=[0,1,2,3].map(i=>Y.filter(x=>Math.floor((+x.d.slice(5,7)-1)/3)===i));
@@ -1563,7 +1571,7 @@ function finTax(F){const y=FV.y==='all'?today().slice(0,4):FV.y;$('fTaxY').textC
   const p130=Math.max(0,0.2*ac-paid130);paid130+=p130;return{i,ing,gas,ac,res:Math.max(0,ac)*FIN.tax/100,p130}});
  const fx=Y.some(x=>x.k==='pay'&&!x.eurReal)&&Y.some(x=>x.k==='pay');
  $('fTaxT').innerHTML=`<table><tr><th>Trimestre</th><th>Ingresos (cobros)</th><th>Gastos</th><th>Rendimiento acumulado</th><th>Reserva acumulada (${n1(FIN.tax)} %)</th><th>Modelo 130 (si eres autónoma)</th></tr>${rows.map(r=>`<tr><td>${r.i+1}T · ${plazo[r.i]}</td><td>${r.ing?eur(r.ing):'–'}</td><td>${r.gas?'−'+eur(r.gas).replace('−',''):'–'}</td><td class="${r.ac>=0?'pos':'neg'}">${eur(r.ac)}</td><td><b>${eur(r.res)}</b></td><td>${r.p130>0?eur(r.p130):'0 €'}</td></tr>`).join('')}</table>`;
- $('fTaxN').innerHTML=`<b>Cómo leer esto.</b> Lo que cobras de una empresa de fondeo no es una ganancia de inversión: no operas tu dinero, te pagan por operar el suyo. Lo habitual es declararlo como <b>rendimiento de actividad económica</b> en el IRPF, sumado a tu sueldo, así que paga a tu tipo marginal. Por eso la reserva por defecto es del 30 %; ajústala con tu gestor. Si te das de alta como autónoma: cada trimestre se presenta el <b>modelo 130</b> (20 % del rendimiento acumulado del año, descontando lo ya ingresado) y la cuota de autónomos es un gasto deducible (añádela abajo como gasto mensual en €). Los cobros se pasan a euros al tipo del día en que los recibes${fx?': pon en cada retiro los euros que te llegaron de verdad (Diario → cuenta → «€ recibidos») para que el cálculo sea exacto; mientras tanto se usa el tipo de arriba':''}. Esto es una estimación para que guardes dinero, no asesoramiento fiscal: confírmalo con un gestor antes de tu primera declaración con cobros.`;finTaxK()}
+ $('fTaxN').innerHTML=`<b>Cómo se calcula.</b> Lo que cobras de una empresa de fondeo se declara como <b>rendimiento de actividad económica</b> en el IRPF, sumado a tu sueldo: por eso el tipo depende de tu sueldo bruto. Se usa la escala estatal y la de la Región de Murcia de 2026, el mínimo personal (5.550 €), un 5 % de gastos de difícil justificación (máx. 2.000 €) y la cuota de autónomos como gasto deducible. La cuota sale de la tabla 2026 por ingresos reales (31,5 % sobre la base mínima de tu tramo; la tarifa plana es de 80 €/mes los 12 primeros meses si no has sido autónoma en los 2 últimos años; como también eres asalariada, puedes pedir en su lugar la reducción por pluriactividad). La «Cuota cero» de Murcia no te encaja si sigues como asalariada más de 6 meses. Los meses futuros usan la media de la proyección. Cada trimestre se presenta el <b>modelo 130</b> (20 % del rendimiento acumulado, a cuenta del IRPF). Los cobros se pasan a euros al tipo del día${fx?': apunta en cada retiro los € que te llegaron':''}. Es una estimación para que guardes dinero, no asesoramiento fiscal: confírmalo con un gestor antes de darte de alta.`;finTaxK()}
 function finExp(){const L=FIN.exp.slice().sort((a,b)=>b.d.localeCompare(a.d));
  $('xList').innerHTML=L.length?`<table><tr><th>Desde</th><th>Concepto</th><th>Importe</th><th>Repetición</th><th>Total hasta hoy</th><th></th></tr>${L.map(e=>{const n=expOcc(e,today()).length;return`<tr><td>${fd(e.d)}</td><td>${esc(e.c||'Gasto')} <span class="chip">${e.cat==='tax'?'Hacienda':e.cat==='aut'?'autónomos':'operativa'}</span></td><td>${e.cur==='eur'?eur(e.amt):usd(e.amt)}</td><td>${e.m?`cada mes${e.end?' hasta '+fd(e.end):''} ${!e.end?`<button type="button" class="btn sm" data-xend="${esc(e.id)}">Dar de baja hoy</button>`:''}`:'una vez'}</td><td>${e.cur==='eur'?eur(e.amt*n):usd(e.amt*n)}</td><td><button type="button" class="x" data-xdel="${esc(e.id)}" aria-label="Borrar gasto">✕</button></td></tr>`}).join('')}</table>`:'<p class="hint" style="padding:10px">Sin gastos añadidos. Incluye las suscripciones (datos de mercado, NinjaTrader, plataforma de order flow, copiador) para ver tu resultado real.</p>'}
 function fixMonthly(){const td=today();return FIN.exp.filter(e=>e.m&&e.cat!=='tax'&&(!e.end||e.end>td)).reduce((s,e)=>s+(e.cur==='eur'?e.amt*FIN.rate:e.amt),0)}
@@ -1600,7 +1608,7 @@ function portSum2(P0,nsim,seed){const {p,states,a,b,shift,beta,H}=P0;let wrs=nul
  for(let m=0;m<months;m++){const col=R.mNet.map(x=>x[m]);mq.push(Q.map(v=>q(col,v)));mm.push(mean(col))}
  const last=R.mNet.map(x=>x[months-1]);
  return{months,mq,mm,mean:mean(last),pPay:frac(R.pay1,fin),pay1Med:medInf(R.pay1),pay1Q:[q(R.pay1,.25),q(R.pay1,.75)],pays:mean(R.pays),cob:mean(R.cob),spent:mean(R.spent),bought:mean(R.bought),
-  fq:Array.from({length:101},(_,i)=>q(last,i/100)),pNeg:frac(last,x=>x<0),pFund:frac(R.fundAlive,x=>x>0),fBurn:mean(R.fBurn),maxFA:q(R.maxFA,.5),wrQ:wrs?[q(wrs,.1),q(wrs,.5),q(wrs,.9)]:null}}
+  ms:Array.from({length:months},(_,mm)=>[0,1,2,3,4,5].map(k=>R.mStat[mm*6+k]/nsim)),fq:Array.from({length:101},(_,i)=>q(last,i/100)),pNeg:frac(last,x=>x<0),pFund:frac(R.fundAlive,x=>x>0),fBurn:mean(R.fBurn),maxFA:q(R.maxFA,.5),wrQ:wrs?[q(wrs,.1),q(wrs,.5),q(wrs,.9)]:null}}
 // cómo operas en la proyección: tu Diario (con incertidumbre) o tus ajustes de Estadísticas
 function projOutcome(base){const src=$('pPru').value,R=realData();
  if(src==='s'||!R.ok)return{src:'s',p:base,R};
@@ -1639,7 +1647,7 @@ function projShow(){const R=FV.proj,p=FV.pp;if(!R)return;const Hm=FV.Hm,tx=v=>v-
  $('pHint').innerHTML=`${R.wrQ?`Cada futuro usa un win rate distinto sacado de tu muestra: entre ${pct(R.wrQ[0])} y ${pct(R.wrQ[2])} en 8 de cada 10, para que la proyección incluya que aún tienes pocos trades. `:''}Mismo motor que Estadísticas: reglas reales de cada cuenta, contratos MES enteros, escalado y forma de retirar de tu plan. Se parte de tus cuentas tal como están hoy y se suman tus gastos fijos de cada mes. Importes antes de impuestos salvo donde se indica.`;
  // impuestos previstos
  const yr=today().slice(0,4),moLeft=12-(+today().slice(5,7)),mi=Math.min(R.months,moLeft)-1,projY=mi>=0?R.mq[mi][2]:0;
- FV.taxProj={yr,projY,moLeft};finTaxK();drawFin()}
+ FV.taxProj={yr,projY,moLeft};finTaxK();finTaxPlan();drawCounts();drawFin()}
 // ---- próximos cobros por cuenta ----
 function nextPays(O){const box=$('nxList');if(!box)return;const base=P();const L=Object.values(J.accs).map(a=>{const x=accState(a);return{a,x,s:accStatus(a,x)}}).filter(o=>o.s==='activa').sort((u,v)=>(v.a.phase==='f')-(u.a.phase==='f'));
  if(!L.length){box.innerHTML='<p class="hint">No tienes cuentas activas en el Diario.</p>';$('nxHint').textContent='';return}
@@ -1725,6 +1733,79 @@ function finBiz(F){const A=Object.values(J.accs),E=A.filter(a=>a.phase==='e'),Fd
   K('Cobro por fondeada',Fd.length?money(cob/Fd.length):'–',Fd.length?'lo que te ha llegado ÷ fondeadas':'aún sin fondeadas')+
   K('Gasto medio al mes',money((buys+ops)/months),`${n1(months)} meses operando`)+
   K('Cobros por cada $ gastado',isFinite(ratio)?(Math.round(ratio*100)/100).toLocaleString('es-ES')+' $':'–',isFinite(ratio)?(ratio>=1?'el negocio ya se paga solo':'aún por debajo de 1: inviertes más de lo que cobras'):'')}
+// ===== impuestos y autónomos mes a mes (España · Región de Murcia · 2026) =====
+const ESC_EST=[[12450,.095],[20200,.12],[35200,.15],[60000,.185],[300000,.225],[Infinity,.245]],ESC_MUR=[[12450,.095],[20200,.112],[34000,.133],[60000,.179],[Infinity,.225]],MIN_PERS=5550;
+const RETA=[[670,205.88,653.59],[900,226.47,718.95],[1166.70,267.65,849.67],[1300,299.56,950.98],[1500,302.65,960.78],[1700,302.65,960.78],[1850,360.29,1143.79],[2030,380.88,1209.15],[2330,401.47,1274.51],[2760,427.21,1356.21],[3190,452.94,1437.91],[3620,478.68,1519.61],[4050,504.41,1601.31],[6000,545.59,1732.03],[Infinity,607.35,1928.10]];
+function escala(b,E){let t=0,prev=0;for(const [lim,r] of E){if(b<=prev)break;t+=(Math.min(b,lim)-prev)*r;prev=lim}return t}
+function irpf(base){base=Math.max(0,base);return Math.max(0,escala(base,ESC_EST)-escala(MIN_PERS,ESC_EST))+Math.max(0,escala(base,ESC_MUR)-escala(MIN_PERS,ESC_MUR))}
+function cuotaRETA(rendMes,modo){if(modo==='no')return 0;if(modo==='plana')return 80;const r=Math.max(0,rendMes)*0.93,t=RETA.find(x=>r<=x[0])||RETA[RETA.length-1];return modo==='pluri'?Math.round(t[2]*0.5*0.315*100)/100:t[1]}
+// serie mensual en euros: real (año en curso) + previsto (proyección, incremento medio de cada mes)
+function taxSeries(){const F=finFlows(),td=today(),y0=td.slice(0,4),cm=td.slice(0,7),out=[];
+ const real={};F.filter(x=>x.k!=='taxpaid').forEach(x=>{const m=x.d.slice(0,7);real[m]=(real[m]||0)+x.eur});
+ const fm=Object.keys(real).sort()[0];let ym=fm&&fm>y0+'-01'?fm:y0+'-01';while(ym<=cm){out.push({m:ym,rend:real[ym]||0,prev:false});ym=nextYm(ym)}
+ const R=FV.proj;if(R&&R.mq){let prevC=0;for(let i=0;i<R.months;i++){const c=R.mq[i][2],inc=(c-prevC)/FIN.rate;prevC=c;out.push({m:ym,rend:inc,prev:true});ym=nextYm(ym)}}
+ return out}
+const nextYm=ym=>{const [y,m]=ym.split('-').map(Number);return m===12?`${y+1}-01`:`${y}-${String(m+1).padStart(2,'0')}`};
+function taxCalc(){const S=taxSeries(),sal=FIN.sal||0,modo=FIN.reta||'plana',salBase=Math.max(0,sal*(1-0.065)-2000),years={};
+ S.forEach(r=>{(years[r.m.slice(0,4)]=years[r.m.slice(0,4)]||[]).push(r)});
+ const altaI=FIN.alta?S.findIndex(r=>r.m>=FIN.alta.slice(0,7)):S.findIndex(r=>r.rend>0);S.forEach((r,i)=>{r.alta=altaI>=0&&i>=altaI;r.mAlta=altaI>=0?i-altaI:-1});
+ Object.entries(years).forEach(([y,L])=>{const act=L.filter(r=>r.alta),avg=act.length?act.reduce((s,r)=>s+r.rend,0)/act.length:0;L.forEach(r=>{r.reta=!r.alta?0:modo==='plana'&&r.mAlta>=12?cuotaRETA(avg,'tramos'):cuotaRETA(avg,modo)});
+  const bruto=L.reduce((s,r)=>s+r.rend-r.reta,0),gen=Math.min(2000,Math.max(0,bruto)*0.05),biz=Math.max(0,bruto-gen),tax=irpf(salBase+biz)-irpf(salBase),eff=biz>0?tax/biz:0,mg=biz>0?(irpf(salBase+biz+100)-irpf(salBase+biz))/100:(irpf(salBase+100)-irpf(salBase))/100;
+  L.forEach(r=>{r.irpf=Math.max(0,r.rend-r.reta)*eff;r.neto=r.rend-r.reta-r.irpf});years[y]={L,bruto,biz,tax,eff,mg,reta:L.reduce((s,r)=>s+r.reta,0)}});
+ return{S,years,salBase}}
+function finTaxPlan(){const el=$('txChart');if(!el)return;$('txSal').value=FIN.sal?String(FIN.sal):'';$('txReta').value=FIN.reta||'plana';
+ const T=taxCalc(),S=T.S,y=today().slice(0,4),Y=T.years[y],Y2=T.years[String(+y+1)];
+ const k=(Y2&&Y2.L.length>=3)?Y2:Y,eff=k?k.eff:0;FV.taxEff=eff;
+ $('txKpi').innerHTML=K(`IRPF sobre el trading ${y}`,pct(Y?Y.eff:0),Y?`${eur(Y.tax)} de ${eur(Y.biz)} de beneficio · tipo marginal ${pct(Y.mg)}`:'')+
+  (Y2?K(`IRPF previsto ${+y+1}`,pct(Y2.eff),`${eur(Y2.tax)} de ${eur(Y2.biz)} previstos (${Y2.L.length} meses) · marginal ${pct(Y2.mg)}`):'')+
+  K('Cuota de autónomos',FIN.reta==='no'?'0 €':eur((()=>{const L=(k||Y).L.filter(r=>r.alta);return L.length?(k||Y).reta/L.length:0})())+'/mes',{no:'sin alta (ingresos esporádicos)',plana:'tarifa plana 12 meses (prorrogable si ganas menos del SMI)',pluri:'reducción del 50 % por pluriactividad',tramos:'tabla por ingresos reales 2026'}[FIN.reta||'plana'])+
+  `<div><span class="l">Reserva recomendada para Hacienda</span><span class="v">${n0(eff*100)} %</span><span class="s">de cada cobro, para el IRPF · tú tienes ${n0(FIN.tax)} % ${Math.abs(eff*100-FIN.tax)>=2?`<button type="button" class="btn sm" id="txApply">Usar ${n0(Math.ceil(eff*100))} %</button>`:'✓'}</span></div>`;
+ const ap=$('txApply');if(ap)ap.addEventListener('click',()=>{FIN.tax=Math.ceil(eff*100);finPut()});
+ // gráfico apilado por mes
+ const n=S.length;if(!n){el.innerHTML='';return}
+ $('txLeg').innerHTML=`<span><i style="background:${C.good}"></i>te queda limpio</span><span><i style="background:${C.warn}"></i>IRPF</span><span><i style="background:${C.violet}"></i>autónomos</span><span><i style="background:${C.dim}"></i>mes en pérdidas</span><span class="hint">· barras claras = previsto (caso típico de la proyección)</span>`;
+ const W=Math.max(300,Math.round(el.clientWidth||900)),H=W<500?200:230,m={l:W<500?50:58,r:10,t:12,b:26};const hi=Math.max(50,...S.map(r=>Math.max(r.rend,r.reta))),lo=Math.min(0,...S.map(r=>r.neto<0?r.rend-r.reta:0));
+ const Y_=v=>m.t+(1-(v-lo)/(hi-lo))*(H-m.t-m.b),bw=Math.max(4,Math.min(36,(W-m.l-m.r)/n*0.62)),X=i=>m.l+(i+.5)*(W-m.l-m.r)/n;
+ const s=[`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Impuestos y autónomos cada mes">`];
+ for(let i=0;i<=4;i++){const v=lo+(hi-lo)*i/4;s.push(`<line x1="${m.l}" x2="${W-m.r}" y1="${Y_(v)}" y2="${Y_(v)}" stroke="${C.line}"/><text x="${m.l-6}" y="${Y_(v)+4}" text-anchor="end" font-size="10.5" fill="${C.mut}">${eur(v)}</text>`)}
+ s.push(`<line x1="${m.l}" x2="${W-m.r}" y1="${Y_(0)}" y2="${Y_(0)}" stroke="${C.dim}"/>`);
+ const step=Math.max(1,Math.ceil(n/(W<500?6:14)));
+ S.forEach((r,i)=>{const x=X(i)-bw/2,op=r.prev?.45:1;
+  if(r.rend-r.reta>0){let y=0;[[r.neto,C.good],[r.irpf,C.warn],[r.reta,C.violet]].forEach(([v,c])=>{if(v>0){s.push(`<rect x="${x}" y="${Y_(y+v)}" width="${bw}" height="${Math.max(.5,Y_(y)-Y_(y+v))}" fill="${c}" fill-opacity="${op}"/>`);y+=v}})}
+  else{const v=r.rend-r.reta;s.push(`<rect x="${x}" y="${Y_(0)}" width="${bw}" height="${Math.max(.5,Y_(v)-Y_(0))}" fill="${C.dim}" fill-opacity="${op}"/>`);if(r.reta>0)s.push(`<rect x="${x}" y="${Y_(r.reta)}" width="${bw}" height="${Math.max(.5,Y_(0)-Y_(r.reta))}" fill="${C.violet}" fill-opacity="${op}"/>`)}
+  if(i%step===0){const [yy,mm]=r.m.split('-');s.push(`<text x="${X(i)}" y="${H-8}" text-anchor="middle" font-size="10.5" fill="${C.dim}">${MESES[+mm-1].slice(0,3)}${mm==='01'||i===0?' '+yy.slice(2):''}</text>`)}});
+ s.push(`<rect x="${m.l}" y="${m.t}" width="${W-m.l-m.r}" height="${H-m.t-m.b}" fill="transparent" id="txhit"/>`);
+ el.innerHTML=s.join('')+'</svg><div class="tip" id="txtip" hidden></div>';const svg=el.querySelector('svg'),tip=el.querySelector('#txtip');
+ el.querySelector('#txhit').addEventListener('mousemove',e=>{const rc=svg.getBoundingClientRect();let i=Math.floor(((e.clientX-rc.left)/rc.width*W-m.l)/((W-m.l-m.r)/n));i=Math.max(0,Math.min(n-1,i));const r=S[i],[yy,mm]=r.m.split('-');
+  tip.hidden=false;tip.innerHTML=`<b>${MESES[+mm-1]} ${yy}</b>${r.prev?' · previsto':''}<br>beneficio del trading: <b>${eur(r.rend)}</b><br>autónomos: −${eur(r.reta).replace('−','')}<br>IRPF: −${eur(r.irpf).replace('−','')}<br>te queda: <b>${eur(r.neto)}</b>`;
+  tip.style.left=Math.min(rc.width-200,Math.max(0,X(i)/W*rc.width+10))+'px';tip.style.top='8px'});
+ el.querySelector('#txhit').addEventListener('mouseleave',()=>{tip.hidden=true});
+ const tt=Object.entries(T.years).map(([yy,v])=>`<tr><td>${yy}${yy>y?' (previsto)':yy===y?' (real + previsto)':''}</td><td>${eur(v.L.reduce((s,r)=>s+r.rend,0))}</td><td>−${eur(v.reta).replace('−','')}</td><td>${eur(v.biz)}</td><td>${pct(v.eff)}</td><td>−${eur(v.tax).replace('−','')}</td><td class="pos"><b>${eur(v.L.reduce((s,r)=>s+r.neto,0))}</b></td></tr>`).join('');
+ $('txTable').innerHTML=`<table><tr><th>Año</th><th>Beneficio del trading</th><th>Autónomos</th><th>Base para el IRPF</th><th>Tipo efectivo</th><th>IRPF</th><th>Te queda</th></tr>${tt}</table>`}
+// ---- cuentas por mes: real + previsto ----
+function drawCounts(){const el=$('mCnt');if(!el||$('vFin').hidden)return;const A=accTimeline(),td=today(),cm=td.slice(0,7);if(!A.length){el.innerHTML='';$('cLeg').innerHTML='';return}
+ const mEnd=ym=>{const [y,m]=ym.split('-').map(Number);return new Date(Date.UTC(y,m,0)).toISOString().slice(0,10)},rows=[];let ym=A[0].start.slice(0,7);
+ while(ym<=cm){const e=mEnd(ym)<td?mEnd(ym):td,inM=d=>d&&d.startsWith(ym);
+  rows.push({m:ym,prev:false,buy:A.filter(o=>inM(o.a.date)&&+o.a.price>0).length,apr:A.filter(o=>o.s==='aprobada'&&inM(o.end)).length,bur:A.filter(o=>o.s==='quemada'&&inM(o.end)).length,pay:A.reduce((x,o)=>x+(o.a.pays||[]).filter(p=>inM(p.d)).length,0),fa:A.filter(o=>o.a.phase==='f'&&o.start<=e&&(!o.end||o.end>e)).length});ym=nextYm(ym)}
+ const R=FV.proj;if(R&&R.ms)R.ms.forEach(v=>{rows.push({m:ym,prev:true,buy:v[0],apr:v[1],bur:v[2]+v[4],pay:v[3],fa:v[5]});ym=nextYm(ym)});
+ const ser=[['buy','compradas',C.acc],['apr','aprobadas',C.good],['bur','quemadas',C.bad],['pay','retiros',C.warn]];
+ $('cLeg').innerHTML=ser.map(x=>`<span><i style="background:${x[2]}"></i>${x[1]}</span>`).join('')+`<span><i style="background:${C.violet};border-radius:50%"></i>fondeadas vivas</span><span class="hint">· claro = previsto (media de 10.000 futuros)</span>`;
+ const n=rows.length,W=Math.max(300,Math.round(el.clientWidth||900)),H=W<500?200:230,m={l:34,r:10,t:14,b:26},hi=Math.max(2,...rows.map(r=>Math.max(r.buy,r.apr,r.bur,r.pay,r.fa)))*1.1;
+ const gw=(W-m.l-m.r)/n,bw=Math.max(2,Math.min(12,gw*0.8/4)),X=i=>m.l+(i+.5)*gw,Y=v=>m.t+(1-v/hi)*(H-m.t-m.b);
+ const s=[`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Cuentas compradas, aprobadas, quemadas, retiros y fondeadas vivas cada mes">`];
+ for(let i=0;i<=4;i++){const v=hi*i/4;s.push(`<line x1="${m.l}" x2="${W-m.r}" y1="${Y(v)}" y2="${Y(v)}" stroke="${C.line}"/><text x="${m.l-6}" y="${Y(v)+4}" text-anchor="end" font-size="10.5" fill="${C.mut}">${n1(v)}</text>`)}
+ const ci=rows.findIndex(r=>r.prev);if(ci>0){const x=m.l+ci*gw;s.push(`<line x1="${x}" x2="${x}" y1="${m.t}" y2="${H-m.b}" stroke="${C.dim}" stroke-dasharray="3 3"/><text x="${x+4}" y="${m.t+8}" font-size="10.5" fill="${C.mut}">previsto →</text>`)}
+ const step=Math.max(1,Math.ceil(n/(W<500?6:14)));
+ rows.forEach((r,i)=>{ser.forEach(([k,,c],j)=>{const v=r[k];if(v>0.02)s.push(`<rect x="${X(i)-2*bw+j*bw}" y="${Y(v)}" width="${bw-1}" height="${Math.max(.5,Y(0)-Y(v))}" rx="2" fill="${c}" fill-opacity="${r.prev?.45:1}"/>`)});
+  if(i%step===0){const [yy,mm]=r.m.split('-');s.push(`<text x="${X(i)}" y="${H-8}" text-anchor="middle" font-size="10.5" fill="${C.dim}">${MESES[+mm-1].slice(0,3)}${mm==='01'||i===0?' '+yy.slice(2):''}</text>`)}});
+ s.push(`<path d="${rows.map((r,i)=>`${i?'L':'M'}${X(i).toFixed(1)},${Y(r.fa).toFixed(1)}`).join('')}" fill="none" stroke="${C.violet}" stroke-width="2"/>`);
+ rows.forEach((r,i)=>s.push(`<circle cx="${X(i)}" cy="${Y(r.fa)}" r="3.5" fill="${C.violet}" fill-opacity="${r.prev?.55:1}" stroke="${C.bg||'#000'}" stroke-width="1.5"/>`));
+ s.push(`<rect x="${m.l}" y="${m.t}" width="${W-m.l-m.r}" height="${H-m.t-m.b}" fill="transparent" id="chit"/>`);
+ el.innerHTML=s.join('')+'</svg><div class="tip" id="ctip" hidden></div>';const svg=el.querySelector('svg'),tip=el.querySelector('#ctip');
+ el.querySelector('#chit').addEventListener('mousemove',e=>{const rc=svg.getBoundingClientRect();let i=Math.floor(((e.clientX-rc.left)/rc.width*W-m.l)/gw);i=Math.max(0,Math.min(n-1,i));const r=rows[i],[yy,mm]=r.m.split('-'),f=v=>r.prev?n1(v):n0(v);
+  tip.hidden=false;tip.innerHTML=`<b>${MESES[+mm-1]} ${yy}</b>${r.prev?' · previsto (media)':''}<br>compradas ${f(r.buy)} · aprobadas ${f(r.apr)} · quemadas ${f(r.bur)}<br>retiros ${f(r.pay)} · fondeadas vivas al cierre <b>${f(r.fa)}</b>`;
+  tip.style.left=Math.min(rc.width-220,Math.max(0,X(i)/W*rc.width+10))+'px';tip.style.top='8px'});
+ el.querySelector('#chit').addEventListener('mouseleave',()=>{tip.hidden=true})}
 // ---- impuestos: cifras clave ----
 function finTaxK(){const el=$('fTaxK');if(!el)return;const F=finFlows(),y=today().slice(0,4),Y=F.filter(x=>x.d.startsWith(y)&&x.k!=='taxpaid'),net=Y.reduce((s,x)=>s+x.eur,0),res=Math.max(0,net)*FIN.tax/100,T=FV.taxProj;
  const pr=T&&T.yr===y?T.projY/FIN.rate:null,tot=pr!=null?net+pr:null;
@@ -1764,6 +1845,7 @@ segOn('fCur',v=>{FIN.cur=v;finPut()});segOn('xCur',v=>{FV.xcur=v});segOn('pH',()
 $('fYear').addEventListener('change',e=>{FV.y=e.target.value;finRender()});
 $('fRate').addEventListener('change',e=>{const v=pnum(e.target.value);if(v>0.5&&v<3){FIN.rate=v;finPut()}else e.target.value=String(FIN.rate).replace('.',',')});
 ['rpFund','rpSave'].forEach(id=>$(id).addEventListener('change',e=>{const v=pnum(e.target.value);if(v>=0&&v<=100){FIN[id==='rpFund'?'pFund':'pSave']=v;finPut()}else finRender()}));
+$('txSal').addEventListener('change',e=>{const v=pnum(e.target.value);FIN.sal=v>0?v:0;finPut()});$('txReta').addEventListener('change',e=>{FIN.reta=e.target.value;finPut()});
 $('rpSeed').addEventListener('change',e=>{const v=pnum(e.target.value);FIN.seed=v>0?v:0;finPut()});
 $('pGoal').addEventListener('change',e=>{const v=pnum(e.target.value);if(v>=0){FIN.goal=v;finPut()}});
 $('fTax').addEventListener('change',e=>{const v=pnum(e.target.value);if(v>=0&&v<=60){FIN.tax=v;finPut()}else e.target.value=String(FIN.tax).replace('.',',')});
