@@ -194,6 +194,12 @@ input.sti{width:62px;padding:3px 6px;font-size:12px;text-align:right}
 .cols div{flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;min-width:0;height:100%}
 .cols span{display:block;width:100%;border-radius:4px 4px 0 0;background:var(--violet)}.cols em{font-style:normal;font-size:10.5px;color:var(--mut);margin-bottom:2px}
 .colx{display:flex;gap:3px;font-size:10.5px;color:var(--dim)}.colx span{flex:1;text-align:center}
+.splitbar{display:flex;height:26px;border-radius:7px;overflow:hidden;font-size:11.5px;font-weight:600;color:#fff}.splitbar div{display:flex;align-items:center;justify-content:center;white-space:nowrap;overflow:hidden;min-width:0}
+.mcs{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+.mc{border:1px solid var(--line);border-radius:10px;padding:10px 12px;display:flex;flex-direction:column;gap:4px;font-size:12px}
+.mc .mh{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px}.mc .mh b{text-transform:capitalize;font-size:13px}.mc .mh span{font-weight:600;font-size:15px}
+.mrow{display:flex;justify-content:space-between;gap:8px;color:var(--mut)}.mrow b{color:var(--ink);font-weight:600;white-space:nowrap}.mrow b.neg,.mrow span.neg{color:var(--bad)}.mrow b.pos,.mrow span.pos{color:var(--good)}.mrow.tot{border-top:1px solid var(--line);padding-top:4px;margin-top:2px}
+#mChart .grow:hover rect:first-child{fill:var(--s2)}
 .lhd{display:grid;grid-template-columns:minmax(0,1fr) 52px 64px;gap:6px;font-size:10.5px;color:var(--dim)}
 .lrow{display:grid;grid-template-columns:minmax(0,1fr) 52px 64px;gap:6px}.lrow input,.lrow select{padding:6px 8px;font-size:12.5px}
 .brk{display:grid;grid-template-columns:repeat(auto-fit,minmax(390px,1fr));gap:12px}@media (max-width:460px){.brk{grid-template-columns:minmax(0,1fr)}}
@@ -243,6 +249,24 @@ footer{font-size:11px;color:var(--dim);border-top:1px solid var(--line);padding-
   </div>
 
   <div class="card">
+    <div class="sh"><h2>Reparto de tu dinero</h2><span class="tag">cada retiro se divide en 4 huchas</span></div>
+    <div class="fset">
+      <label class="f" for="rpTax">Hacienda (%) · se cambia arriba<input id="rpTax" type="text" inputmode="decimal" disabled></label>
+      <label class="f" for="rpFund">Fondo de trading (%)<input id="rpFund" type="text" inputmode="decimal"></label>
+      <label class="f" for="rpSave">Ahorro y colchón (%)<input id="rpSave" type="text" inputmode="decimal"></label>
+      <label class="f" for="rpSeed">Dinero que metiste en el fondo de tu bolsillo ($)<input id="rpSeed" type="text" inputmode="decimal" placeholder="0"></label>
+    </div>
+    <div class="splitbar" id="rpBar"></div>
+    <div class="kp" id="rpKpi"></div>
+    <div id="rpNote" class="note"></div>
+  </div>
+
+  <div class="card">
+    <div class="sh"><h2>Salud del negocio</h2><span class="tag">tus números reales del Diario</span></div>
+    <div class="kp" id="bzKpi"></div>
+  </div>
+
+  <div class="card">
     <div class="sh"><h2>Próximos cobros</h2><span class="tag">tus cuentas activas · con tu forma de retirar de Estadísticas</span></div>
     <div id="nxList" class="vb"></div>
     <p class="hint" id="nxHint"></p>
@@ -252,6 +276,7 @@ footer{font-size:11px;color:var(--dim);border-top:1px solid var(--line);padding-
     <div class="sh"><h2>Proyección de tu plan</h2><span class="tag">desde tus cuentas de hoy · plan de Estadísticas · 10.000 simulaciones</span></div>
     <div class="fset">
       <div class="f"><span>Horizonte</span><div class="seg" id="pH" role="group" aria-label="Horizonte" style="width:auto"><button type="button" data-v="3" aria-pressed="false">3 meses</button><button type="button" data-v="6" aria-pressed="true">6 meses</button><button type="button" data-v="12" aria-pressed="false">12 meses</button></div></div>
+      <label class="f" for="pGoal">Objetivo de ingresos (€ al mes, ya sin impuestos)<input id="pGoal" type="text" inputmode="decimal" value="1000"></label>
       <label class="f" for="pPru">Cómo operas en la proyección<select id="pPru"><option value="d-5" selected>Tu Diario, prudente (5 puntos menos de acierto)</option><option value="d0">Tu Diario, tal cual (con su margen de error)</option><option value="s">Tus ajustes de Estadísticas</option></select></label>
     </div>
     <div id="pSrc" class="hint"></div>
@@ -262,8 +287,9 @@ footer{font-size:11px;color:var(--dim);border-top:1px solid var(--line);padding-
   </div>
 
   <div class="card">
-    <div class="sh"><h2>Mes a mes</h2><span class="tag">compras, gastos y cobros reales</span></div>
+    <div class="sh"><h2>Tus cuentas mes a mes</h2><span class="tag">cada barra es una cuenta: desde que la compras hasta que se aprueba, se quema o hoy</span></div>
     <div class="chartbox"><div class="lg" id="mLeg"></div><div id="mChart" class="chart" style="position:relative"></div></div>
+    <div id="mCards" class="mcs"></div>
     <details class="more"><summary>Ver en tabla</summary><div class="tw" id="fMonths" style="margin-top:8px"></div></details>
   </div>
 
@@ -281,6 +307,7 @@ footer{font-size:11px;color:var(--dim);border-top:1px solid var(--line);padding-
       <label class="f" for="xC">Concepto<input id="xC" type="text" autocomplete="off" placeholder="p. ej. datos CME"></label>
       <label class="f" for="xA">Importe<input id="xA" type="text" inputmode="decimal" placeholder="0"></label>
       <div class="f"><span>Moneda</span><div class="seg" id="xCur" role="group" aria-label="Moneda del gasto" style="width:auto"><button type="button" data-v="usd" aria-pressed="true">$</button><button type="button" data-v="eur" aria-pressed="false">€</button></div></div>
+      <label class="f" for="xCat">Tipo<select id="xCat"><option value="op">Operativa (datos, plataforma, copiador…)</option><option value="aut">Cuota de autónomos</option><option value="tax">Pago a Hacienda (IRPF, modelo 130)</option></select></label>
       <label class="chk"><input type="checkbox" id="xM"> Se repite cada mes</label>
       <button type="button" class="btn pri" id="xAdd">Añadir gasto</button>
     </div>
@@ -925,7 +952,11 @@ function cmp(t){const R=realData(),C=$('cmpC');if(!R.ok){C.hidden=true;return}C.
 // ================= persistencia y eventos =================
 const SKEYS=['sBE','sLR','sPart','sPartR','sAdj','sKeep','sN0','sL1','sN1','sF1','sL2','sN2','sF2','sL3','sN3','sF3','sMaxEv','sSL','sPre','sBal','sHi','sNpay','sRE','sRF','sRR','sCost','sWR','sVar','sMT','sPM','sExtra','sThr','sHm','sDpw','sFee','sFix','sTax',...Object.values(RF)];
 function statsObj(){const o={ph:sPh,stopWin:$('sStopWin').checked,ladOn:$('sLadOn').checked,full:$('sFull').checked,v2:true,v3:true};SKEYS.forEach(k=>o[k]=$(k).value);return o}
-function saveStats(){store.set('stats',statsObj())}
+function saveStats(){store.set('stats',statsObj());if(typeof cfgPush==='function')cfgPush()}
+// ajustes sincronizados entre dispositivos (documento «_cfg» de tu cuenta de Claude)
+const CFG={last:null,hold:0,t:null};
+function cfgPush(now){clearTimeout(CFG.t);CFG.t=setTimeout(()=>{if(!J.col||Date.now()<CFG.hold)return;let d;try{d=JSON.stringify(settingsSnapshot())}catch(e){return}if(d===CFG.last)return;CFG.last=d;const upd=Date.now();store.set('cfgUpd',upd);
+ J.pend._cfg=(J.pend._cfg||Promise.resolve()).then(()=>J.col.doc('_cfg').set({id:'_cfg',kind:'cfg',upd,data:d})).catch(jErr)},now?0:1500)}
 // ajustes que viajan en la copia .json
 function settingsSnapshot(){const m={};SRCF.forEach(k=>m[k]=$(k).value);return{stats:statsObj(),src:SRC,manual:SRC==='man'?m:(store.get('manual')||null),statsAcc:$('sAcc').value||'',proj:$('pPru').value,setups:setupList(),hoyStop:$('hStop').value,calc:store.get('calc')||null,mode:document.documentElement.getAttribute('data-mode')}}
 function restoreSettings(x){if(!x||typeof x!=='object')return false;const st=x.stats;
@@ -995,8 +1026,10 @@ async function jInit(){const o=store.get('journal');if(o&&o.accs&&typeof o.accs=
  try{const [db,user]=await Promise.all([window.claude.use('db'),window.claude.use('user')]);if(!db||!user)return;
   const id=await user.id();if(!id)return;
   const col=db.collection('data/users/'+id);let first=true;
-  col.onSnapshot(snap=>{const m={};let fdoc=null;snap.docs.forEach(d=>{const x=d.data();if(x&&x.kind==='fin'){fdoc=x;return}if(x&&x.id)m[x.id]=JSON.parse(JSON.stringify(x))});
+  col.onSnapshot(snap=>{const m={};let fdoc=null,cdoc=null;snap.docs.forEach(d=>{const x=d.data();if(x&&x.kind==='fin'){fdoc=x;return}if(x&&x.kind==='cfg'){cdoc=x;return}if(x&&x.id)m[x.id]=JSON.parse(JSON.stringify(x))});
    if(fdoc&&(+fdoc.upd||0)>=(+FIN.upd||0)){FIN=cleanFin(fdoc);store.set('fin',FIN)}else if(!fdoc&&first&&(FIN.exp.length||FIN.upd)){J.col=col;finPut()}
+   if(cdoc&&typeof cdoc.data==='string'&&(+cdoc.upd||0)>(+store.get('cfgUpd')||0)&&cdoc.data!==CFG.last){CFG.last=cdoc.data;store.set('cfgUpd',+cdoc.upd);CFG.hold=Date.now()+4000;try{setTimeout(()=>restoreSettings(JSON.parse(cdoc.data)),0)}catch(e){}}
+   else if(!cdoc&&first){J.col=col;setTimeout(()=>cfgPush(true),500)}
    if(first){first=false;J.col=col;J.cloud=true;const loc=Object.values(J.accs);
     if(snap.empty&&loc.length){loc.forEach(a=>jPut(a));jMsg('Las cuentas que tenías en este navegador se han copiado a tu cuenta de Claude.','ok');return}}
    J.accs=m;jSaveLocal();jRender();finRender()},()=>{J.col=null;J.cloud=false;jRender()});
@@ -1382,7 +1415,7 @@ function hoyRender(){if($('vHoy').hidden)return;const td=today(),sl=pnum($('hSto
  // checklist
  const ck=store.get('hoyCk')||{};const cur=ck.d===td?ck.v||{}:{};document.querySelectorAll('#hCheck input').forEach(i=>{i.checked=!!cur[i.dataset.k]});
  const hasCopy=L.some(x=>x.a.copy);document.querySelectorAll('#hCheck .cpo').forEach(e=>e.hidden=!hasCopy)}
-$('hStop').addEventListener('input',hoyRender);
+$('hStop').addEventListener('input',hoyRender);$('hStop').addEventListener('change',()=>cfgPush());
 $('hList').addEventListener('change',e=>{if(!e.target.classList.contains('hrp'))return;const id=e.target.closest('[data-id]').dataset.id,a=JSON.parse(JSON.stringify(J.accs[id]));const v=pnum(e.target.value);if(v>0&&v<=5)a.rp=v;else delete a.rp;jPut(a);hoyRender()});
 $('hCheck').addEventListener('change',()=>{const v={};document.querySelectorAll('#hCheck input').forEach(i=>v[i.dataset.k]=i.checked);store.set('hoyCk',{d:today(),v})});
 $('hImp').addEventListener('click',()=>$('ntFile').click());
@@ -1467,18 +1500,19 @@ function drawJ2(){const el=$('j2svg');if(!el||!J2.series)return;const R=J2.serie
   tip.hidden=false;tip.innerHTML=`<b>${fmt(p.v)}</b><br>${fd(t.d)} ${t.h||''} · ${esc(t.acc.name||'')}<br>${t.dir==='L'?'Largo':t.dir==='S'?'Corto':''} ${t.mes||''} MES · ${t.pl>=0?'+':''}${usd2(t.pl)}${p.x.r!=null?` · ${p.x.r>=0?'+':''}${n1(p.x.r)}R`:''}`;
   const px=X(i)/W*r.width;tip.style.left=Math.min(r.width-170,Math.max(0,px+10))+'px';tip.style.top='8px'};
  hit.addEventListener('mousemove',mv);hit.addEventListener('mouseleave',()=>{tip.hidden=true;el.querySelector('#j2x').setAttribute('visibility','hidden');el.querySelector('#j2d').setAttribute('visibility','hidden')})}
-$('jsSetups').addEventListener('change',e=>{const L=e.target.value.split(',').map(x=>x.trim()).filter(Boolean).slice(0,20);store.set('setups',L);jRender()});
+$('jsSetups').addEventListener('change',e=>{setTimeout(cfgPush,0);const L=e.target.value.split(',').map(x=>x.trim()).filter(Boolean).slice(0,20);store.set('setups',L);jRender()});
 
 function applyMode(m){document.documentElement.setAttribute('data-mode',m);$('bMode').textContent=m==='light'?'Modo noche':'Modo día';$('bMode').setAttribute('aria-pressed',m==='light');refreshC();store.set('mode',m);
  if(S.done){renderAccounts();renderGL();renderEvo()}if(typeof drawJ2==='function')drawJ2();if(S.evo)drawEvo();if(typeof drawMonths==='function'&&!$('vFin').hidden){drawFin();drawMonths()}if(typeof drawFin==='function')drawFin()}
 $('bMode').addEventListener('click',()=>applyMode(document.documentElement.getAttribute('data-mode')==='light'?'dark':'light'));
 applyMode(store.get('mode')==='light'?'light':'dark');
 // ================= FINANZAS (fase 3) =================
-const FIN0={id:'_fin',kind:'fin',rate:1.12,tax:30,cur:'usd',exp:[]};
+const FIN0={id:'_fin',kind:'fin',rate:1.12,tax:30,cur:'usd',exp:[],pFund:20,pSave:20,goal:1000,seed:0};
 let FIN=Object.assign({},FIN0,{exp:[]}),FV={y:'all',ptok:0,ntok:0,proj:null,pkey:'',xcur:'usd'};
 function cleanFin(o){o=o&&typeof o==='object'?o:{};const dt=d=>/^\d{4}-\d\d-\d\d$/.test(d||'')?d:'';
- return{id:'_fin',kind:'fin',rate:+o.rate>0.5&&+o.rate<3?+o.rate:1.12,tax:+o.tax>=0&&+o.tax<=60?+o.tax:30,cur:o.cur==='eur'?'eur':'usd',
-  exp:(Array.isArray(o.exp)?o.exp:[]).slice(0,400).map(e=>({id:String(e.id||uid_()).replace(/[^A-Za-z0-9_-]/g,'').slice(0,40)||uid_(),d:dt(e.d)||today(),c:String(e.c||'').slice(0,60),amt:Math.max(0,+e.amt||0),cur:e.cur==='eur'?'eur':'usd',m:!!e.m,end:dt(e.end)})).filter(e=>e.amt>0),upd:+o.upd||0}}
+ const pc=(v,d)=>isFinite(+v)&&+v>=0&&+v<=100?+v:d;
+ return{id:'_fin',kind:'fin',rate:+o.rate>0.5&&+o.rate<3?+o.rate:1.12,tax:+o.tax>=0&&+o.tax<=60?+o.tax:30,cur:o.cur==='eur'?'eur':'usd',pFund:pc(o.pFund,20),pSave:pc(o.pSave,20),goal:+o.goal>=0?+o.goal:1000,seed:+o.seed>=0?+o.seed:0,
+  exp:(Array.isArray(o.exp)?o.exp:[]).slice(0,400).map(e=>({id:String(e.id||uid_()).replace(/[^A-Za-z0-9_-]/g,'').slice(0,40)||uid_(),d:dt(e.d)||today(),c:String(e.c||'').slice(0,60),amt:Math.max(0,+e.amt||0),cur:e.cur==='eur'?'eur':'usd',m:!!e.m,end:dt(e.end),cat:['op','aut','tax'].includes(e.cat)?e.cat:'op'})).filter(e=>e.amt>0),upd:+o.upd||0}}
 function finPut(){FIN.upd=Date.now();store.set('fin',FIN);if(J.col){const body=JSON.parse(JSON.stringify(FIN));J.pend._fin=(J.pend._fin||Promise.resolve()).then(()=>J.col.doc('_fin').set(body)).catch(jErr)}finRender()}
 {const o=store.get('fin');if(o)FIN=cleanFin(o)}
 // --- utilidades de dinero ---
@@ -1491,19 +1525,19 @@ function expOcc(e,until){if(!e.m)return e.d<=until?[e.d]:[];const out=[],lim=e.e
 function finFlows(){const F=[],td=today();
  Object.values(J.accs).forEach(a=>{const nm=a.name||a.size;if(+a.price>0)F.push({d:a.date,k:'buy',usd:-a.price,eur:-a.price/FIN.rate,txt:nm,ph:a.phase});
   const sp=jRules(a).split;(a.pays||[]).forEach(p=>{const u=(+p.amt||0)*sp;F.push({d:p.d,k:'pay',usd:u,eur:+p.eur>0?+p.eur:u/FIN.rate,txt:nm,eurReal:+p.eur>0})})});
- FIN.exp.forEach(e=>expOcc(e,td).forEach(d=>F.push({d,k:'exp',usd:-(e.cur==='eur'?e.amt*FIN.rate:e.amt),eur:-(e.cur==='eur'?e.amt:e.amt/FIN.rate),txt:e.c||'Gasto'})));
+ FIN.exp.forEach(e=>expOcc(e,td).forEach(d=>F.push({d,k:e.cat==='tax'?'taxpaid':'exp',cat:e.cat||'op',usd:-(e.cur==='eur'?e.amt*FIN.rate:e.amt),eur:-(e.cur==='eur'?e.amt:e.amt/FIN.rate),txt:e.c||'Gasto'})));
  return F.sort((x,y)=>x.d<y.d?-1:x.d>y.d?1:0)}
 const fv=x=>FIN.cur==='eur'?x.eur:x.usd;
 function finRender(){if($('vFin').hidden)return;
  $('fStore').textContent=J.cloud?'se sincroniza con tu cuenta de Claude':'guardado en este navegador';
- $('fRate').value=String(FIN.rate).replace('.',',');$('fTax').value=String(FIN.tax).replace('.',',');segSet('fCur',FIN.cur);
+ $('fRate').value=String(FIN.rate).replace('.',',');$('pGoal').value=String(FIN.goal);$('fTax').value=String(FIN.tax).replace('.',',');segSet('fCur',FIN.cur);
  const F=finFlows(),years=[...new Set(F.map(x=>x.d.slice(0,4)))].sort().reverse(),cy=today().slice(0,4);
  if(!years.includes(cy))years.unshift(cy);
  $('fYear').innerHTML=`<option value="all">Todo</option>`+years.map(y=>`<option value="${y}">${y}</option>`).join('');if(FV.y!=='all'&&!years.includes(FV.y))FV.y='all';$('fYear').value=FV.y;
  const P_=F.filter(x=>FV.y==='all'||x.d.startsWith(FV.y)),sum=k=>P_.filter(x=>x.k===k).reduce((s,x)=>s+fv(x),0);
  const cob=sum('pay'),buy=-sum('buy'),exp=-sum('exp'),net=cob-buy-exp;
  // reserva: por año natural, sobre el neto positivo en euros
- const taxYear=y=>{const Y=F.filter(x=>x.d.startsWith(y)),n=Y.reduce((s,x)=>s+x.eur,0);return Math.max(0,n)*FIN.tax/100};
+ const taxYear=y=>{const Y=F.filter(x=>x.d.startsWith(y)&&x.k!=='taxpaid'),n=Y.reduce((s,x)=>s+x.eur,0);return Math.max(0,n)*FIN.tax/100};
  const resE=(FV.y==='all'?years:[FV.y]).reduce((s,y)=>s+taxYear(y),0),res=FIN.cur==='eur'?resE:resE*FIN.rate;
  const A=Object.values(J.accs).filter(a=>FV.y==='all'||(a.date||'').startsWith(FV.y)),E=A.filter(a=>a.phase==='e'),eA=E.filter(a=>a.status==='aprobada').length,eBuy=E.reduce((s,a)=>s+(+a.price||0),0);
  const nPay=P_.filter(x=>x.k==='pay').length;
@@ -1512,20 +1546,18 @@ function finRender(){if($('vFin').hidden)return;
   K('Invertido en cuentas',money(buy),`${A.filter(a=>+a.price>0).length} compras`)+K('Otros gastos',money(exp),FIN.exp.length?`${FIN.exp.length} ${FIN.exp.length===1?'concepto':'conceptos'}`:'añádelos abajo')+
   K('Reserva para impuestos',money(res),`${n1(FIN.tax)} % del beneficio de cada año`)+
   `<div><span class="l">Libre después de impuestos</span><span class="v ${net-res>=0?'pos':'neg'}">${money(net-res)}</span><span class="s">lo que puedes gastar sin miedo</span></div>`+
-  K('Tasa de aprobación',E.filter(a=>a.status==='aprobada'||a.status==='quemada').length?pct(eA/E.filter(a=>a.status==='aprobada'||a.status==='quemada').length):'–',`${eA} de ${E.filter(a=>a.status==='aprobada'||a.status==='quemada').length} challenges terminados`)+
-  K('Coste por fondeada',eA?money(toCur(eBuy/eA)):'–',eA?`${usd(eBuy)} en ${E.length} ${E.length===1?'evaluación':'evaluaciones'} · ${eA} ${eA===1?'aprobada':'aprobadas'}`:'aún sin evaluaciones aprobadas')+
-  K('Retorno por cada $ gastado',buy+exp>0?n0(cob/(buy+exp)*100)+' %':'–',buy+exp>0?(cob>=buy+exp?'ya has recuperado lo invertido':`te faltan ${money(buy+exp-cob)} para recuperarlo`):'');
+  '';
  const fixU=fixMonthly();
  $('fNote').className='note '+(net<0?'w':'ok');$('fNote').innerHTML=net<0?`Todavía vas en negativo: es normal al principio, porque el dinero de los challenges sale antes que el primer retiro. ${fixU>0?`Tus gastos fijos son ${money(toCur(fixU))} al mes. `:''}Mira abajo cuándo es probable que llegue el primer cobro.`
   :`Vas en positivo. Separa ya ${money(res)} para Hacienda (cuenta aparte) y no cuentes con ese dinero.`;
- finMonths(F);finTax(F);finExp();projRun()}
+ finMonths(F);finSplit(F);finBiz(F);finTax(F);finExp();projRun()}
 function finMonths(F){if(!F.length){$('fMonths').innerHTML='<p class="hint" style="padding:10px">Sin movimientos todavía.</p>';FV.real=[];return}
  const first=F[0].d.slice(0,7),last=today().slice(0,7),M=[];let ym=first;while(ym<=last&&M.length<240){M.push(ym);const [y,m]=ym.split('-').map(Number);ym=m===12?`${y+1}-01`:`${y}-${String(m+1).padStart(2,'0')}`}
  let acc=0;const rows=M.map(m=>{const X=F.filter(x=>x.d.startsWith(m)),s=k=>X.filter(x=>x.k===k).reduce((t,x)=>t+fv(x),0),b=-s('buy'),e=-s('exp'),c=s('pay'),n=c-b-e;acc+=n;return{m,b,e,c,n,acc}});
  FV.real=rows;setTimeout(drawMonths,0);
  $('fMonths').innerHTML=`<table><tr><th>Mes</th><th>Cuentas</th><th>Otros gastos</th><th>Cobros</th><th>Neto del mes</th><th>Acumulado</th></tr>${rows.slice().reverse().map(r=>{const [y,m]=r.m.split('-');return`<tr><td>${MESES[+m-1]} ${y}</td><td>${r.b?'−'+money(r.b).replace('−',''):'–'}</td><td>${r.e?'−'+money(r.e).replace('−',''):'–'}</td><td class="${r.c>0?'pos':''}">${r.c?money(r.c):'–'}</td><td class="${r.n>=0?'pos':'neg'}">${money(r.n)}</td><td class="${r.acc>=0?'pos':'neg'}"><b>${money(r.acc)}</b></td></tr>`}).join('')}</table>`}
 function finTax(F){const y=FV.y==='all'?today().slice(0,4):FV.y;$('fTaxY').textContent='año '+y;
- const Y=F.filter(x=>x.d.startsWith(y)),Q=[0,1,2,3].map(i=>Y.filter(x=>Math.floor((+x.d.slice(5,7)-1)/3)===i));
+ const Y=F.filter(x=>x.d.startsWith(y)&&x.k!=='taxpaid'),Q=[0,1,2,3].map(i=>Y.filter(x=>Math.floor((+x.d.slice(5,7)-1)/3)===i));
  const plazo=['1–20 de abril','1–20 de julio','1–20 de octubre','1–30 de enero'];let ac=0,acI=0,acG=0,paid130=0;
  const rows=Q.map((X,i)=>{const ing=X.filter(x=>x.k==='pay').reduce((s,x)=>s+x.eur,0),gas=-X.filter(x=>x.k!=='pay').reduce((s,x)=>s+x.eur,0);acI+=ing;acG+=gas;ac=acI-acG;
   const p130=Math.max(0,0.2*ac-paid130);paid130+=p130;return{i,ing,gas,ac,res:Math.max(0,ac)*FIN.tax/100,p130}});
@@ -1533,8 +1565,8 @@ function finTax(F){const y=FV.y==='all'?today().slice(0,4):FV.y;$('fTaxY').textC
  $('fTaxT').innerHTML=`<table><tr><th>Trimestre</th><th>Ingresos (cobros)</th><th>Gastos</th><th>Rendimiento acumulado</th><th>Reserva acumulada (${n1(FIN.tax)} %)</th><th>Modelo 130 (si eres autónoma)</th></tr>${rows.map(r=>`<tr><td>${r.i+1}T · ${plazo[r.i]}</td><td>${r.ing?eur(r.ing):'–'}</td><td>${r.gas?'−'+eur(r.gas).replace('−',''):'–'}</td><td class="${r.ac>=0?'pos':'neg'}">${eur(r.ac)}</td><td><b>${eur(r.res)}</b></td><td>${r.p130>0?eur(r.p130):'0 €'}</td></tr>`).join('')}</table>`;
  $('fTaxN').innerHTML=`<b>Cómo leer esto.</b> Lo que cobras de una empresa de fondeo no es una ganancia de inversión: no operas tu dinero, te pagan por operar el suyo. Lo habitual es declararlo como <b>rendimiento de actividad económica</b> en el IRPF, sumado a tu sueldo, así que paga a tu tipo marginal. Por eso la reserva por defecto es del 30 %; ajústala con tu gestor. Si te das de alta como autónoma: cada trimestre se presenta el <b>modelo 130</b> (20 % del rendimiento acumulado del año, descontando lo ya ingresado) y la cuota de autónomos es un gasto deducible (añádela abajo como gasto mensual en €). Los cobros se pasan a euros al tipo del día en que los recibes${fx?': pon en cada retiro los euros que te llegaron de verdad (Diario → cuenta → «€ recibidos») para que el cálculo sea exacto; mientras tanto se usa el tipo de arriba':''}. Esto es una estimación para que guardes dinero, no asesoramiento fiscal: confírmalo con un gestor antes de tu primera declaración con cobros.`;finTaxK()}
 function finExp(){const L=FIN.exp.slice().sort((a,b)=>b.d.localeCompare(a.d));
- $('xList').innerHTML=L.length?`<table><tr><th>Desde</th><th>Concepto</th><th>Importe</th><th>Repetición</th><th>Total hasta hoy</th><th></th></tr>${L.map(e=>{const n=expOcc(e,today()).length;return`<tr><td>${fd(e.d)}</td><td>${esc(e.c||'Gasto')}</td><td>${e.cur==='eur'?eur(e.amt):usd(e.amt)}</td><td>${e.m?`cada mes${e.end?' hasta '+fd(e.end):''} ${!e.end?`<button type="button" class="btn sm" data-xend="${esc(e.id)}">Dar de baja hoy</button>`:''}`:'una vez'}</td><td>${e.cur==='eur'?eur(e.amt*n):usd(e.amt*n)}</td><td><button type="button" class="x" data-xdel="${esc(e.id)}" aria-label="Borrar gasto">✕</button></td></tr>`}).join('')}</table>`:'<p class="hint" style="padding:10px">Sin gastos añadidos. Incluye las suscripciones (datos de mercado, NinjaTrader, plataforma de order flow, copiador) para ver tu resultado real.</p>'}
-function fixMonthly(){const td=today();return FIN.exp.filter(e=>e.m&&(!e.end||e.end>td)).reduce((s,e)=>s+(e.cur==='eur'?e.amt*FIN.rate:e.amt),0)}
+ $('xList').innerHTML=L.length?`<table><tr><th>Desde</th><th>Concepto</th><th>Importe</th><th>Repetición</th><th>Total hasta hoy</th><th></th></tr>${L.map(e=>{const n=expOcc(e,today()).length;return`<tr><td>${fd(e.d)}</td><td>${esc(e.c||'Gasto')} <span class="chip">${e.cat==='tax'?'Hacienda':e.cat==='aut'?'autónomos':'operativa'}</span></td><td>${e.cur==='eur'?eur(e.amt):usd(e.amt)}</td><td>${e.m?`cada mes${e.end?' hasta '+fd(e.end):''} ${!e.end?`<button type="button" class="btn sm" data-xend="${esc(e.id)}">Dar de baja hoy</button>`:''}`:'una vez'}</td><td>${e.cur==='eur'?eur(e.amt*n):usd(e.amt*n)}</td><td><button type="button" class="x" data-xdel="${esc(e.id)}" aria-label="Borrar gasto">✕</button></td></tr>`}).join('')}</table>`:'<p class="hint" style="padding:10px">Sin gastos añadidos. Incluye las suscripciones (datos de mercado, NinjaTrader, plataforma de order flow, copiador) para ver tu resultado real.</p>'}
+function fixMonthly(){const td=today();return FIN.exp.filter(e=>e.m&&e.cat!=='tax'&&(!e.end||e.end>td)).reduce((s,e)=>s+(e.cur==='eur'?e.amt*FIN.rate:e.amt),0)}
 // --- proyección ---
 function projStats(){const T=[];Object.values(J.accs).forEach(a=>{if(a.copy)return;const est=estStop(a.trades||[]);(a.trades||[]).forEach(t=>T.push({t,a,est}))});
  const g=estStop(T.map(x=>x.t))||7;let w=0,l=0,be=0,sw=0,sl_=0,stp=[];const days={};
@@ -1568,7 +1600,7 @@ function portSum2(P0,nsim,seed){const {p,states,a,b,shift,beta,H}=P0;let wrs=nul
  for(let m=0;m<months;m++){const col=R.mNet.map(x=>x[m]);mq.push(Q.map(v=>q(col,v)));mm.push(mean(col))}
  const last=R.mNet.map(x=>x[months-1]);
  return{months,mq,mm,mean:mean(last),pPay:frac(R.pay1,fin),pay1Med:medInf(R.pay1),pay1Q:[q(R.pay1,.25),q(R.pay1,.75)],pays:mean(R.pays),cob:mean(R.cob),spent:mean(R.spent),bought:mean(R.bought),
-  pNeg:frac(last,x=>x<0),pFund:frac(R.fundAlive,x=>x>0),fBurn:mean(R.fBurn),maxFA:q(R.maxFA,.5),wrQ:wrs?[q(wrs,.1),q(wrs,.5),q(wrs,.9)]:null}}
+  fq:Array.from({length:101},(_,i)=>q(last,i/100)),pNeg:frac(last,x=>x<0),pFund:frac(R.fundAlive,x=>x>0),fBurn:mean(R.fBurn),maxFA:q(R.maxFA,.5),wrQ:wrs?[q(wrs,.1),q(wrs,.5),q(wrs,.9)]:null}}
 // cómo operas en la proyección: tu Diario (con incertidumbre) o tus ajustes de Estadísticas
 function projOutcome(base){const src=$('pPru').value,R=realData();
  if(src==='s'||!R.ok)return{src:'s',p:base,R};
@@ -1601,6 +1633,7 @@ function projShow(){const R=FV.proj,p=FV.pp;if(!R)return;const Hm=FV.Hm,tx=v=>v-
   K('Primer cobro (cualquier cuenta)',isFinite(R.pay1Med)?dDate(R.pay1Med):'–',`${pct(R.pPay)} de probabilidad${isFinite(R.pay1Q[1])?` · entre ${dDate(R.pay1Q[0])} y ${dDate(R.pay1Q[1])}`:''}`)+
   K('Recuperas lo invertido',realNow>=0?'ya':beM>0?`mes ${beM}`:'no en el horizonte',realNow>=0?'vas en positivo':`ahora vas en ${money(realNow)} (caso típico)`)+
   K('Retiros',n1(R.pays),`te llegan ${money(cv(R.cob))} · gastas ${money(cv(R.spent))} en challenges`)+
+  (()=>{const g=FIN.goal||0,need=g*FIN.rate/(1-FIN.tax/100)*Hm;if(!g||!R.fq)return'';let pr=0;for(let i=0;i<=100;i++)if(R.fq[i]>=need){pr=1-i/100;break};return K(`Objetivo ${eur(g)}/mes`,pct(pr),`probabilidad de ganar de media ${eur(g)} al mes limpios en ${Hm} meses`)})()+
   K('Riesgo',pct(R.pNeg)+' en negativo',`10 % peor: ${money(cv(last[0]))} · fondeadas a la vez: ${n1(R.maxFA)}`);
  $('pTable').innerHTML=`<table><tr><th>Dentro de</th><th>10 % peor</th><th>Caso típico</th><th>Media</th><th>10 % mejor</th></tr>${R.mq.map((a,i)=>`<tr><td>${i+1} ${i?'meses':'mes'}</td><td class="${a[0]>=0?'pos':'neg'}">${money(cv(a[0]))}</td><td class="${a[2]>=0?'pos':'neg'}"><b>${money(cv(a[2]))}</b></td><td>${money(cv(R.mm[i]))}</td><td class="pos">${money(cv(a[4]))}</td></tr>`).join('')}</table>`;
  $('pHint').innerHTML=`${R.wrQ?`Cada futuro usa un win rate distinto sacado de tu muestra: entre ${pct(R.wrQ[0])} y ${pct(R.wrQ[2])} en 8 de cada 10, para que la proyección incluya que aún tienes pocos trades. `:''}Mismo motor que Estadísticas: reglas reales de cada cuenta, contratos MES enteros, escalado y forma de retirar de tu plan. Se parte de tus cuentas tal como están hoy y se suman tus gastos fijos de cada mes. Importes antes de impuestos salvo donde se indica.`;
@@ -1620,25 +1653,80 @@ function nextPays(O){const box=$('nxList');if(!box)return;const base=P();const L
  box.innerHTML=L.map(o=>row(o,null)).join('');
  ensureProbs(L.map(o=>({a:o.a,st:o.x}))).then(out=>{if(t!==FV.ntok)return;box.innerHTML=L.map((o,k)=>row(o,out[k]&&out[k].r)).join('');
   const F=L.filter(o=>o.a.phase==='f');$('nxHint').innerHTML=`Barra: lo que llevas hacia el siguiente objetivo. Porcentaje: probabilidad de llegar antes de quemar la cuenta, con ${srcLbl(O.src)} (lo eliges en «Cómo operas en la proyección» y vale también para el Diario) y tu riesgo (${usd(base.rF)} en fondeada${F.length?'':''}). Las fechas cuentan ${+$('sDpw').value||5} días de trading por semana.`})}
-// ---- mes a mes en gráfico ----
-function drawMonths(){const el=$('mChart'),R=FV.real||[];if(!el||$('vFin').hidden)return;if(!R.length){el.innerHTML='<p class="hint">Sin movimientos todavía.</p>';$('mLeg').innerHTML='';return}
- $('mLeg').innerHTML=`<span><i style="background:${C.good}"></i>cobros</span><span><i style="background:${C.bad}"></i>cuentas y gastos</span><span><i style="background:${C.acc}"></i>acumulado</span>`;
- const n=R.length,vals=R.flatMap(r=>[r.c,-(r.b+r.e),r.acc,0]);let y0=Math.min(...vals),y1=Math.max(...vals);if(y0===y1)y1=y0+1;const pd=(y1-y0)*.08;y0-=pd;y1+=pd;
- const W=Math.max(280,Math.round(el.clientWidth||760)),H=W<500?190:220,m={l:W<500?52:62,r:14,t:12,b:26},bw=Math.min(46,(W-m.l-m.r)/n*0.6),X=i=>m.l+(i+.5)*(W-m.l-m.r)/n,Y=v=>m.t+(1-(v-y0)/(y1-y0))*(H-m.t-m.b);
- const s=[`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Cobros y gastos de cada mes">`];
- for(let i=0;i<=4;i++){const v=y0+(y1-y0)*i/4;s.push(`<line x1="${m.l}" x2="${W-m.r}" y1="${Y(v)}" y2="${Y(v)}" stroke="${C.line}"/><text x="${m.l-8}" y="${Y(v)+4}" text-anchor="end" font-size="11" fill="${C.mut}">${money(v)}</text>`)}
- s.push(`<line x1="${m.l}" x2="${W-m.r}" y1="${Y(0)}" y2="${Y(0)}" stroke="${C.dim}"/>`);
- R.forEach((r,i)=>{const x=X(i)-bw/2,g=r.b+r.e;if(r.c>0)s.push(`<rect x="${x}" y="${Y(r.c)}" width="${bw}" height="${Math.max(1,Y(0)-Y(r.c))}" rx="3" fill="${C.good}"/>`);if(g>0)s.push(`<rect x="${x}" y="${Y(0)}" width="${bw}" height="${Math.max(1,Y(-g)-Y(0))}" rx="3" fill="${C.bad}"/>`);
-  const [yy,mm]=r.m.split('-');s.push(`<text x="${X(i)}" y="${H-8}" text-anchor="middle" font-size="10.5" fill="${C.dim}">${MESES[+mm-1].slice(0,3)}${mm==='01'||i===0?' '+yy.slice(2):''}</text>`)});
- s.push(`<path d="${R.map((r,i)=>`${i?'L':'M'}${X(i).toFixed(1)},${Y(r.acc).toFixed(1)}`).join('')}" fill="none" stroke="${C.acc}" stroke-width="2"/>`);R.forEach((r,i)=>s.push(`<circle cx="${X(i)}" cy="${Y(r.acc)}" r="3.5" fill="${C.acc}" stroke="${C.bg||'#000'}" stroke-width="2"/>`));
- s.push(`<rect x="${m.l}" y="${m.t}" width="${W-m.l-m.r}" height="${H-m.t-m.b}" fill="transparent" id="mhit"/>`);
+// ---- tus cuentas en el tiempo + tarjetas de cada mes ----
+function accTimeline(){const td=today(),A=Object.values(J.accs).map(a=>{const st=accState(a),s=accStatus(a,st),T=(a.trades||[]).map(t=>t.d).sort();
+  let end=null;if(s==='quemada')end=st.burn?st.burn.d:(T[T.length-1]||a.date);else if(s==='aprobada'){const ch=Object.values(J.accs).find(b=>b.parent===a.id);end=ch?ch.date:(T[T.length-1]||a.date)}else if(s==='cerrada'||s==='completada')end=T[T.length-1]||a.date;
+  const pl=(a.trades||[]).reduce((x,t)=>x+(+t.pl||0),0);return{a,st,s,start:a.date||T[0]||td,end,pl}}).sort((x,y)=>x.start.localeCompare(y.start)||((x.a.phase==='f')-(y.a.phase==='f')));return A}
+const accShort=a=>{const m=String(a.nt||a.name||'').match(/(\d{4})(?!.*\d)/);return`${(FN(a.firm).short||'').replace('Tradeify ','')} ${a.size}${m?' ·'+m[1]:''}`};
+function drawMonths(){const el=$('mChart'),R=FV.real||[];if(!el||$('vFin').hidden)return;
+ const A=accTimeline();if(!A.length&&!R.length){el.innerHTML='<p class="hint">Sin cuentas ni movimientos todavía.</p>';$('mLeg').innerHTML='';$('mCards').innerHTML='';return}
+ $('mLeg').innerHTML=`<span><i style="background:${C.acc}"></i>challenge</span><span><i style="background:${C.violet}"></i>fondeada</span><span><i style="background:${C.good};border-radius:50%"></i>retiro cobrado</span><span><i style="background:${C.good}"></i>✓ aprobada</span><span><i style="background:${C.bad}"></i>✕ quemada</span>`;
+ const td=today(),dmin=A.length?A[0].start:R[0].m+'-01',D=d=>new Date(d+'T12:00:00Z').getTime(),t0=D(dmin.slice(0,8)+'01'),t1=Math.max(D(td)+5*864e5,t0+30*864e5);
+ const W=Math.max(300,Math.round(el.clientWidth||900)),lw=W<560?118:200,rh=W<560?30:28,top=22,H=top+A.length*rh+8,X=d=>lw+(D(d)-t0)/(t1-t0)*(W-lw-14);
+ const s=[`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Tus cuentas en el tiempo">`];
+ // meses
+ let cur=new Date(t0);while(cur.getTime()<=t1){const iso=cur.toISOString().slice(0,10),x=X(iso);if(x<W-36)s.push(`<line x1="${x}" x2="${x}" y1="${top-6}" y2="${H}" stroke="${C.line}"/><text x="${x+4}" y="${top-10}" font-size="10.5" fill="${C.dim}">${MESES[cur.getUTCMonth()].slice(0,3)} ${String(cur.getUTCFullYear()).slice(2)}</text>`);cur=new Date(Date.UTC(cur.getUTCFullYear(),cur.getUTCMonth()+1,1))}
+ const xt=X(td);s.push(`<line x1="${xt}" x2="${xt}" y1="${top-6}" y2="${H}" stroke="${C.dim}" stroke-dasharray="3 3"/><text x="${xt-4}" y="${top-10}" font-size="10.5" text-anchor="end" fill="${C.mut}">hoy</text>`);
+ A.forEach((o,i)=>{const y=top+i*rh,f=o.a.phase==='f',col=f?C.violet:C.acc,x0=X(o.start),x1=Math.max(x0+6,X(o.end||td)),act=!o.end;
+  s.push(`<g class="grow" data-i="${i}"><rect x="0" y="${y}" width="${W}" height="${rh}" fill="transparent"/>`);
+  s.push(`<text x="0" y="${y+rh/2+4}" font-size="11.5" fill="${C.ink}">${esc(accShort(o.a))}</text>`+(W<560?'':`<text x="${lw-8}" y="${y+rh/2+4}" font-size="10.5" text-anchor="end" fill="${o.pl>=0?C.good:C.bad}">${o.pl>=0?'+':'−'}${usd(Math.abs(o.pl)).replace('−','')}</text>`));
+  s.push(`<rect x="${x0}" y="${y+7}" width="${x1-x0}" height="${rh-14}" rx="4" fill="${col}" fill-opacity="${act?1:.55}"/>`);
+  if(o.s==='quemada')s.push(`<text x="${x1+4}" y="${y+rh/2+4}" font-size="12" font-weight="700" fill="${C.bad}">✕</text>`);
+  if(o.s==='aprobada')s.push(`<text x="${x1+4}" y="${y+rh/2+4}" font-size="12" font-weight="700" fill="${C.good}">✓</text>`);
+  (o.a.pays||[]).forEach(p=>s.push(`<circle cx="${X(p.d)}" cy="${y+rh/2}" r="5" fill="${C.good}" stroke="${C.bg||'#000'}" stroke-width="2"/>`));
+  if(o.a.copy)s.push(`<text x="${x0+6}" y="${y+rh/2+4}" font-size="9.5" fill="#fff">copia</text>`);
+  s.push('</g>')});
  el.innerHTML=s.join('')+'</svg><div class="tip" id="mtip" hidden></div>';const svg=el.querySelector('svg'),tip=el.querySelector('#mtip');
- el.querySelector('#mhit').addEventListener('mousemove',e=>{const r=svg.getBoundingClientRect();let i=Math.floor(((e.clientX-r.left)/r.width*W-m.l)/((W-m.l-m.r)/n));i=Math.max(0,Math.min(n-1,i));const x=R[i],[yy,mm]=x.m.split('-');
-  tip.hidden=false;tip.innerHTML=`<b>${MESES[+mm-1]} ${yy}</b><br>cobros: ${money(x.c)}<br>cuentas: ${x.b?'−'+money(x.b).replace('−',''):'–'} · gastos: ${x.e?'−'+money(x.e).replace('−',''):'–'}<br>neto del mes: <b>${money(x.n)}</b> · acumulado: ${money(x.acc)}`;
-  const px=X(i)/W*r.width;tip.style.left=Math.min(r.width-190,Math.max(0,px+10))+'px';tip.style.top='8px'});
- el.querySelector('#mhit').addEventListener('mouseleave',()=>{tip.hidden=true})}
+ svg.querySelectorAll('.grow').forEach(g=>{g.addEventListener('mousemove',e=>{const o=A[+g.dataset.i],r=svg.getBoundingClientRect(),st=o.st,f=o.a.phase==='f';
+  tip.hidden=false;tip.innerHTML=`<b>${esc(o.a.name||o.a.size)}</b><br>${f?'Fondeada':'Challenge'} · ${STX[o.s][0]}<br>desde ${fd(o.start)}${o.end?' hasta '+fd(o.end):''} · ${+o.a.price>0?'pagado '+usd(+o.a.price):'sin coste'}<br>resultado ${o.pl>=0?'+':''}${usd(o.pl)}${f?` · ${st.npay} ${st.npay===1?'retiro':'retiros'} (${usd(st.paid)} para ti)`:''}`;
+  tip.style.left=Math.min(r.width-230,Math.max(0,e.clientX-r.left+12))+'px';tip.style.top=Math.max(0,e.clientY-r.top+12)+'px'});g.addEventListener('mouseleave',()=>{tip.hidden=true})});
+ // tarjetas por mes
+ const mEnd=ym=>{const [y,m]=ym.split('-').map(Number);return new Date(Date.UTC(y,m,0)).toISOString().slice(0,10)};
+ $('mCards').innerHTML=R.slice().reverse().map(r=>{const e=mEnd(r.m)<td?mEnd(r.m):td,inM=d=>d&&d.startsWith(r.m);
+  const fv_=A.filter(o=>o.a.phase==='f'&&o.start<=e&&(!o.end||o.end>e)).length,ev_=A.filter(o=>o.a.phase==='e'&&o.start<=e&&(!o.end||o.end>e)).length;
+  const buys=A.filter(o=>inM(o.a.date)&&+o.a.price>0).length,apr=A.filter(o=>o.s==='aprobada'&&inM(o.end)).length,bur=A.filter(o=>o.s==='quemada'&&inM(o.end)).length,pays=A.reduce((x,o)=>x+(o.a.pays||[]).filter(p=>inM(p.d)).length,0);
+  const [yy,mm]=r.m.split('-');
+  return`<div class="mc"><div class="mh"><b>${MESES[+mm-1]} ${yy}</b><span class="${r.n>=0?'pos':'neg'}">${r.n>=0?'+':''}${money(r.n)}</span></div>
+   <div class="mrow"><span>Fondeadas al cierre</span><b style="color:${C.violet}">${fv_}</b></div><div class="mrow"><span>Challenges en curso</span><b style="color:${C.acc}">${ev_}</b></div>
+   <div class="mrow"><span>Comprados · aprobados · quemados</span><b>${buys} · <span class="pos">${apr}</span> · <span class="neg">${bur}</span></b></div>
+   <div class="mrow"><span>Cobros</span><b class="${r.c>0?'pos':''}">${pays?`${pays} · ${money(r.c)}`:'–'}</b></div>
+   <div class="mrow"><span>Gastado (cuentas + otros)</span><b>${r.b+r.e?'−'+money(r.b+r.e).replace('−',''):'–'}</b></div>
+   <div class="mrow tot"><span>Acumulado</span><b class="${r.acc>=0?'pos':'neg'}">${money(r.acc)}</b></div></div>`}).join('')}
+// ---- reparto de cada retiro en huchas ----
+function nextPayAmt(){const base=P(),o=Object.values(J.accs).map(a=>({a,x:accState(a)})).find(o=>o.a.phase==='f'&&accStatus(o.a,o.x)==='activa');if(!o)return null;const rr=o.x.r,kp=base.keep>0?rr.lock+base.keep*rr.mll:0,lvl=Math.max(base.thr||0,rr.pmin||0,kp+(base.full?capOf(rr,o.x.npay):rr.min)),amt=Math.min(rr.pct*lvl,capOf(rr,o.x.npay),kp>0?lvl-kp:Infinity);return amt*rr.split}
+function finSplit(F){const tax=FIN.tax,fund=FIN.pFund,save=FIN.pSave,me=100-tax-fund-save,cv=v=>FIN.cur==='eur'?v/FIN.rate:v;
+ $('rpTax').value=String(tax).replace('.',',');$('rpFund').value=String(fund).replace('.',',');$('rpSave').value=String(save).replace('.',',');$('rpSeed').value=FIN.seed?String(FIN.seed):'';
+ const sum=k=>F.filter(x=>x.k===k).reduce((s,x)=>s+fv(x),0),cob=sum('pay'),buys=-sum('buy'),ops=-sum('exp'),taxPaid=-sum('taxpaid'),seed=cv(FIN.seed||0);
+ const hac=cob*tax/100-taxPaid,fondo=seed+cob*fund/100-buys-ops,aho=cob*save/100,yo=cob*Math.max(0,me)/100;
+ const segs=[['Hacienda',tax,C.warn],['Fondo de trading',fund,C.acc],['Ahorro',save,C.violet],['Para ti',Math.max(0,me),C.good]];
+ $('rpBar').innerHTML=segs.filter(x=>x[1]>0).map(x=>`<div style="width:${x[1]}%;background:${x[2]}" title="${x[0]} ${x[1]} %">${x[1]>=12?`${x[0]} ${n0(x[1])} %`:n0(x[1])+' %'}</div>`).join('');
+ const planU=(Math.max(0,num('sPM')|0)*(num('sFee')||0))+fixMonthly(),plan=cv(planU),cover=plan>0?fondo/plan:Infinity;
+ const nx=nextPayAmt()||900,nxE=nx/FIN.rate,pe=v=>eur(nxE*v/100);
+ $('rpKpi').innerHTML=`<div><span class="l">Hacienda</span><span class="v" style="color:${C.warn}">${money(hac)}</span><span class="s">${n0(tax)} % de cada cobro${taxPaid?` · ya pagado ${money(taxPaid)}`:''}</span></div>`+
+  `<div><span class="l">Fondo de trading</span><span class="v ${fondo<0?'neg':''}" style="${fondo>=0?'color:'+C.acc:''}">${money(fondo)}</span><span class="s">${fondo<0?'pagado de tu bolsillo de momento':isFinite(cover)?`cubre ${n1(cover)} ${n1(cover)==='1'?'mes':'meses'} de tu plan (${money(plan)}/mes)`:'para challenges y gastos'}</span></div>`+
+  `<div><span class="l">Ahorro y colchón</span><span class="v" style="color:${C.violet}">${money(aho)}</span><span class="s">${n0(save)} % de cada cobro · no se toca</span></div>`+
+  `<div><span class="l">Para ti</span><span class="v pos">${money(yo)}</span><span class="s">${n0(Math.max(0,me))} % de cada cobro · para gastar</span></div>`;
+ let rec,cls='i';
+ if(me<0){rec=`Los porcentajes suman ${n0(tax+fund+save)} %: baja el fondo o el ahorro hasta que sumen 100 % o menos.`;cls='b'}
+ else if(fondo<0){rec=`<b>Primero, recupera lo invertido.</b> El fondo está en ${money(fondo)}: los challenges y gastos los has pagado tú. Hasta que vuelva a positivo, lo prudente es mandar al fondo todo lo que no es Hacienda (${n0(100-tax)} %). ${nxE*(100-tax)/100>=-fondo/(FIN.cur==='eur'?1:FIN.rate)?`Con el próximo retiro te basta: devuelves al fondo ${eur(-fondo/(FIN.cur==='eur'?1:FIN.rate))} y lo que sobra se reparte con normalidad.`:`Con el próximo retiro recuperas ${pe(100-tax)} de los ${eur(-fondo/(FIN.cur==='eur'?1:FIN.rate))} que faltan.`}`;cls='w'}
+ else if(cover<3){rec=`Tu fondo cubre ${n1(cover)} meses de tu plan. Lo prudente es tener <b>3 meses</b> (${money(plan*3)}) para no depender del siguiente cobro si llega una mala racha: sube el fondo de trading hasta llegar ahí.`;cls='w'}
+ else if(cover>6){rec=`Tu fondo cubre ${n1(cover)} meses de tu plan: es más de lo necesario. Puedes bajar el fondo al 10 % y pasar la diferencia a ahorro o a ti.`;cls='ok'}
+ else{rec=`Reparto equilibrado: el fondo cubre ${n1(cover)} meses de tu plan y el resto se reparte entre ahorro y tú.`;cls='ok'}
+ $('rpNote').className='note '+cls;$('rpNote').innerHTML=`${rec}<br><b>Cuando cobres el próximo retiro</b> (${usd(nx)} ≈ ${eur(nxE)}), haz las transferencias el mismo día: ${(()=>{const tA=nxE*tax/100,def=Math.max(0,-fondo/(FIN.cur==='eur'?1:FIN.rate)),av=nxE-tA,rc=Math.min(def,av),rm=av-rc,b=Math.max(1e-9,100-tax);return`Hacienda ${eur(tA)} · fondo ${eur(rc+rm*fund/b)}${rc>0?` (incluye ${eur(rc)} para recuperar lo invertido)`:''} · ahorro ${eur(rm*save/b)} · para ti ${eur(rm*Math.max(0,me)/b)}`})()}. Cuando pagues el IRPF o el modelo 130, apúntalo abajo como «Pago a Hacienda» y se descuenta de su hucha.`}
+// ---- salud del negocio ----
+function finBiz(F){const A=Object.values(J.accs),E=A.filter(a=>a.phase==='e'),Fd=A.filter(a=>a.phase==='f'),done=E.filter(a=>a.status==='aprobada'||a.status==='quemada'||accStatus(a,accState(a))==='quemada'),apr=E.filter(a=>a.status==='aprobada').length;
+ const sum=k=>F.filter(x=>x.k===k).reduce((s,x)=>s+fv(x),0),cob=sum('pay'),buys=-sum('buy'),ops=-sum('exp'),bought=A.filter(a=>+a.price>0);
+ const first=F.length?F[0].d:today(),months=Math.max(1,(new Date(today())-new Date(first))/(864e5*30.4)),fAlive=Fd.filter(a=>accStatus(a,accState(a))==='activa').length,fBurn=Fd.filter(a=>accStatus(a,accState(a))==='quemada').length;
+ const ratio=buys+ops>0?cob/(buys+ops):NaN;
+ $('bzKpi').innerHTML=K('Challenges comprados',n0(bought.length),bought.length?`coste medio ${money(buys/bought.length)}`:'')+
+  K('Tasa de aprobación',done.length?pct(apr/done.length):'–',`${apr} de ${done.length} terminados`)+
+  K('Coste por fondeada',apr?money(E.reduce((s,a)=>s+(FIN.cur==='eur'?(+a.price||0)/FIN.rate:(+a.price||0)),0)/apr):'–','lo invertido en challenges ÷ aprobados')+
+  K('Fondeadas',`${fAlive} ${fAlive===1?'viva':'vivas'}`,`${Fd.length} conseguidas · ${fBurn} quemadas`)+
+  K('Cobro por fondeada',Fd.length?money(cob/Fd.length):'–',Fd.length?'lo que te ha llegado ÷ fondeadas':'aún sin fondeadas')+
+  K('Gasto medio al mes',money((buys+ops)/months),`${n1(months)} meses operando`)+
+  K('Cobros por cada $ gastado',isFinite(ratio)?(Math.round(ratio*100)/100).toLocaleString('es-ES')+' $':'–',isFinite(ratio)?(ratio>=1?'el negocio ya se paga solo':'aún por debajo de 1: inviertes más de lo que cobras'):'')}
 // ---- impuestos: cifras clave ----
-function finTaxK(){const el=$('fTaxK');if(!el)return;const F=finFlows(),y=today().slice(0,4),Y=F.filter(x=>x.d.startsWith(y)),net=Y.reduce((s,x)=>s+x.eur,0),res=Math.max(0,net)*FIN.tax/100,T=FV.taxProj;
+function finTaxK(){const el=$('fTaxK');if(!el)return;const F=finFlows(),y=today().slice(0,4),Y=F.filter(x=>x.d.startsWith(y)&&x.k!=='taxpaid'),net=Y.reduce((s,x)=>s+x.eur,0),res=Math.max(0,net)*FIN.tax/100,T=FV.taxProj;
  const pr=T&&T.yr===y?T.projY/FIN.rate:null,tot=pr!=null?net+pr:null;
  el.innerHTML=K(`Rendimiento ${y} hasta hoy`,`<span class="${net>=0?'pos':'neg'}">${eur(net)}</span>`,'cobros − cuentas − gastos, en euros')+K('Reserva a separar ya',eur(res),`${n1(FIN.tax)} % del rendimiento positivo`)+
   (pr!=null?K(`Previsión a 31-12-${y}`,`<span class="${tot>=0?'pos':'neg'}">${eur(tot)}</span>`,`caso típico de la proyección · reserva ${eur(Math.max(0,tot)*FIN.tax/100)}`):'')}
@@ -1675,12 +1763,15 @@ function segOn(id,fn){$(id).addEventListener('click',e=>{const b=e.target.closes
 segOn('fCur',v=>{FIN.cur=v;finPut()});segOn('xCur',v=>{FV.xcur=v});segOn('pH',()=>{FV.pkey='';projRun()});
 $('fYear').addEventListener('change',e=>{FV.y=e.target.value;finRender()});
 $('fRate').addEventListener('change',e=>{const v=pnum(e.target.value);if(v>0.5&&v<3){FIN.rate=v;finPut()}else e.target.value=String(FIN.rate).replace('.',',')});
+['rpFund','rpSave'].forEach(id=>$(id).addEventListener('change',e=>{const v=pnum(e.target.value);if(v>=0&&v<=100){FIN[id==='rpFund'?'pFund':'pSave']=v;finPut()}else finRender()}));
+$('rpSeed').addEventListener('change',e=>{const v=pnum(e.target.value);FIN.seed=v>0?v:0;finPut()});
+$('pGoal').addEventListener('change',e=>{const v=pnum(e.target.value);if(v>=0){FIN.goal=v;finPut()}});
 $('fTax').addEventListener('change',e=>{const v=pnum(e.target.value);if(v>=0&&v<=60){FIN.tax=v;finPut()}else e.target.value=String(FIN.tax).replace('.',',')});
-$('pPru').addEventListener('change',()=>{store.set('proj',{pru:$('pPru').value});FV.pkey='';projRun();if(!$('vJour').hidden)jRender()});
+$('pPru').addEventListener('change',()=>{store.set('proj',{pru:$('pPru').value});cfgPush();FV.pkey='';projRun();if(!$('vJour').hidden)jRender()});
 {const o=store.get('proj');if(o&&['d-5','d0','s'].includes(o.pru))$('pPru').value=o.pru}
 $('xD').value=today();
 $('xAdd').addEventListener('click',()=>{const amt=pnum($('xA').value),m=$('xMsg');if(!(amt>0)){m.hidden=false;m.className='note w';m.textContent='Escribe el importe del gasto.';return}
- FIN.exp.push({id:uid_(),d:$('xD').value||today(),c:$('xC').value.trim().slice(0,60),amt,cur:FV.xcur,m:$('xM').checked,end:''});$('xA').value='';$('xC').value='';$('xM').checked=false;m.hidden=true;FV.pkey='';finPut()});
+ FIN.exp.push({id:uid_(),d:$('xD').value||today(),c:$('xC').value.trim().slice(0,60)||$('xCat').selectedOptions[0].textContent.split(' (')[0],amt,cur:FV.xcur,m:$('xM').checked,end:'',cat:$('xCat').value});$('xA').value='';$('xC').value='';$('xM').checked=false;m.hidden=true;FV.pkey='';finPut()});
 $('xList').addEventListener('click',e=>{const d=e.target.closest('[data-xdel]'),en=e.target.closest('[data-xend]');
  if(d){FIN.exp=FIN.exp.filter(x=>x.id!==d.dataset.xdel);FV.pkey='';finPut()}
  if(en){const x=FIN.exp.find(x=>x.id===en.dataset.xend);if(x){x.end=today();FV.pkey='';finPut()}}});
