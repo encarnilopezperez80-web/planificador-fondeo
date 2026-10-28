@@ -606,6 +606,7 @@ details[open]>*:not(summary){animation:viewIn .35s ease-out both}
       <div class="two"><label class="f" for="rTarget">Objetivo challenge ($)<input id="rTarget" type="text" inputmode="decimal"></label><label class="f" for="rMll">Drawdown EOD ($)<input id="rMll" type="text" inputmode="decimal"></label></div>
       <div class="two"><label class="f" for="rLock">Suelo se bloquea en (+$)<input id="rLock" type="text" inputmode="decimal"></label><label class="f" for="rElock">Bloqueo en challenge (+$, vacío = nunca)<input id="rElock" type="text" inputmode="decimal"></label></div>
       <div class="two"><label class="f" for="rCons">Consistencia challenge (%)<input id="rCons" type="text" inputmode="decimal"></label><label class="f" for="rFcons">Consistencia fondeada (%)<input id="rFcons" type="text" inputmode="decimal"></label></div>
+      <label class="f" for="rMdays">Días mínimos para aprobar el challenge<input id="rMdays" type="text" inputmode="numeric"></label>
       <div class="two"><label class="f" for="rDll">Pérdida diaria máx. ($)<input id="rDll" type="text" inputmode="decimal"></label><label class="f" for="rMaxE">Máx. MES challenge<input id="rMaxE" type="text" inputmode="numeric"></label></div>
       <label class="f" for="rScale">Contratos en fondeada (beneficio:MES)<input id="rScale" type="text" autocomplete="off"></label>
       <div class="two"><label class="f" for="rPmin">Beneficio mín. para pedir ($)<input id="rPmin" type="text" inputmode="decimal"></label><label class="f" for="rPct">Máx. del beneficio por retiro (%)<input id="rPct" type="text" inputmode="decimal"></label></div>
@@ -770,7 +771,7 @@ const FN=f=>(FIRMS[f]||FIRMS.lucid);
 const sizeOf=v=>String(v||'').split('|')[1]||(SIZEK.includes(v)?v:null),firmOf=v=>String(v||'').includes('|')?v.split('|')[0]:'lucid';
 const SIZEK=['25K','50K','100K','150K'];
 const SIZE={'25K':25000,'50K':50000,'100K':100000,'150K':150000};
-const RF={target:'rTarget',mll:'rMll',lock:'rLock',elock:'rElock',pmin:'rPmin',fcons:'rFcons',cons:'rCons',dll:'rDll',pct:'rPct',cap:'rCap',min:'rMin',split:'rSplit',qn:'rQn',qd:'rQd',maxP:'rMaxP',maxF:'rMaxF',maxE:'rMaxE',scale:'rScale'};
+const RF={mdays:'rMdays',target:'rTarget',mll:'rMll',lock:'rLock',elock:'rElock',pmin:'rPmin',fcons:'rFcons',cons:'rCons',dll:'rDll',pct:'rPct',cap:'rCap',min:'rMin',split:'rSplit',qn:'rQn',qd:'rQd',maxP:'rMaxP',maxF:'rMaxF',maxE:'rMaxE',scale:'rScale'};
 function parseScale(t){const out=[];String(t||'').split(/[;,\n]+/).forEach(x=>{const m=x.split(':');if(m.length===2){const a=esNum(m[0]),b=esNum(m[1]);if(isFinite(a)&&b>0)out.push([a,b])}});return out.sort((x,y)=>x[0]-y[0])}
 function tierMax(tiers,bal){if(!tiers||!tiers.length)return Infinity;let n=tiers[0][1];for(const t of tiers)if(bal>=t[0])n=t[1];return n}
 const $=id=>document.getElementById(id);
@@ -860,14 +861,14 @@ $('cPct').addEventListener('input',()=>{lastEdit='pct';calc()});
 // ================= ESTADÍSTICAS: parámetros =================
 let sPh='e';
 function loadPreset(k){const s0=sizeOf(k);if(!s0)return;const X=PR(firmOf(k),s0);for(const f in RF)$(RF[f]).value=X[f]===Infinity?'':X[f];if(X.caps&&X.caps.length>1)$('rCap').value=X.caps.join(' / ');$('hPre').textContent=FN(firmOf(k)).src;$('sThr').value=X.thr;$('sFee').value=X.fee;$('sRE').value=Math.round(SIZE[s0]*0.01);$('sRF').value=Math.round(SIZE[s0]*0.006)}
-function rules(){const r={};for(const f in RF)if(f!=='scale')r[f]=num(RF[f]);{const L=String($('rCap').value).split('/').map(v=>pnum(v)).filter(v=>v>0);r.caps=L.length>1?L:null;if(L.length)r.cap=L[0]}if(!isFinite(r.elock))r.elock=Infinity;r.pmin=r.pmin>0?r.pmin:0;r.fcons=(r.fcons>0?r.fcons:0)/100;r.tiers=parseScale($('rScale').value);if(!(r.maxE>0))r.maxE=Infinity;for(const k of ['lock','dll','min','qn','qd'])if(!isFinite(r[k]))r[k]=0;
+function rules(){if($('rMdays')&&$('rMdays').value===''&&$('sPre').value!=='custom'){const k=$('sPre').value,z=sizeOf(k);if(z)$('rMdays').value=PR(firmOf(k),z).mdays||0}const r={};for(const f in RF)if(f!=='scale')r[f]=num(RF[f]);{const L=String($('rCap').value).split('/').map(v=>pnum(v)).filter(v=>v>0);r.caps=L.length>1?L:null;if(L.length)r.cap=L[0]}if(!isFinite(r.elock))r.elock=Infinity;r.pmin=r.pmin>0?r.pmin:0;r.fcons=(r.fcons>0?r.fcons:0)/100;r.tiers=parseScale($('rScale').value);if(!(r.maxE>0))r.maxE=Infinity;for(const k of ['lock','dll','min','qn','qd','mdays'])if(!isFinite(r[k]))r[k]=0;
  if(!isFinite(r.cap))r.cap=1e9;if(!(r.maxP>=1))r.maxP=5;if(!(r.maxF>=1))r.maxF=5;r.cons=(r.cons||0)/100;r.pct=(isFinite(r.pct)?r.pct:50)/100;r.split=(isFinite(r.split)?r.split:90)/100;return r}
 function P(){const r=rules(),dpw=+$('sDpw').value,L=Math.round(dpw*4.2),months=+$('sHm').value;
  return{r,rE:num('sRE'),rF:num('sRF'),rr:num('sRR'),sl:num('sSL')>0?num('sSL'):Infinity,cost:(num('sCost')||0)/100,wr:+$('sWR').value/100,vr:+$('sVar').value/100,mt:+$('sMT').value,stopWin:$('sStopWin').checked,
   pm:Math.max(0,num('sPM')|0),extra:Math.max(0,num('sExtra')|0),thr:num('sThr'),months,L,H:L*months,dpw,fee:num('sFee')||0,fix:num('sFix')||0,tax:(num('sTax')||0)/100,
   pbe:Math.min(.6,Math.max(0,(num('sBE')||0)/100)),ppart:Math.min(1,Math.max(0,(num('sPart')||0)/100)),partR:num('sPartR')>0?num('sPartR'):1,lr:num('sLR')>0?num('sLR'):1,adj:$('sAdj').value==='1',keep:+$('sKeep').value||0,full:$('sFull').checked,maxEv:+$('sMaxEv').value||1,ladder:ladder(r),
   ph:sPh,bal:num('sBal')||0,hi:Math.max(num('sHi')||0,num('sBal')||0,0),npay:Math.max(0,num('sNpay')|0),...(SLINK&&SLINK.ph===sPh?{mx:SLINK.mx,q:SLINK.q,cyc:SLINK.cyc}:{})}}
-function presetRules(X){const r={...X};r.cons=(X.cons||0)/100;r.pct=(X.pct??50)/100;r.split=(X.split??90)/100;r.fcons=(X.fcons||0)/100;r.tiers=parseScale(X.scale);if(!(r.maxE>0))r.maxE=Infinity;r.caps=X.caps&&X.caps.length>1?X.caps:null;for(const k of ['lock','dll','min','qn','qd','pmin'])if(!isFinite(r[k]))r[k]=0;return r}
+function presetRules(X){const r={...X};r.cons=(X.cons||0)/100;r.pct=(X.pct??50)/100;r.split=(X.split??90)/100;r.fcons=(X.fcons||0)/100;r.tiers=parseScale(X.scale);if(!(r.maxE>0))r.maxE=Infinity;r.caps=X.caps&&X.caps.length>1?X.caps:null;for(const k of ['lock','dll','min','qn','qd','pmin','mdays'])if(!isFinite(r[k]))r[k]=0;return r}
 // pasos de escalado: 1.º = la cuenta de arriba (con sus reglas); los siguientes, planes de la lista
 function ladder(r0,force){const k0=$('sPre').value,z0=sizeOf(k0)||'25K',f0=k0==='custom'?'custom':firmOf(k0),on=force!=null?force:$('sLadOn').checked;
  const L=[{key:k0,r:r0||rules(),mult:1,fee:num('sFee')||0,thr:null,n:on?Math.max(1,num('sN0')|0):Infinity,g:FN(f0).grp||f0,cap:Math.max(1,(r0||rules()).maxF|0),lbl:k0==='custom'?'Personalizada':`${FN(f0).short} ${z0}`}];
@@ -905,7 +906,7 @@ function sim(p,o){const rnd=mulberry32(o.seed||20260927),N=o.nsim,H=o.H||p.H,L=p
   let st;if(o.start==='freshF')st={ph:1,bal:0,hi:0,mx:0,q:0,cyc:0,lk:false,npy:0,paid:false};
   else if(o.start==='freshE')st={ph:0,bal:0,hi:0,mx:0,q:0,cyc:0,lk:false,npy:0,paid:false};
   else st={ph:p.ph==='e'?0:1,bal:p.bal,hi:p.hi,mx:p.mx||0,q:p.q||0,cyc:p.cyc||0,lk:p.ph==='f'&&p.npay>0,npy:p.ph==='f'?p.npay:0,paid:p.ph==='f'&&p.npay>0};
-  st.k=0;st.cb=0;st.fl=st.lk?r0.lock:Math.min(st.hi-r0.mll,st.ph===0?(r0.elock??r0.lock):r0.lock);st.act=st.npy<r0.maxP;st.orig=true;sl[0]=st;
+  st.k=0;st.cb=0;st.fl=st.lk?r0.lock:Math.min(st.hi-r0.mll,st.ph===0?(r0.elock??r0.lock):r0.lock);st.act=st.npy<r0.maxP;st.orig=true;st.nd=99;sl[0]=st;
   if(o.states){sl[0]={act:false};o.states.forEach((x,i)=>{sl[i]=Object.assign({k:0,cb:0},x,{act:true,orig:true})})}
   if(st.ph===1&&!o.states)res.stF[s*NS]++;
   let bank=o.plan?p.extra:0,nf=0,spent=0,cob=0,gr=0,npays=0,pass=0,evB=0,fB=0,fPaid=0,fDone=0,wr=o.wrs?o.wrs[s]:p.wr,minC=0,fix=0,mxFA=0;
@@ -921,7 +922,7 @@ function sim(p,o){const rnd=mulberry32(o.seed||20260927),N=o.nsim,H=o.H||p.H,L=p
    if(any){for(let t=0;t<p.mt;t++){const be=pbe>0&&rnd()<pbe,win=!be&&rnd()<wr,part=win&&ppart>0&&rnd()<ppart,mult=be?0:win?(part?partR:rr):-lr;let traded=false;
      for(const x of sl){if(!x.alive)continue;traded=true;const S=LAD[x.k],r=S.r,R=x.R;const pl=mult*R-p.cost*R;x.bal+=pl;x.day+=pl;
       if(x.bal<=x.fl){x.alive=false;x.act=false;if(x.ph===0){evB++;if(o.plan)res.mStat[m*6+2]++;if(x.orig&&isNaN(res.bDay[s]))res.bDay[s]=d}else{fB++;res.stBurn[s*NS+x.k]++;if(o.plan)res.mStat[m*6+4]++;if(x.orig&&isNaN(res.bDay[s]))res.bDay[s]=d}continue}
-      if(x.ph===0){const mx=Math.max(x.mx,x.day);if(x.bal>=r.target&&(r.cons<=0||mx<=r.cons*x.bal)){pass++;if(isNaN(res.fp1[s]))res.fp1[s]=d;if(o.plan)res.mStat[m*6+1]++;if(x.orig&&isNaN(res.pDay[s]))res.pDay[s]=d;
+      if(x.ph===0){const mx=Math.max(x.mx,x.day);if(x.bal>=r.target&&(r.cons<=0||mx<=r.cons*x.bal)&&(x.nd||0)+1>=(r.mdays||0)){pass++;if(isNaN(res.fp1[s]))res.fp1[s]=d;if(o.plan)res.mStat[m*6+1]++;if(x.orig&&isNaN(res.pDay[s]))res.pDay[s]=d;
         if(o.start==='freshE'){x.act=false;x.alive=false;continue}
         Object.assign(x,{ph:1,bal:0,hi:0,fl:-r.mll,mx:0,q:0,cyc:0,cb:0,lk:false,npy:0,paid:false,day:0});x.alive=false;let c2=0;for(const y of sl)if(y.act&&y.ph===1&&LAD[y.k].g===S.g)c2++;if(c2>S.cap)x.act=false;else res.stF[s*NS+x.k]++;continue}}
       else if(r.dll>0&&x.day<=-r.dll)x.alive=false;
@@ -929,7 +930,7 @@ function sim(p,o){const rnd=mulberry32(o.seed||20260927),N=o.nsim,H=o.H||p.H,L=p
      if(!traded)break;if(win&&!part&&p.stopWin)break;if(win&&part&&p.stopWin)break}
     let fa=0;
     for(const x of sl){if(!x.act)continue;const S=LAD[x.k],r=S.r;
-     if(x.ph===0){if(x.day>x.mx)x.mx=x.day;if(x.bal>x.hi){x.hi=x.bal;x.fl=Math.min(x.hi-r.mll,r.elock??r.lock)}}
+     if(x.ph===0){x.nd=(x.nd||0)+1;if(x.day>x.mx)x.mx=x.day;if(x.bal>x.hi){x.hi=x.bal;x.fl=Math.min(x.hi-r.mll,r.elock??r.lock)}}
      else{fa++;if(x.day>r.qd&&x.day>0)x.q++;if(x.day>(x.cb||0))x.cb=x.day;if(!x.lk&&x.bal>x.hi){x.hi=x.bal;x.fl=Math.min(x.hi-r.mll,r.lock)}
       if(x.q>=r.qn&&x.bal>x.cyc&&x.bal>=Math.max(S.thr!=null?S.thr:p.thr,r.pmin||0)&&!(r.fcons>0&&(x.cb||0)>r.fcons*(x.bal-x.cyc))){const cp=capN(r,x.npy),kp=keepOf(S);let amt=Math.min(r.pct*x.bal,cp);if(kp>0)amt=Math.min(amt,x.bal-kp);
        if(amt>=r.min&&amt>0&&(!full||amt>=cp-1e-6)){x.bal-=amt;gr+=amt;cob+=r.split*amt;npays++;res.stPay[s*NS+x.k]++;res.stCob[s*NS+x.k]+=r.split*amt;if(o.plan)res.mStat[m*6+3]++;if(!x.paid){x.paid=true;fPaid++}if(isNaN(res.pay1[s]))res.pay1[s]=d;if(x.orig)pd.push(d);
@@ -2051,8 +2052,8 @@ function sAccList(){return Object.values(J.accs).map(a=>{const st=accState(a);re
 function sAccFill(L,cur){$('sAcc').innerHTML='<option value="">— Ninguna: valores a mano</option>'+L.map(x=>`<option value="${esc(x.a.id)}">${esc(x.a.name||x.a.size)}${/fondead|evaluaci|challenge/i.test(x.a.name||'')?'':x.a.phase==='f'?', fondeada':', evaluación'}${x.a.copy?', copia':''}</option>`).join('');$('sAcc').value=L.some(x=>x.a.id===cur)?cur:''}
 function statsLink(id,full){const a=J.accs[id];if(!a){SLINK=null;$('hAcc').textContent='';return false}
  const st=accState(a),r=st.r,k=`${a.firm||'lucid'}|${a.size}`,sz=SIZE[a.size];let ch=false;const set=(id,v)=>{v=String(v);if($(id).value!==v){$(id).value=v;ch=true}};
- if(full){if($('sPre').value!==k){$('sPre').value=k;loadPreset(k);ch=true}
-  if(a.rules){const M={target:'rTarget',mll:'rMll',lock:'rLock',cons:'rCons',pct:'rPct',cap:'rCap',min:'rMin',pmin:'rPmin',qn:'rQn',qd:'rQd',fcons:'rFcons',split:'rSplit'};for(const f in a.rules)if(M[f])set(M[f],a.rules[f])}
+ if(full){if($('sPre').value!==k)ch=true;$('sPre').value=k;{const before=Object.values(RF).map(i=>$(i).value).join('|');loadPreset(k);if(Object.values(RF).map(i=>$(i).value).join('|')!==before)ch=true}
+  if(a.rules){const M={target:'rTarget',mll:'rMll',lock:'rLock',cons:'rCons',pct:'rPct',cap:'rCap',min:'rMin',pmin:'rPmin',qn:'rQn',qd:'rQd',fcons:'rFcons',split:'rSplit',mdays:'rMdays'};for(const f in a.rules)if(M[f])set(M[f],a.rules[f]);if(a.rules.lock!=null&&a.rules.lock!==''&&$('rElock').value!=='')set('rElock',a.rules.lock)}
   set('sRE',Math.round(sz*(a.phase==='e'&&a.rp>0?a.rp:1)/100));{const hs=a.dstop>0?a.dstop:pnum($('hStop').value);if(hs>0)set('sSL',String(hs).replace('.',','))}set('sRF',Math.round(sz*(a.phase==='f'&&a.rp>0?a.rp:0.6)/100));
   {const lp=Object.values(J.accs).filter(b=>b.phase==='e'&&+b.price>0&&(b.firm||'lucid')===(a.firm||'lucid')&&b.size===a.size).sort((x,y)=>(y.date||'').localeCompare(x.date||''))[0];if(lp)set('sFee',lp.price)}if(r.pmin>0&&num('sThr')<r.pmin)set('sThr',r.pmin)}
  if(sPh!==a.phase){sPh=a.phase;segSet('sPh',sPh);ch=true}
