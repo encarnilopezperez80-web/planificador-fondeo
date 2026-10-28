@@ -226,7 +226,7 @@ h3{font-size:13px;color:var(--ink);font-weight:600}
 /* cabecera: pestañas a todo lo ancho */
 .topbar{position:sticky;top:0;z-index:6;display:flex;align-items:center;gap:10px;padding-block:12px;border:0;flex-wrap:nowrap;
  background:color-mix(in srgb,var(--bg) 80%,transparent);-webkit-backdrop-filter:blur(14px) saturate(140%);backdrop-filter:blur(14px) saturate(140%)}
-.tabs{flex:1;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;padding:4px;border-radius:14px;border:1px solid var(--cline);background:color-mix(in srgb,var(--card) 70%,transparent);overflow:visible}
+.tabs{flex:1;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;padding:4px;border-radius:14px;border:1px solid var(--cline);background:color-mix(in srgb,var(--card) 70%,transparent);overflow:visible}
 .tabs a{position:relative;display:flex;align-items:center;justify-content:center;gap:9px;padding:10px 12px;border:0!important;border-radius:10px;font:550 14px "Schibsted Grotesk",sans-serif;color:var(--mut);text-decoration:none;transition:color .2s,background .2s}
 .tabs a[data-c="c"]{--tc:var(--c-c)}.tabs a[data-c="s"]{--tc:var(--c-s)}.tabs a[data-c="j"]{--tc:var(--c-j)}.tabs a[data-c="f"]{--tc:var(--c-f)}
 .tabs a:hover{color:var(--ink);background:color-mix(in srgb,var(--tc) 8%,transparent)}
@@ -335,6 +335,14 @@ footer{border-top:1px solid var(--cline);opacity:1;color:var(--dim);font-size:11
 .mfl i{height:8px;border-radius:999px;background:var(--open);overflow:hidden;display:block}.mfl em{display:block;height:100%;border-radius:999px;transform-origin:left;animation:growX .9s cubic-bezier(.25,.8,.25,1) both}
 .mfl b{font-weight:600;min-width:56px;text-align:right}
 .mft{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;font-size:11.5px;color:var(--dim);border-top:1px solid var(--cline);padding-top:8px}.mft b{font-weight:650}
+
+.tipc{min-width:240px;padding:12px 14px}
+.tip .th{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:8px;font-size:13px}
+.tip .tg2{font-size:10.5px;padding:2px 8px;border-radius:999px;background:var(--open);color:var(--mut);white-space:nowrap}.tip .tg2.rl{background:color-mix(in srgb,var(--good) 18%,transparent);color:var(--ink)}
+.tip .tr{display:flex;justify-content:space-between;gap:18px;padding:3px 0;font-size:12.5px}.tip .tr span{color:var(--mut);display:flex;align-items:center;gap:7px}
+.tip .tr i{width:8px;height:8px;border-radius:2px;display:inline-block}.tip .tr b{font-weight:650}.tip .tr em{font-style:normal;color:var(--dim);font-weight:500}
+.tip .tf{border-top:1px solid var(--cline);margin-top:4px;padding-top:6px}
+.tip p{margin:8px 0 0;font-size:11.5px;color:var(--dim);line-height:1.45;max-width:260px}
 /* ===== movimiento ===== */
 .tabs{position:relative}
 .tabind{position:absolute;top:4px;bottom:4px;left:0;width:0;border-radius:10px;background:var(--tile);box-shadow:inset 0 0 0 1px var(--cline);transition:transform .45s cubic-bezier(.3,.8,.2,1),width .45s cubic-bezier(.3,.8,.2,1);pointer-events:none;z-index:0}
@@ -368,15 +376,36 @@ svg[role="img"]{animation:reveal 1.1s cubic-bezier(.25,.8,.25,1) both}
 @keyframes tick{0%{opacity:.55}100%{opacity:1}}
 details>summary{transition:color .2s}
 details[open]>*:not(summary){animation:viewIn .35s ease-out both}
-@media (max-width:760px){.ny span{display:none}}
+
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+
+/* ===== cabecera ===== */
+.topbar{display:grid!important;grid-template-columns:1fr minmax(0,560px) 1fr;align-items:center;gap:16px;padding-block:14px!important;position:sticky}
+.hd-l{display:flex;align-items:baseline;gap:12px;min-width:0}
+.clk{font:600 22px/1 "Schibsted Grotesk",sans-serif;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.clk .cn{animation:blink 2s steps(1) infinite;margin:0 1px}
+@keyframes blink{50%{opacity:.25}}
+.dt{font-size:12.5px;color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dt::first-letter{text-transform:uppercase}
+.hd-r{display:flex;align-items:center;justify-content:flex-end;gap:10px}
+.ny{padding:6px 12px 6px 10px;border-radius:999px;border:1px solid var(--cline);background:var(--tile);font-size:12px;color:var(--mut);gap:8px}
+.ny b{color:var(--ink);font-weight:600}
+.ny.on{border-color:color-mix(in srgb,var(--good) 40%,var(--cline));background:color-mix(in srgb,var(--good) 9%,var(--tile))}
+.sess{position:absolute;left:0;right:0;bottom:0;height:2px;background:transparent;overflow:hidden}
+.sess i{display:block;height:100%;width:0;background:linear-gradient(90deg,transparent,var(--good));transition:width 1s ease}
+.sess.pre i{background:linear-gradient(90deg,transparent,var(--warn));opacity:.7}
+.divh{display:flex;align-items:baseline;gap:12px;padding:10px 4px 0;border-top:1px solid var(--cline);margin-top:6px}
+.divh h2{font-size:20px;letter-spacing:-.02em}.divh span{color:var(--dim);font-size:12.5px}
+#vFin>.jw{margin-top:12px}
+@media (max-width:980px){.topbar{grid-template-columns:auto minmax(0,1fr) auto}.dt{display:none}}
+@media (max-width:640px){.topbar{grid-template-columns:minmax(0,1fr) auto;gap:8px}.hd-l{display:none}.ny{padding:5px 8px}.ny span{display:none}}
 </style></head><body>
 
 <div class="wrap">
 <div class="topbar">
-  <nav class="tabs" aria-label="Páginas"><span class="tabind" aria-hidden="true"></span><a href="#calc" id="tCalc" data-c="c"><span>Calculadora</span></a><a href="#stats" id="tStats" data-c="s"><span>Estadísticas</span></a><a href="#diario" id="tJour" data-c="j"><span>Diario</span></a><a href="#finanzas" id="tFin" data-c="f"><span>Finanzas</span></a></nav>
-  <span class="ny" id="nyS" aria-live="polite"></span>
-  <button type="button" class="modeb" id="bMode" aria-pressed="false" aria-label="Cambiar a modo día" title="Modo día"></button>
+  <div class="hd-l"><div class="clk" id="hClk" aria-label="Hora"></div><div class="dt" id="hDt"></div></div>
+  <nav class="tabs" aria-label="Páginas"><span class="tabind" aria-hidden="true"></span><a href="#calc" id="tCalc" data-c="c"><span>Calculadora</span></a><a href="#stats" id="tStats" data-c="s"><span>Estadísticas</span></a><a href="#diario" id="tJour" data-c="j"><span>Diario</span></a><a href="#finanzas" id="tFin" data-c="f" hidden></a></nav>
+  <div class="hd-r"><span class="ny" id="nyS" aria-live="polite"></span><button type="button" class="modeb" id="bMode" aria-pressed="false" aria-label="Cambiar a modo día" title="Modo día"></button></div>
 </div>
 
 <!-- ================= HOY ================= -->
@@ -398,97 +427,7 @@ details[open]>*:not(summary){animation:viewIn .35s ease-out both}
  </div>
 </section>
 
-<!-- ================= FINANZAS ================= -->
-<section class="view" id="vFin" aria-label="Finanzas" hidden>
- <div class="jw">
-  <div class="card">
-    <div class="sh"><h2>Tus finanzas de fondeo</h2><span class="tag" id="fStore"></span></div>
-    <div class="fset">
-      <label class="f" for="fYear">Periodo<select id="fYear"></select></label>
-      <div class="f"><span>Moneda</span><div class="seg" id="fCur" role="group" aria-label="Moneda" style="width:auto"><button type="button" data-v="usd" aria-pressed="true">$</button><button type="button" data-v="eur" aria-pressed="false">€</button></div></div>
-      <label class="f" for="fRate">Dólares por euro<input id="fRate" type="text" inputmode="decimal" value="1,12"></label>
-      <label class="f" for="fTax">Reserva para impuestos (%)<input id="fTax" type="text" inputmode="decimal" value="30"></label>
-    </div>
-    <div class="kp" id="fKpi"></div>
-    <div id="fNote" class="note"></div>
-  </div>
 
-  <div class="card">
-    <div class="sh"><h2>Reparto de tu dinero</h2><span class="tag">4 huchas por retiro</span></div>
-    <div class="fset">
-      <label class="f" for="rpTax">Hacienda (%), se cambia arriba<input id="rpTax" type="text" inputmode="decimal" disabled></label>
-      <label class="f" for="rpFund">Fondo de trading (%)<input id="rpFund" type="text" inputmode="decimal"></label>
-      <label class="f" for="rpSave">Ahorro y colchón (%)<input id="rpSave" type="text" inputmode="decimal"></label>
-      <label class="f" for="rpSeed">Dinero que metiste en el fondo de tu bolsillo ($)<input id="rpSeed" type="text" inputmode="decimal" placeholder="0"></label>
-    </div>
-    <div class="splitbar" id="rpBar"></div>
-    <div class="kp" id="rpKpi"></div>
-    <div id="rpNote" class="note"></div>
-  </div>
-
-  <div class="card">
-    <div class="sh"><h2>Salud del negocio</h2><span class="tag">datos reales</span></div>
-    <div class="kp" id="bzKpi"></div>
-  </div>
-
-  <div class="card">
-    <div class="sh"><h2>Próximos cobros</h2><span class="tag">cuentas activas</span></div>
-    <div id="nxList" class="vb"></div>
-    <p class="hint" id="nxHint"></p>
-  </div>
-
-  <div class="card">
-    <div class="sh"><h2>Proyección de tu plan</h2><span class="tag">10.000 simulaciones</span></div>
-    <div class="fset">
-      <div class="f"><span>Horizonte</span><div class="seg" id="pH" role="group" aria-label="Horizonte" style="width:auto"><button type="button" data-v="3" aria-pressed="false">3 meses</button><button type="button" data-v="6" aria-pressed="true">6 meses</button><button type="button" data-v="12" aria-pressed="false">12 meses</button></div></div>
-      <label class="f" for="pGoal">Objetivo de ingresos (€ al mes, ya sin impuestos)<input id="pGoal" type="text" inputmode="decimal" value="1000"></label>
-      <label class="f" for="pPru">Cómo operas en la proyección<select id="pPru"><option value="d-5" selected>Tu Diario, prudente (5 puntos menos de acierto)</option><option value="d0">Tu Diario, tal cual (con su margen de error)</option><option value="s">Tus ajustes de Estadísticas</option></select></label>
-    </div>
-    <div id="pSrc" class="hint"></div>
-    <div class="kp" id="pKpi"></div>
-    <div class="chartbox"><div class="sh"><h3>Dinero acumulado: real y proyectado</h3><div class="lg" id="fLeg"></div></div><div id="fChart" class="chart" style="position:relative"></div></div>
-    <details class="more"><summary>Ver proyección en tabla</summary><div class="tw" id="pTable" style="margin-top:8px"></div></details>
-    <p class="hint" id="pHint"></p>
-  </div>
-
-  <div class="card">
-    <div class="sh"><h2>Tus cuentas mes a mes</h2><span class="tag">de la compra al cierre</span></div>
-    <div class="chartbox"><div class="sh"><h3>Cuentas cada mes: lo real y lo previsto</h3></div><div class="lg" id="cLeg"></div><div id="mCnt" class="chart" style="position:relative"></div></div>
-    <div class="chartbox"><div class="sh"><h3>Cada cuenta en el tiempo</h3></div><div class="lg" id="mLeg"></div><div id="mChart" class="chart" style="position:relative"></div></div>
-    <div id="mCards" class="mcs"></div>
-    <details class="more"><summary>Ver en tabla</summary><div class="tw" id="fMonths" style="margin-top:8px"></div></details>
-  </div>
-
-  <div class="card">
-    <div class="sh"><h2>Impuestos y autónomos</h2><span class="tag">IRPF y RETA, <span id="fTaxY"></span></span></div>
-    <div class="fset">
-      <label class="f" for="txSal">Tu sueldo bruto anual como asalariada (€)<input id="txSal" type="text" inputmode="decimal" placeholder="p. ej. 22000"></label>
-      <label class="f" for="txReta">Autónomos<select id="txReta"><option value="plana">Alta con tarifa plana (80 €/mes)</option><option value="pluri">Alta con reducción por pluriactividad (50 %)</option><option value="tramos">Alta con cuota por ingresos reales</option><option value="no">Sin alta (ingresos esporádicos)</option></select></label>
-    </div>
-    <div class="kp" id="txKpi"></div>
-    <div class="chartbox"><div class="sh"><h3>Cada mes: lo que ganas, lo que pagas y lo que te queda</h3></div><div class="lg" id="txLeg"></div><div id="txChart" class="chart" style="position:relative"></div></div>
-    <div class="tw" id="txTable"></div>
-    <div class="kp" id="fTaxK"></div>
-    <div class="tw" id="fTaxT"></div>
-    <div class="note i" id="fTaxN"></div>
-  </div>
-
-  <div class="card">
-    <div class="sh"><h2>Otros gastos</h2><span class="tag">suscripciones y cuotas</span></div>
-    <div class="jform">
-      <label class="f" for="xD">Fecha<input id="xD" type="date"></label>
-      <label class="f" for="xC">Concepto<input id="xC" type="text" autocomplete="off" placeholder="p. ej. datos CME"></label>
-      <label class="f" for="xA">Importe<input id="xA" type="text" inputmode="decimal" placeholder="0"></label>
-      <div class="f"><span>Moneda</span><div class="seg" id="xCur" role="group" aria-label="Moneda del gasto" style="width:auto"><button type="button" data-v="usd" aria-pressed="true">$</button><button type="button" data-v="eur" aria-pressed="false">€</button></div></div>
-      <label class="f" for="xCat">Tipo<select id="xCat"><option value="op">Operativa (datos, plataforma, copiador…)</option><option value="aut">Cuota de autónomos</option><option value="tax">Pago a Hacienda (IRPF, modelo 130)</option></select></label>
-      <label class="chk"><input type="checkbox" id="xM"> Se repite cada mes</label>
-      <button type="button" class="btn pri" id="xAdd">Añadir gasto</button>
-    </div>
-    <div id="xMsg" class="note" hidden></div>
-    <div class="tw" id="xList"></div>
-  </div>
- </div>
-</section>
 
 <!-- ================= CALCULADORA ================= -->
 <section class="view" id="vCalc" aria-label="Calculadora de contratos">
@@ -746,6 +685,99 @@ details[open]>*:not(summary){animation:viewIn .35s ease-out both}
   <p class="hint">Probabilidades: 10.000 simulaciones por cuenta con los ajustes de Estadísticas.</p>
  </div>
 </section>
+
+<!-- ================= FINANZAS ================= -->
+<section class="view vfin" id="vFin" aria-label="Previsión" hidden>
+ <div class="divh"><h2>Previsión</h2><span>lo que viene, según tu plan de Estadísticas</span></div>
+ <div class="jw">
+  <div class="card" hidden>
+    <div class="sh"><h2>Tus finanzas de fondeo</h2><span class="tag" id="fStore"></span></div>
+    <div class="fset">
+      <label class="f" for="fYear">Periodo<select id="fYear"></select></label>
+      <div class="f"><span>Moneda</span><div class="seg" id="fCur" role="group" aria-label="Moneda" style="width:auto"><button type="button" data-v="usd" aria-pressed="true">$</button><button type="button" data-v="eur" aria-pressed="false">€</button></div></div>
+      <label class="f" for="fRate">Dólares por euro<input id="fRate" type="text" inputmode="decimal" value="1,12"></label>
+      <label class="f" for="fTax">Reserva para impuestos (%)<input id="fTax" type="text" inputmode="decimal" value="30"></label>
+    </div>
+    <div class="kp" id="fKpi"></div>
+    <div id="fNote" class="note"></div>
+  </div>
+
+  <div class="card" hidden>
+    <div class="sh"><h2>Reparto de tu dinero</h2><span class="tag">4 huchas por retiro</span></div>
+    <div class="fset">
+      <label class="f" for="rpTax">Hacienda (%), se cambia arriba<input id="rpTax" type="text" inputmode="decimal" disabled></label>
+      <label class="f" for="rpFund">Fondo de trading (%)<input id="rpFund" type="text" inputmode="decimal"></label>
+      <label class="f" for="rpSave">Ahorro y colchón (%)<input id="rpSave" type="text" inputmode="decimal"></label>
+      <label class="f" for="rpSeed">Dinero que metiste en el fondo de tu bolsillo ($)<input id="rpSeed" type="text" inputmode="decimal" placeholder="0"></label>
+    </div>
+    <div class="splitbar" id="rpBar"></div>
+    <div class="kp" id="rpKpi"></div>
+    <div id="rpNote" class="note"></div>
+  </div>
+
+  <div class="card" hidden>
+    <div class="sh"><h2>Salud del negocio</h2><span class="tag">datos reales</span></div>
+    <div class="kp" id="bzKpi"></div>
+  </div>
+
+  <div class="card">
+    <div class="sh"><h2>Próximos cobros</h2><span class="tag">cuentas activas</span></div>
+    <div id="nxList" class="vb"></div>
+    <p class="hint" id="nxHint"></p>
+  </div>
+
+  <div class="card">
+    <div class="sh"><h2>Proyección de tu plan</h2><span class="tag">10.000 simulaciones</span></div>
+    <div class="fset">
+      <div class="f"><span>Horizonte</span><div class="seg" id="pH" role="group" aria-label="Horizonte" style="width:auto"><button type="button" data-v="3" aria-pressed="false">3 meses</button><button type="button" data-v="6" aria-pressed="true">6 meses</button><button type="button" data-v="12" aria-pressed="false">12 meses</button></div></div>
+      <label class="f" for="pGoal">Objetivo de ingresos (€ al mes)<input id="pGoal" type="text" inputmode="decimal" value="1000"></label>
+      <label class="f" for="pPru">Cómo operas en la proyección<select id="pPru"><option value="d-5" selected>Tu Diario, prudente (5 puntos menos de acierto)</option><option value="d0">Tu Diario, tal cual (con su margen de error)</option><option value="s">Tus ajustes de Estadísticas</option></select></label>
+    </div>
+    <div id="pSrc" class="hint"></div>
+    <div class="kp" id="pKpi"></div>
+    <div class="chartbox"><div class="sh"><h3>Dinero acumulado: real y proyectado</h3><div class="lg" id="fLeg"></div></div><div id="fChart" class="chart" style="position:relative"></div></div>
+    <details class="more"><summary>Ver proyección en tabla</summary><div class="tw" id="pTable" style="margin-top:8px"></div></details>
+    <p class="hint" id="pHint"></p>
+  </div>
+
+  <div class="card">
+    <div class="sh"><h2>Tus cuentas mes a mes</h2><span class="tag">de la compra al cierre</span></div>
+    <div class="chartbox"><div class="sh"><h3>Cuentas cada mes: lo real y lo previsto</h3></div><div class="lg" id="cLeg"></div><div id="mCnt" class="chart" style="position:relative"></div></div>
+    <div class="chartbox"><div class="sh"><h3>Cada cuenta en el tiempo</h3></div><div class="lg" id="mLeg"></div><div id="mChart" class="chart" style="position:relative"></div></div>
+    <div id="mCards" class="mcs"></div>
+    <details class="more"><summary>Ver en tabla</summary><div class="tw" id="fMonths" style="margin-top:8px"></div></details>
+  </div>
+
+  <div class="card" hidden>
+    <div class="sh"><h2>Impuestos y autónomos</h2><span class="tag">IRPF y RETA, <span id="fTaxY"></span></span></div>
+    <div class="fset">
+      <label class="f" for="txSal">Tu sueldo bruto anual como asalariada (€)<input id="txSal" type="text" inputmode="decimal" placeholder="p. ej. 22000"></label>
+      <label class="f" for="txReta">Autónomos<select id="txReta"><option value="plana">Alta con tarifa plana (80 €/mes)</option><option value="pluri">Alta con reducción por pluriactividad (50 %)</option><option value="tramos">Alta con cuota por ingresos reales</option><option value="no">Sin alta (ingresos esporádicos)</option></select></label>
+    </div>
+    <div class="kp" id="txKpi"></div>
+    <div class="chartbox"><div class="sh"><h3>Cada mes: lo que ganas, lo que pagas y lo que te queda</h3></div><div class="lg" id="txLeg"></div><div id="txChart" class="chart" style="position:relative"></div></div>
+    <div class="tw" id="txTable"></div>
+    <div class="kp" id="fTaxK"></div>
+    <div class="tw" id="fTaxT"></div>
+    <div class="note i" id="fTaxN"></div>
+  </div>
+
+  <div class="card" hidden>
+    <div class="sh"><h2>Otros gastos</h2><span class="tag">suscripciones y cuotas</span></div>
+    <div class="jform">
+      <label class="f" for="xD">Fecha<input id="xD" type="date"></label>
+      <label class="f" for="xC">Concepto<input id="xC" type="text" autocomplete="off" placeholder="p. ej. datos CME"></label>
+      <label class="f" for="xA">Importe<input id="xA" type="text" inputmode="decimal" placeholder="0"></label>
+      <div class="f"><span>Moneda</span><div class="seg" id="xCur" role="group" aria-label="Moneda del gasto" style="width:auto"><button type="button" data-v="usd" aria-pressed="true">$</button><button type="button" data-v="eur" aria-pressed="false">€</button></div></div>
+      <label class="f" for="xCat">Tipo<select id="xCat"><option value="op">Operativa (datos, plataforma, copiador…)</option><option value="aut">Cuota de autónomos</option><option value="tax">Pago a Hacienda (IRPF, modelo 130)</option></select></label>
+      <label class="chk"><input type="checkbox" id="xM"> Se repite cada mes</label>
+      <button type="button" class="btn pri" id="xAdd">Añadir gasto</button>
+    </div>
+    <div id="xMsg" class="note" hidden></div>
+    <div class="tw" id="xList"></div>
+  </div>
+ </div>
+</section>
 <footer>Simulación orientativa. Reglas de cada empresa revisadas en octubre de 2026: verifícalas antes de operar. No es asesoramiento financiero.</footer>
 </div>
 
@@ -793,18 +825,26 @@ function segBind(id,cb){const el=$(id);el.querySelectorAll('button').forEach(b=>
 function segSet(id,v){$(id).querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.v===v))}
 
 // ================= navegación =================
-function route(){const h=location.hash,v=h==='#stats'?'s':h==='#diario'?'j':h==='#finanzas'?'f':'c';document.documentElement.setAttribute('data-sec',v);$('vFin').hidden=v!=='f';$('tFin').setAttribute('aria-current',v==='f'?'page':'false');$('vHoy').hidden=true;$('vCalc').hidden=v!=='c';$('vStats').hidden=v!=='s';$('vJour').hidden=v!=='j';
+function route(){const h=location.hash,v=h==='#stats'?'s':h==='#diario'||h==='#finanzas'?'j':'c';document.documentElement.setAttribute('data-sec',v);$('vFin').hidden=v!=='j';$('vHoy').hidden=true;$('vCalc').hidden=v!=='c';$('vStats').hidden=v!=='s';$('vJour').hidden=v!=='j';
  $('tCalc').setAttribute('aria-current',v==='c'?'page':'false');$('tStats').setAttribute('aria-current',v==='s'?'page':'false');$('tJour').setAttribute('aria-current',v==='j'?'page':'false');
- if(v==='s'&&(!S.done||S.dirty))schedule();if(v==='s'&&S.evo)setTimeout(drawEvo,0);if(v==='j')jRender(true);if(v==='f')finRender();requestAnimationFrame(tabInd)}
+ if(v==='s'&&(!S.done||S.dirty))schedule();if(v==='s'&&S.evo)setTimeout(drawEvo,0);if(v==='j'){jRender(true);finRender()}requestAnimationFrame(tabInd)}
 addEventListener('hashchange',route);
 // ===== movimiento =====
 function tabInd(){const n=document.querySelector('.tabs'),a=n&&n.querySelector('a[aria-current="page"]'),k=n&&n.querySelector('.tabind');if(!a||!k)return;k.style.width=a.offsetWidth+'px';k.style.transform=`translateX(${a.offsetLeft}px)`}
 addEventListener('resize',()=>tabInd());
-function nyTick(){const el=$('nyS');if(!el)return;let wd,h,m;try{const f=new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',weekday:'short',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).formatToParts(new Date());const g=t=>(f.find(x=>x.type===t)||{}).value;wd=g('weekday');h=+g('hour');m=+g('minute')}catch(e){el.hidden=true;return}
- const t=h*60+m,we=wd==='Sat'||wd==='Sun',fm=x=>x>=60?`${Math.floor(x/60)} h ${x%60} min`:`${x} min`;let on=false,txt;
- if(we)txt='NY cerrado';else if(t<570)txt='NY abre en '+fm(570-t);else if(t<960){on=true;txt='NY abierto, cierra en '+fm(960-t)}else txt='NY cerrado';
- el.className='ny'+(on?' on':'');el.innerHTML=`<i></i><span>${txt}</span>`}
-nyTick();setInterval(nyTick,30000);
+function nyTick(){const el=$('nyS');if(!el)return;const now=new Date();
+ const ck=$('hClk');if(ck){const h=String(now.getHours()).padStart(2,'0'),mi=String(now.getMinutes()).padStart(2,'0');ck.innerHTML=`${h}<span class="cn">:</span>${mi}`}
+ const dt=$('hDt');if(dt)dt.textContent=now.toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long'});
+ let wd,h,m;try{const f=new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',weekday:'short',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).formatToParts(now);const g=t=>(f.find(x=>x.type===t)||{}).value;wd=g('weekday');h=+g('hour');m=+g('minute')}catch(e){el.hidden=true;return}
+ const t=h*60+m,we=wd==='Sat'||wd==='Sun',fm=x=>x>=60?`${Math.floor(x/60)} h ${String(x%60).padStart(2,'0')} min`:`${x} min`;let on=false,txt,prog=0,pre=false;
+ const openL=new Date(now.getTime()+(570-t)*60000).toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'});
+ if(we){txt='Mercado cerrado'}
+ else if(t<570){txt=`Apertura NY a las <b>${openL}</b>, en ${fm(570-t)}`;if(t>=240){pre=true;prog=(t-240)/330}}
+ else if(t<960){on=true;txt=`Sesión NY <b>abierta</b>, ${fm(960-t)} para el cierre`;prog=(t-570)/390}
+ else txt='Sesión NY cerrada';
+ el.className='ny'+(on?' on':'');el.innerHTML=`<i></i><span>${txt}</span>`;
+ const sb=$('sessBar');if(sb){sb.style.width=(prog*100).toFixed(1)+'%';sb.parentElement.className='sess'+(pre?' pre':'')}}
+nyTick();setInterval(nyTick,15000);
 // cifras que cuentan hasta su valor
 const CU={sel:'.kp .v,.tiles .v,.an .v,.hn .v',busy:new WeakSet(),last:new WeakMap()};
 function cuParse(t){const m=/^([^\d]*?)(\d{1,3}(?:\.\d{3})+|\d+)(?:,(\d+))?(.*)$/s.exec(t);if(!m)return null;const ip=m[2].replace(/\./g,''),dec=m[3]||'';return{pre:m[1],val:parseFloat(ip+(dec?'.'+dec:'')),dec:dec.length,dots:m[2].includes('.'),suf:m[4]}}
@@ -881,7 +921,8 @@ function valid(p){return p.rE>0&&p.rF>0&&p.rr>0&&p.r.mll>=100&&p.r.target>=100&&
 function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
 // o.start: 'freshE' | 'freshF' | 'state' ; o.plan: true = plan con compras mensuales
 // p.ladder: pasos de escalado [{r,mult,fee,thr,n,g,cap}], p.adj: ajustar el riesgo al objetivo, p.pbe/p.ppart/p.partR/p.lr: cómo salen los trades
-function sim(p,o){const rnd=mulberry32(o.seed||20260927),N=o.nsim,H=o.H||p.H,L=p.L,months=Math.ceil(H/L);
+function sim(p,o){const rnd=mulberry32(o.seed||20260927),N=o.nsim,H=o.H||p.H,L=p.L,m0=Math.max(0,Math.min(H,o.m0|0)),months=m0>0?1+Math.ceil((H-m0)/L):Math.ceil(H/L);
+ const BI=d=>m0>0?(d<=m0?0:1+Math.floor((d-m0-1)/L)):Math.floor((d-1)/L),BS=d=>m0>0?(d===1||(d>m0&&(d-m0-1)%L===0)):(d-1)%L===0;
  const LAD=p.ladder&&p.ladder.length?p.ladder.map((x,i)=>i===0?{...x,r:p.r,fee:p.fee}:x):[{r:p.r,mult:1,fee:p.fee,thr:null,n:Infinity,g:'_',cap:Math.max(1,p.r.maxF|0)}];
  const r0=LAD[0].r,NS=LAD.length,maxEv=Math.max(1,p.maxEv|0||1),keepM=p.keep||0,full=!!p.full;
  const capTot=LAD.reduce((s,x)=>s+Math.min(x.n,x.cap),0);
@@ -909,15 +950,15 @@ function sim(p,o){const rnd=mulberry32(o.seed||20260927),N=o.nsim,H=o.H||p.H,L=p
   st.k=0;st.cb=0;st.fl=st.lk?r0.lock:Math.min(st.hi-r0.mll,st.ph===0?(r0.elock??r0.lock):r0.lock);st.act=st.npy<r0.maxP;st.orig=true;st.nd=99;sl[0]=st;
   if(o.states){sl[0]={act:false};o.states.forEach((x,i)=>{sl[i]=Object.assign({k:0,cb:0},x,{act:true,orig:true})})}
   if(st.ph===1&&!o.states)res.stF[s*NS]++;
-  let bank=o.plan?p.extra:0,nf=0,spent=0,cob=0,gr=0,npays=0,pass=0,evB=0,fB=0,fPaid=0,fDone=0,wr=o.wrs?o.wrs[s]:p.wr,minC=0,fix=0,mxFA=0;
+  let ex=o.plan?p.extra:0,quota=0,nf=0,spent=0,cob=0,gr=0,npays=0,pass=0,evB=0,fB=0,fPaid=0,fDone=0,wr=o.wrs?o.wrs[s]:p.wr,minC=0,fix=0,mxFA=0;
   const mNet=o.plan?new Float64Array(months):null;const pd=[];
-  for(let d=1;d<=H;d++){const m=Math.ceil(d/L)-1;
-   if((d-1)%L===0){if(p.vr>0)wr=Math.min(.95,Math.max(.05,p.wr+(rnd()*2-1)*p.vr));if(o.plan){if(d>1)bank+=p.pm;fix+=p.fix}}
+  for(let d=1;d<=H;d++){const m=BI(d);
+   if(BS(d)){if(p.vr>0)wr=Math.min(.95,Math.max(.05,p.wr+(rnd()*2-1)*p.vr));if(o.plan){quota=d===1&&o.q0!=null?o.q0:p.pm;if(!(d===1&&m0>0))fix+=p.fix}}
    if(o.plan){let ne=0;for(const x of sl)if(x.act&&x.ph===0)ne++;
-    while(ne<maxEv&&bank>=1){// paso al que va el challenge nuevo: el primero con hueco (en el paso y en la empresa)
+    while(ne<maxEv&&quota+ex>=1){// paso al que va el challenge nuevo: el primero con hueco (en el paso y en la empresa)
      let kk=-1;for(let k=0;k<NS&&kk<0;k++){const S=LAD[k];let inStep=0,inGrp=0;for(const x of sl){if(!x.act)continue;if(x.k===k)inStep++;if(LAD[x.k].g===S.g)inGrp++}if(inStep<S.n&&inGrp<S.cap)kk=k}
      if(kk<0)break;let put=false;for(let i=0;i<M;i++)if(!sl[i].act){sl[i]=newAcc(kk,0);put=true;break}if(!put)break;
-     bank-=1;nf++;spent+=LAD[kk].fee;res.stBuy[s*NS+kk]++;res.mStat[m*6]++;ne++}}
+     if(quota>=1)quota--;else ex--;nf++;spent+=LAD[kk].fee;res.stBuy[s*NS+kk]++;res.mStat[m*6]++;ne++}}
    let any=false;for(const x of sl){if(x.act){any=true;x.day=0;x.alive=true;x.R=riskOf(x)}else x.alive=false}
    if(any){for(let t=0;t<p.mt;t++){const be=pbe>0&&rnd()<pbe,win=!be&&rnd()<wr,part=win&&ppart>0&&rnd()<ppart,mult=be?0:win?(part?partR:rr):-lr;let traded=false;
      for(const x of sl){if(!x.alive)continue;traded=true;const S=LAD[x.k],r=S.r,R=x.R;const pl=mult*R-p.cost*R;x.bal+=pl;x.day+=pl;
@@ -936,7 +977,7 @@ function sim(p,o){const rnd=mulberry32(o.seed||20260927),N=o.nsim,H=o.H||p.H,L=p
        if(amt>=r.min&&amt>0&&(!full||amt>=cp-1e-6)){x.bal-=amt;gr+=amt;cob+=r.split*amt;npays++;res.stPay[s*NS+x.k]++;res.stCob[s*NS+x.k]+=r.split*amt;if(o.plan)res.mStat[m*6+3]++;if(!x.paid){x.paid=true;fPaid++}if(isNaN(res.pay1[s]))res.pay1[s]=d;if(x.orig)pd.push(d);
         x.fl=r.lock;x.lk=true;x.q=0;x.cb=0;x.cyc=x.bal;x.npy++;if(x.npy>=r.maxP){x.act=false;fDone++}}}}}
     if(fa>mxFA)mxFA=fa}
-   if(o.plan){const cash=cob*(1-p.tax)-spent-fix;if(cash<minC)minC=cash;if(d%L===0||d===H){mNet[m]=cash;let fa=0;for(const x of sl)if(x.act&&x.ph===1)fa++;res.mStat[m*6+5]+=fa}}
+   if(o.plan){const cash=cob*(1-p.tax)-spent-fix;if(cash<minC)minC=cash;if(d===H||BI(d+1)!==m){mNet[m]=cash;let fa=0;for(const x of sl)if(x.act&&x.ph===1)fa++;res.mStat[m*6+5]+=fa}}
    if(!o.plan&&!sl[0].act)break}
   let fa=0;for(const x of sl)if(x.act&&x.ph===1)fa++;
   res.net[s]=cob*(1-p.tax)-spent-fix;res.cob[s]=cob;res.gross[s]=gr;res.bought[s]=nf;res.spent[s]=spent;res.pass[s]=pass;res.evBurn[s]=evB;res.fBurn[s]=fB;res.fPaid[s]=fPaid;res.fDone[s]=fDone;res.pays[s]=npays;res.minCash[s]=minC;res.fundAlive[s]=fa;res.maxFA[s]=mxFA;
@@ -1281,7 +1322,7 @@ function prTxt(a,r,p){if(!r)return'Calculando probabilidades…';const ses=v=>is
  return a.phase==='e'?`<b>Aprueba ${pct(r.pPass)}</b>, hacia ${ses(r.passMed)}. Cobro posterior: ${pct(r.pPay)}. <span class="mut">${rk}</span>`
  :`<b>Cobra el próximo retiro ${pct(r.pPay)}</b>, hacia ${ses(r.payMed)}. Pide a +${usd(Math.max(p.thr,r0l(a).pmin||0,(p.keep>0?r0l(a).lock+p.keep*r0l(a).mll:0)+(p.full?capOf(r0l(a),accState(a).npay):r0l(a).min)))}, total medio ${usd(r.cob)}. <span class="mut">${rk}</span>`}
 // ---- render ----
-function jRender(force){if(!$('vHoy').hidden)hoyRender();if($('vJour').hidden&&!force)return;
+let finT;function jRender(force){if(!$('vFin').hidden){clearTimeout(finT);finT=setTimeout(finRender,60)}if(!$('vHoy').hidden)hoyRender();if($('vJour').hidden&&!force)return;
  const A=Object.values(J.accs),L=A.map(a=>{const st=accState(a);return{a,st,s:accStatus(a,st)}});J.estStop={};L.forEach(x=>J.estStop[x.a.id]=estStop(x.a.trades||[]));
  $('jStore').textContent=J.cloud?'Sincronizado':'Solo en este navegador';
  const inv=A.reduce((s,a)=>s+(+a.price||0),0),cob=L.reduce((s,x)=>s+x.st.paid,0),net=cob-inv,nPay=L.reduce((s,x)=>s+(x.a.pays||[]).length,0);
@@ -1789,12 +1830,12 @@ function portSum(P0,nsim,seed){const {G,a,b,shift,H}=P0,rg=mulberry32(seed+7),wr
  const Q=[.1,.25,.5,.75,.9],fin_=tot[months-1];
  return{months,mq:tot.map(a=>Q.map(p=>q(a,p))),pPay:frac(pay1,fin),pay1Med:medInf(pay1),pay1Q:[q(pay1,.25),q(pay1,.75)],pays:mean(pays),pFund:frac(fa,x=>x>0),bought:mean(bought),cob:mean(cob),pNeg:frac(fin_,x=>x<0),fBurn:mean(fb),wrMed:q(wrs,.5),wrQ:[q(wrs,.1),q(wrs,.9)]}}
 // ---- proyección con el plan de Estadísticas desde tus cuentas reales ----
-function portSum2(P0,nsim,seed){const {p,states,a,b,shift,beta,H}=P0;let wrs=null;
+function portSum2(P0,nsim,seed){const {p,states,a,b,shift,beta,H,m0,q0}=P0,fr0=P0.frac;let wrs=null;
  if(beta){const rg=mulberry32(seed+7);wrs=new Float64Array(nsim);for(let s=0;s<nsim;s++)wrs[s]=Math.min(.9,Math.max(.05,betaS(rg,a,b)+shift))}
- const R=sim({...p,H},{nsim,seed,plan:true,states,H,wrs}),months=R.months,Q=[.1,.25,.5,.75,.9],mq=[],mm=[];
+ const R=sim({...p,H},{nsim,seed,plan:true,states,H,wrs,m0,q0}),months=R.months,Q=[.1,.25,.5,.75,.9],mq=[],mm=[];
  for(let m=0;m<months;m++){const col=R.mNet.map(x=>x[m]);mq.push(Q.map(v=>q(col,v)));mm.push(mean(col))}
  const last=R.mNet.map(x=>x[months-1]);
- return{months,mq,mm,mean:mean(last),pPay:frac(R.pay1,fin),pay1Med:medInf(R.pay1),pay1Q:[q(R.pay1,.25),q(R.pay1,.75)],pays:mean(R.pays),cob:mean(R.cob),spent:mean(R.spent),bought:mean(R.bought),
+ return{months,cur:m0>0,frac:fr0||0,mq,mm,mean:mean(last),pPay:frac(R.pay1,fin),pay1Med:medInf(R.pay1),pay1Q:[q(R.pay1,.25),q(R.pay1,.75)],pays:mean(R.pays),cob:mean(R.cob),spent:mean(R.spent),bought:mean(R.bought),
   ms:Array.from({length:months},(_,mm)=>[0,1,2,3,4,5].map(k=>R.mStat[mm*6+k]/nsim)),fq:Array.from({length:101},(_,i)=>q(last,i/100)),pNeg:frac(last,x=>x<0),pFund:frac(R.fundAlive,x=>x>0),fBurn:mean(R.fBurn),maxFA:q(R.maxFA,.5),wrQ:wrs?[q(wrs,.1),q(wrs,.5),q(wrs,.9)]:null}}
 // cómo operas en la proyección: tu Diario (con incertidumbre) o tus ajustes de Estadísticas
 function projOutcome(base){const src=$('pPru').value,R=realData();
@@ -1811,29 +1852,38 @@ function realStates(p){const L=p.ladder.map(x=>({...x})),k0=$('sPre').value,z0=s
 function projRun(){const box=$('pKpi'),base=P();
  if(!valid(base)){box.innerHTML='';$('pSrc').innerHTML='Revisa los datos de Estadísticas: la proyección usa ese plan.';FV.proj=null;drawFin();nextPays(null);return}
  const O=projOutcome(base),RS=realStates(O.p),Hm=+(document.querySelector('#pH [aria-pressed=true]')||{dataset:{v:6}}).dataset.v,H=Hm*base.L;
- const p={...O.p,ladder:RS.L,fix:fixMonthly(),tax:0,months:Hm,H};FV.pp=p;FV.O=O;FV.RS=RS;nextPays(O);
+ const CAL=projCal(base);const H2=CAL.m0+H;
+ const p={...O.p,ladder:RS.L,fix:fixMonthly(),tax:0,months:Hm,H:H2};FV.cal=CAL;FV.pp=p;FV.O=O;FV.RS=RS;nextPays(O);
  const keepT=p.keep>0?(p.keep===1?'un drawdown':'medio drawdown')+' de colchón':'sin colchón',ladT=p.ladder.length>1?p.ladder.map(x=>esc(x.lbl)).join(' → '):esc(p.ladder[0].lbl);
  $('pSrc').innerHTML=`${p.pm} challenge${p.pm===1?'':'s'}/mes, riesgo ${usd(p.rE)} / ${usd(p.rF)}, ${O.src==='s'?`win rate ${pct(p.wr)}`:`${O.R.ntot} trades del Diario${O.shift?' (−5 puntos de acierto)':''}`}. <a href="#stats">Cambiar plan</a>`;
- const key=JSON.stringify([p,RS.st,O.src,O.w,O.l]);if(key===FV.pkey&&FV.proj){projShow();return}
+ const key=JSON.stringify([p,RS.st,O.src,O.w,O.l,CAL]);if(key===FV.pkey&&FV.proj){projShow();return}
  const t=++FV.ptok;box.innerHTML=`<div><span class="l">Calculando</span><span class="v">…</span><span class="s">10.000 futuros</span></div>`;
- runJobs([{p:{p,states:RS.st,a:(O.w||0)+1,b:(O.l||0)+1,shift:O.shift||0,beta:O.src!=='s',H},nsim:NS_MAIN,seed:31,kind:'port2'}],()=>t!==FV.ptok).then(o=>{if(!o||t!==FV.ptok)return;FV.proj=o[0];FV.pkey=key;FV.pL=p.L;FV.pm=p.pm;FV.Hm=Hm;projShow()})}
+ runJobs([{p:{p,states:RS.st,a:(O.w||0)+1,b:(O.l||0)+1,shift:O.shift||0,beta:O.src!=='s',H:H2,m0:CAL.m0,q0:CAL.q0,frac:CAL.frac},nsim:NS_MAIN,seed:31,kind:'port2'}],()=>t!==FV.ptok).then(o=>{if(!o||t!==FV.ptok)return;FV.proj=o[0];FV.pkey=key;FV.pL=p.L;FV.pm=p.pm;FV.Hm=Hm;projShow()})}
 const k0=()=>$('sPre').value;
+// calendario de la proyección: lo que queda de este mes es el primer tramo; luego meses completos
+function projCal(base){const td=today(),[y,mo]=td.split('-').map(Number),last=new Date(Date.UTC(y,mo,0)).getUTCDate();let wd=0,all=0;
+ let nyOpen=true;try{const f=new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).formatToParts(new Date());const g=t=>+((f.find(x=>x.type===t)||{}).value);nyOpen=g('hour')*60+g('minute')<960}catch(e){}
+ for(let d=1;d<=last;d++){const dw=new Date(Date.UTC(y,mo-1,d)).getUTCDay();if(dw===0||dw===6)continue;all++;if(d>+td.slice(8)||(d===+td.slice(8)&&nyOpen))wd++}
+ const m0=Math.round(wd*(base.dpw||5)/5),cm=td.slice(0,7),bought=Object.values(J.accs).filter(a=>(a.date||'').startsWith(cm)&&+a.price>0).length;
+ return{m0,q0:Math.max(0,(base.pm|0)-bought),bought,frac:all?wd/all:0,cm}}
+const projYm=(R,i)=>{let ym=today().slice(0,7);const k=i+(R&&R.cur?0:1);for(let j=0;j<k;j++)ym=nextYm(ym);return ym};
+const ymName=(ym,short)=>{const [y,m]=ym.split('-');return short?MESES[+m-1].slice(0,3)+' '+y.slice(2):MESES[+m-1]+' '+y};
 function projShow(){const R=FV.proj,p=FV.pp;if(!R)return;const Hm=FV.Hm,tx=v=>v-Math.max(0,v)*FIN.tax/100,cv=v=>FIN.cur==='eur'?v/FIN.rate:v,last=R.mq[R.months-1];
  const realNow=(FV.real&&FV.real.length?FV.real[FV.real.length-1].acc:0)/(FIN.cur==='eur'?1:1);// FV.real ya está en la moneda elegida
  const dDate=d=>{if(!isFinite(d))return'–';const t=new Date();t.setDate(t.getDate()+Math.round(d/FV.pL*30.4));return t.toLocaleDateString('es-ES',{day:'numeric',month:'short'})};
- let beM=-1;for(let m=0;m<R.months;m++){if(realNow+cv(R.mq[m][2])>=0){beM=m+1;break}}
- const perMonth=R.mean/Hm;
- $('pKpi').innerHTML=`<div class="big"><span class="l">Ganas en ${Hm} meses (caso típico)</span><span class="v ${last[2]>=0?'pos':'neg'}">${money(cv(last[2]))}</span><span class="s">media ${money(cv(R.mean))}, tras reservar impuestos ${money(cv(tx(last[2])))}</span></div>`+
-  K('Ingreso medio al mes',money(cv(perMonth)),`${eur(perMonth/FIN.rate)}, después de impuestos ${eur(tx(perMonth)/FIN.rate)}`)+
+ let beM=-1;for(let m=0;m<R.months;m++){if(realNow+cv(R.mq[m][2])>=0){beM=m;break}}
+ const perMonth=R.mean/(Hm+(R.cur?R.frac:0)),endYm=projYm(R,R.months-1);
+ $('pKpi').innerHTML=`<div class="big"><span class="l">Ganas hasta fin de ${ymName(endYm,true)} (caso típico)</span><span class="v ${last[2]>=0?'pos':'neg'}">${money(cv(last[2]))}</span><span class="s">media ${money(cv(R.mean))}</span></div>`+
+  K('Ingreso medio al mes',money(cv(perMonth)),`≈ ${eur(perMonth/FIN.rate)}`)+
   K('Primer cobro (cualquier cuenta)',isFinite(R.pay1Med)?dDate(R.pay1Med):'–',`${pct(R.pPay)} de probabilidad${isFinite(R.pay1Q[1])?`, entre ${dDate(R.pay1Q[0])} y ${dDate(R.pay1Q[1])}`:''}`)+
-  K('Recuperas lo invertido',realNow>=0?'ya':beM>0?`mes ${beM}`:'no en el horizonte',realNow>=0?'vas en positivo':`ahora vas en ${money(realNow)} (caso típico)`)+
+  K('Recuperas lo invertido',realNow>=0?'ya':beM>=0?ymName(projYm(R,beM)):'no en el horizonte',realNow>=0?'vas en positivo':`ahora vas en ${money(realNow)} (caso típico)`)+
   K('Retiros',n1(R.pays),`te llegan ${money(cv(R.cob))}, gastas ${money(cv(R.spent))} en challenges`)+
-  (()=>{const g=FIN.goal||0,need=g*FIN.rate/(1-FIN.tax/100)*Hm;if(!g||!R.fq)return'';let pr=0;for(let i=0;i<=100;i++)if(R.fq[i]>=need){pr=1-i/100;break};return K(`Objetivo ${eur(g)}/mes`,pct(pr),`probabilidad de ganar de media ${eur(g)} al mes limpios en ${Hm} meses`)})()+
+  (()=>{const g=FIN.goal||0,need=g*FIN.rate*Hm;if(!g||!R.fq)return'';let pr=0;for(let i=0;i<=100;i++)if(R.fq[i]>=need){pr=1-i/100;break};return K(`Objetivo ${eur(g)}/mes`,pct(pr),`probabilidad de ganar de media ${eur(g)} al mes en ${Hm} meses`)})()+
   K('Riesgo',pct(R.pNeg)+' en negativo',`10 % peor: ${money(cv(last[0]))}, fondeadas a la vez: ${n1(R.maxFA)}`);
- $('pTable').innerHTML=`<table><tr><th>Dentro de</th><th>10 % peor</th><th>Caso típico</th><th>Media</th><th>10 % mejor</th></tr>${R.mq.map((a,i)=>`<tr><td>${i+1} ${i?'meses':'mes'}</td><td class="${a[0]>=0?'pos':'neg'}">${money(cv(a[0]))}</td><td class="${a[2]>=0?'pos':'neg'}"><b>${money(cv(a[2]))}</b></td><td>${money(cv(R.mm[i]))}</td><td class="pos">${money(cv(a[4]))}</td></tr>`).join('')}</table>`;
- $('pHint').innerHTML=`${R.wrQ?`Win rate entre ${pct(R.wrQ[0])} y ${pct(R.wrQ[2])} (8 de cada 10 futuros). `:''}Importes antes de impuestos.`;
+ $('pTable').innerHTML=`<table><tr><th>Al cierre de</th><th>10 % peor</th><th>Caso típico</th><th>Media</th><th>10 % mejor</th></tr>${R.mq.map((a,i)=>`<tr><td>${ymName(projYm(R,i))}</td><td class="${a[0]>=0?'pos':'neg'}">${money(cv(a[0]))}</td><td class="${a[2]>=0?'pos':'neg'}"><b>${money(cv(a[2]))}</b></td><td>${money(cv(R.mm[i]))}</td><td class="pos">${money(cv(a[4]))}</td></tr>`).join('')}</table>`;
+ $('pHint').innerHTML=`${R.wrQ?`Win rate entre ${pct(R.wrQ[0])} y ${pct(R.wrQ[2])} (8 de cada 10 futuros). `:''}`;
  // impuestos previstos
- const yr=today().slice(0,4),moLeft=12-(+today().slice(5,7)),mi=Math.min(R.months,moLeft)-1,projY=mi>=0?R.mq[mi][2]:0;
+ const yr=today().slice(0,4),moLeft=12-(+today().slice(5,7)),mi=Math.min(R.months-1,R.cur?moLeft:moLeft-1),projY=mi>=0?R.mq[mi][2]:0;
  FV.taxProj={yr,projY,moLeft};finTaxK();finTaxPlan();drawCounts();drawFin()}
 // ---- próximos cobros por cuenta ----
 function nextPays(O){const box=$('nxList');if(!box)return;const base=P();const L=Object.values(J.accs).map(a=>{const x=accState(a);return{a,x,s:accStatus(a,x)}}).filter(o=>o.s==='activa').sort((u,v)=>(v.a.phase==='f')-(u.a.phase==='f'));
@@ -1929,7 +1979,7 @@ function cuotaRETA(rendMes,modo){if(modo==='no')return 0;if(modo==='plana')retur
 function taxSeries(){const F=finFlows(),td=today(),y0=td.slice(0,4),cm=td.slice(0,7),out=[];
  const real={};F.filter(x=>x.k!=='taxpaid').forEach(x=>{const m=x.d.slice(0,7);real[m]=(real[m]||0)+x.eur});
  const fm=Object.keys(real).sort()[0];let ym=fm&&fm>y0+'-01'?fm:y0+'-01';while(ym<=cm){out.push({m:ym,rend:real[ym]||0,prev:false});ym=nextYm(ym)}
- const R=FV.proj;if(R&&R.mq){let prevC=0;for(let i=0;i<R.months;i++){const c=R.mq[i][2],inc=(c-prevC)/FIN.rate;prevC=c;out.push({m:ym,rend:inc,prev:true});ym=nextYm(ym)}}
+ const R=FV.proj;if(R&&R.mq){let prevC=0;for(let i=0;i<R.months;i++){const c=R.mq[i][2],inc=(c-prevC)/FIN.rate;prevC=c;if(R.cur&&i===0&&out.length&&out[out.length-1].m===cm){out[out.length-1].rend+=inc;out[out.length-1].part=inc;continue}out.push({m:ym,rend:inc,prev:true});ym=nextYm(ym)}}
  return out}
 const nextYm=ym=>{const [y,m]=ym.split('-').map(Number);return m===12?`${y+1}-01`:`${y}-${String(m+1).padStart(2,'0')}`};
 function taxCalc(){const S=taxSeries(),sal=FIN.sal||0,modo=FIN.reta||'plana',salBase=Math.max(0,sal*(1-0.065)-2000),years={};
@@ -1973,42 +2023,54 @@ function drawCounts(){const el=$('mCnt');if(!el||$('vFin').hidden)return;const A
  const mEnd=ym=>{const [y,m]=ym.split('-').map(Number);return new Date(Date.UTC(y,m,0)).toISOString().slice(0,10)},rows=[];let ym=A[0].start.slice(0,7);
  while(ym<=cm){const e=mEnd(ym)<td?mEnd(ym):td,inM=d=>d&&d.startsWith(ym);
   rows.push({m:ym,prev:false,buy:A.filter(o=>inM(o.a.date)&&+o.a.price>0).length,apr:A.filter(o=>o.s==='aprobada'&&inM(o.end)).length,bur:A.filter(o=>o.s==='quemada'&&inM(o.end)).length,pay:A.reduce((x,o)=>x+(o.a.pays||[]).filter(p=>inM(p.d)).length,0),fa:A.filter(o=>o.a.phase==='f'&&o.start<=e&&(!o.end||o.end>e)).length});ym=nextYm(ym)}
- const R=FV.proj;if(R&&R.ms)R.ms.forEach(v=>{rows.push({m:ym,prev:true,buy:v[0],apr:v[1],bur:v[2]+v[4],pay:v[3],fa:v[5]});ym=nextYm(ym)});
- const ser=[['buy','compradas',C.buy],['apr','aprobadas',C.good],['bur','quemadas',C.bad],['pay','retiros',C.warn]];
- $('cLeg').innerHTML=ser.map(x=>`<span><i style="background:${x[2]}"></i>${x[1]}</span>`).join('')+`<span><i style="background:${C.violet};border-radius:50%"></i>fondeadas vivas</span><span class="hint">claro = previsto</span>`;
- const n=rows.length,W=Math.max(300,Math.round(el.clientWidth||900)),H=W<500?200:230,m={l:34,r:10,t:14,b:26},hi=Math.max(2,...rows.map(r=>Math.max(r.buy,r.apr,r.bur,r.pay,r.fa)))*1.1;
+ const R=FV.proj;if(R&&R.ms)R.ms.forEach((v,i)=>{const o={buy:v[0],apr:v[1],bur:v[2]+v[4],pay:v[3],fa:v[5]};
+  if(R.cur&&i===0){const c=rows[rows.length-1];c.cur=true;c.faNow=c.fa;c.add={buy:o.buy,apr:o.apr,bur:o.bur,pay:o.pay};c.fa=o.fa;return}
+  rows.push({m:ym,prev:true,...o});ym=nextYm(ym)});
+ const ser=[['buy','Challenges comprados','compradas',C.buy],['apr','Challenges aprobados','aprobadas',C.good],['bur','Cuentas quemadas','quemadas',C.bad],['pay','Retiros cobrados','retiros',C.warn]];
+ $('cLeg').innerHTML=ser.map(x=>`<span><i style="background:${x[3]}"></i>${x[2]}</span>`).join('')+`<span><i style="background:${C.violet};border-radius:50%"></i>fondeadas vivas</span><span class="hint">claro = previsto</span>`;
+ const tot=(r,k)=>r[k]+(r.add?r.add[k]:0);
+ const n=rows.length,W=Math.max(300,Math.round(el.clientWidth||900)),H=W<500?200:230,m={l:34,r:10,t:14,b:26},hi=Math.max(2,...rows.map(r=>Math.max(tot(r,'buy'),tot(r,'apr'),tot(r,'bur'),tot(r,'pay'),r.fa)))*1.1;
  const gw=(W-m.l-m.r)/n,bw=Math.max(2,Math.min(12,gw*0.8/4)),X=i=>m.l+(i+.5)*gw,Y=v=>m.t+(1-v/hi)*(H-m.t-m.b);
  const s=[`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Cuentas compradas, aprobadas, quemadas, retiros y fondeadas vivas cada mes">`];
  for(let i=0;i<=4;i++){const v=hi*i/4;s.push(`<line x1="${m.l}" x2="${W-m.r}" y1="${Y(v)}" y2="${Y(v)}" stroke="${C.grid}" stroke-dasharray="1 3"/><text x="${m.l-6}" y="${Y(v)+3.5}" text-anchor="end" font-size="10.5" fill="${C.dim}">${n1(v)}</text>`)}
- const ci=rows.findIndex(r=>r.prev);if(ci>0){const x=m.l+ci*gw;s.push(`<line x1="${x}" x2="${x}" y1="${m.t}" y2="${H-m.b}" stroke="${C.dim}" stroke-dasharray="3 3"/><text x="${x+4}" y="${m.t+8}" font-size="10.5" fill="${C.mut}">previsto →</text>`)}
+ const ci=rows.findIndex(r=>r.prev||r.cur);if(ci>=0){const x=rows[ci].cur?X(ci):m.l+ci*gw;s.push(`<line x1="${x}" x2="${x}" y1="${m.t}" y2="${H-m.b}" stroke="${C.dim}" stroke-dasharray="3 3"/><text x="${x+4}" y="${m.t+8}" font-size="10.5" fill="${C.mut}">${rows[ci].cur?'hoy':'previsto'} →</text>`)}
  const step=Math.max(1,Math.ceil(n/(W<500?6:14)));
- rows.forEach((r,i)=>{ser.forEach(([k,,c],j)=>{const v=r[k];if(v>0.02)s.push(`<rect x="${X(i)-2*bw+j*bw}" y="${Y(v)}" width="${bw-1}" height="${Math.max(.5,Y(0)-Y(v))}" rx="2" fill="${c}" fill-opacity="${r.prev?.45:1}"/>`)});
+ rows.forEach((r,i)=>{ser.forEach(([k,,,c],j)=>{const x=X(i)-2*bw+j*bw,v=r[k];
+   if(v>0.02)s.push(`<rect x="${x}" y="${Y(v)}" width="${bw-1}" height="${Math.max(.5,Y(0)-Y(v))}" rx="2" fill="${c}" fill-opacity="${r.prev?.45:1}"/>`);
+   if(r.add&&r.add[k]>0.02){const y1=Y(v+r.add[k]),y0=Y(v);s.push(`<rect x="${x}" y="${y1}" width="${bw-1}" height="${Math.max(.5,y0-y1-(v>0.02?1.5:0))}" rx="2" fill="${c}" fill-opacity=".45"/>`)}});
   if(i%step===0){const [yy,mm]=r.m.split('-');s.push(`<text x="${X(i)}" y="${H-8}" text-anchor="middle" font-size="10.5" fill="${C.dim}">${MESES[+mm-1].slice(0,3)}${mm==='01'||i===0?' '+yy.slice(2):''}</text>`)}});
- s.push(`<path d="${rows.map((r,i)=>`${i?'L':'M'}${X(i).toFixed(1)},${Y(r.fa).toFixed(1)}`).join('')}" fill="none" stroke="${C.violet}" stroke-width="2"/>`);
- rows.forEach((r,i)=>s.push(`<circle cx="${X(i)}" cy="${Y(r.fa)}" r="3.5" fill="${C.violet}" fill-opacity="${r.prev?.55:1}" stroke="${C.bg||'#000'}" stroke-width="1.5"/>`));
- s.push(`<rect x="${m.l}" y="${m.t}" width="${W-m.l-m.r}" height="${H-m.t-m.b}" fill="transparent" id="chit"/>`);
- el.innerHTML=s.join('')+'</svg><div class="tip" id="ctip" hidden></div>';const svg=el.querySelector('svg'),tip=el.querySelector('#ctip');
- el.querySelector('#chit').addEventListener('mousemove',e=>{const rc=svg.getBoundingClientRect();let i=Math.floor(((e.clientX-rc.left)/rc.width*W-m.l)/gw);i=Math.max(0,Math.min(n-1,i));const r=rows[i],[yy,mm]=r.m.split('-'),f=v=>r.prev?n1(v):n0(v);
-  tip.hidden=false;tip.innerHTML=`<b>${MESES[+mm-1]} ${yy}</b>${r.prev?', previsto (media)':''}<br>compradas ${f(r.buy)}, aprobadas ${f(r.apr)}, quemadas ${f(r.bur)}<br>retiros ${f(r.pay)}, fondeadas vivas al cierre <b>${f(r.fa)}</b>`;
-  tip.style.left=Math.min(rc.width-220,Math.max(0,X(i)/W*rc.width+10))+'px';tip.style.top='8px'});
- el.querySelector('#chit').addEventListener('mouseleave',()=>{tip.hidden=true})}
+ const lastReal=rows.findIndex(r=>r.prev||r.cur),cut=lastReal<0?n-1:Math.max(0,lastReal-1);
+ const path=(a,b)=>rows.slice(a,b+1).map((r,k)=>`${k?'L':'M'}${X(a+k).toFixed(1)},${Y(r.fa).toFixed(1)}`).join('');
+ if(cut>0||lastReal<0)s.push(`<path d="${path(0,cut)}" fill="none" stroke="${C.violet}" stroke-width="2"/>`);
+ if(lastReal>=0)s.push(`<path d="${path(cut,n-1)}" fill="none" stroke="${C.violet}" stroke-width="2" stroke-dasharray="5 4"/>`);
+ rows.forEach((r,i)=>s.push(`<circle cx="${X(i)}" cy="${Y(r.fa)}" r="3.5" fill="${r.prev||r.cur?C.bg||'#000':C.violet}" stroke="${C.violet}" stroke-width="1.75"/>`));
+ s.push(`<line id="cxl" x1="0" x2="0" y1="${m.t}" y2="${H-m.b}" stroke="${C.dim}" stroke-opacity=".5" visibility="hidden"/><rect x="${m.l}" y="${m.t}" width="${W-m.l-m.r}" height="${H-m.t-m.b}" fill="transparent" id="chit"/>`);
+ el.innerHTML=s.join('')+'</svg><div class="tip tipc" id="ctip" hidden></div>';const svg=el.querySelector('svg'),tip=el.querySelector('#ctip'),cx=el.querySelector('#cxl');
+ const nf=v=>v<0.05?'0':n1(v);
+ el.querySelector('#chit').addEventListener('mousemove',e=>{const rc=svg.getBoundingClientRect();let i=Math.floor(((e.clientX-rc.left)/rc.width*W-m.l)/gw);i=Math.max(0,Math.min(n-1,i));const r=rows[i],[yy,mm]=r.m.split('-');
+  const head=r.prev?`<span class="tg2">previsto</span>`:r.cur?`<span class="tg2">real + previsto</span>`:`<span class="tg2 rl">real</span>`;
+  const line=([k,lab,,c])=>{const v=r[k],a=r.add?r.add[k]:0;const val=r.prev?nf(v):r.cur?`${n0(v)}${a>=0.05?` <em>+${n1(a)}</em>`:''}`:n0(v);return`<div class="tr"><span><i style="background:${c}"></i>${lab}</span><b>${val}</b></div>`};
+  tip.hidden=false;tip.innerHTML=`<div class="th"><b>${MESES[+mm-1][0].toUpperCase()+MESES[+mm-1].slice(1)} ${yy}</b>${head}</div>${ser.map(line).join('')}<div class="tr tf"><span><i style="background:${C.violet};border-radius:50%"></i>Fondeadas vivas al cierre</span><b>${r.prev||r.cur?nf(r.fa):n0(r.fa)}</b></div>${r.cur?`<p>Lo real hasta hoy y, en claro, lo que se espera hasta fin de mes${FV.cal?` (te ${FV.cal.q0===1?'queda':'quedan'} ${FV.cal.q0} ${FV.cal.q0===1?'challenge':'challenges'} por comprar este mes)`:''}.</p>`:r.prev?`<p>Media de 10.000 futuros con tu plan: ${FV.pm||1} challenge${(FV.pm||1)===1?'':'s'} al mes como máximo y el escalado de Estadísticas. Un 0,6 es «6 de cada 10 veces».</p>`:''}`;
+  cx.setAttribute('x1',X(i));cx.setAttribute('x2',X(i));cx.setAttribute('visibility','visible');
+  const px=X(i)/W*rc.width,tw=tip.offsetWidth||250;tip.style.left=(px+14+tw>rc.width?px-tw-14:px+14)+'px';tip.style.top='6px'});
+ el.querySelector('#chit').addEventListener('mouseleave',()=>{tip.hidden=true;cx.setAttribute('visibility','hidden')})}
 // ---- impuestos: cifras clave ----
 function finTaxK(){const el=$('fTaxK');if(!el)return;const F=finFlows(),y=today().slice(0,4),Y=F.filter(x=>x.d.startsWith(y)&&x.k!=='taxpaid'),net=Y.reduce((s,x)=>s+x.eur,0),res=Math.max(0,net)*FIN.tax/100,T=FV.taxProj;
  const pr=T&&T.yr===y?T.projY/FIN.rate:null,tot=pr!=null?net+pr:null;
  el.innerHTML=K(`Rendimiento ${y} hasta hoy`,`<span class="${net>=0?'pos':'neg'}">${eur(net)}</span>`,'cobros − cuentas − gastos, en euros')+K('Reserva a separar ya',eur(res),`${n1(FIN.tax)} % del rendimiento positivo`)+
   (pr!=null?K(`Previsión a 31-12-${y}`,`<span class="${tot>=0?'pos':'neg'}">${eur(tot)}</span>`,`caso típico de la proyección, reserva ${eur(Math.max(0,tot)*FIN.tax/100)}`):'')}
 function drawFin(){const el=$('fChart');if(!el||$('vFin').hidden)return;const real=FV.real||[],R=FV.proj,cv=v=>FIN.cur==='eur'?v/FIN.rate:v;
- const pts=real.map(r=>({lab:r.m,v:r.acc,real:true}));const base=pts.length?pts[pts.length-1].v:0;
- const pr=R?R.mq.map((a,i)=>{const [y,m]=today().slice(0,7).split('-').map(Number),t=new Date(Date.UTC(y,m-1+i+1,1));return{lab:t.toISOString().slice(0,7),lo:base+cv(a[0]),q1:base+cv(a[1]),v:base+cv(a[2]),q3:base+cv(a[3]),hi:base+cv(a[4])}}):[];
+ const pts=real.map((r,i)=>({lab:r.m,v:r.acc,real:true,pos:i}));const base=pts.length?pts[pts.length-1].v:0,off0=pts.length?pts.length-1:0;
+ const pr=R?R.mq.map((a,i)=>{return{pos:off0+(R.cur?Math.max(.3,R.frac)+i:i+1),endCur:R.cur&&i===0,lab:projYm(R,i),lo:base+cv(a[0]),q1:base+cv(a[1]),v:base+cv(a[2]),q3:base+cv(a[3]),hi:base+cv(a[4])}}):[];
  if(pts.length+pr.length<2){el.innerHTML='<p class="hint">Aún no hay datos suficientes para el gráfico.</p>';$('fLeg').innerHTML='';return}
  $('fLeg').innerHTML=`<span><i style="background:${C.good}"></i>real</span>${pr.length?`<span><i style="background:${C.violet}"></i>proyección (mediana)</span><span><i style="background:${C.violet};opacity:.25"></i>8 de cada 10 futuros</span>`:''}`;
- const all=[...pts,...pr],n=all.length,vs=all.flatMap(p=>[p.v,p.lo??p.v,p.hi??p.v,0]);let y0=Math.min(...vs),y1=Math.max(...vs);if(y0===y1)y1=y0+1;const pd=(y1-y0)*.08;y0-=pd;y1+=pd;
- const W=Math.max(280,Math.round(el.clientWidth||760)),H=W<500?210:250,m={l:W<500?52:64,r:14,t:12,b:30},X=i=>m.l+(n<2?0:i/(n-1))*(W-m.l-m.r),Y=v=>m.t+(1-(v-y0)/(y1-y0))*(H-m.t-m.b);
+ const all=[...pts,...pr],n=all.length,maxPos=Math.max(1,...all.map(p=>p.pos)),vs=all.flatMap(p=>[p.v,p.lo??p.v,p.hi??p.v,0]);let y0=Math.min(...vs),y1=Math.max(...vs);if(y0===y1)y1=y0+1;const pd=(y1-y0)*.08;y0-=pd;y1+=pd;
+ const W=Math.max(280,Math.round(el.clientWidth||760)),H=W<500?210:250,m={l:W<500?52:64,r:14,t:12,b:30},X=i=>m.l+i/maxPos*(W-m.l-m.r),Y=v=>m.t+(1-(v-y0)/(y1-y0))*(H-m.t-m.b);
  const s=[`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Resultado neto acumulado, real y proyectado">`],fmt=v=>money(v);
  for(let i=0;i<=4;i++){const v=y0+(y1-y0)*i/4;s.push(`<line x1="${m.l}" x2="${W-m.r}" y1="${Y(v)}" y2="${Y(v)}" stroke="${C.grid}" stroke-dasharray="1 3"/><text x="${m.l-8}" y="${Y(v)+3.5}" text-anchor="end" font-size="10.5" fill="${C.dim}">${fmt(v)}</text>`)}
  if(y0<0&&y1>0)s.push(`<line x1="${m.l}" x2="${W-m.r}" y1="${Y(0)}" y2="${Y(0)}" stroke="${C.dim}"/>`);
  const off=pts.length;
- if(pr.length){const i0=off?off-1:0,b0={v:base,lo:base,hi:base,q1:base,q3:base},P=off?[b0,...pr]:pr,ix=k=>off?i0+k:k;
+ if(pr.length){const i0=off0,b0={v:base,lo:base,hi:base,q1:base,q3:base,pos:off0},P=off?[b0,...pr]:pr,ix=k=>P[k].pos;
   const band=(lo,hi,op)=>`<path d="${P.map((p,k)=>`${k?'L':'M'}${X(ix(k)).toFixed(1)},${Y(p[hi]).toFixed(1)}`).join('')}${P.slice().reverse().map((p,k)=>`L${X(ix(P.length-1-k)).toFixed(1)},${Y(p[lo]).toFixed(1)}`).join('')}Z" fill="${op}"/>`;
   s.push(GR('gFin',C.violet,.24,.03),GR('gFin2',C.violet,.30,.08),band('lo','hi','url(#gFin)'),band('q1','q3','url(#gFin2)'));
   s.push(`<path d="${P.map((p,k)=>`${k?'L':'M'}${X(ix(k)).toFixed(1)},${Y(p.v).toFixed(1)}`).join('')}" fill="none" stroke="${C.violet}" stroke-width="2" stroke-dasharray="6 4"/>`);
@@ -2016,15 +2078,15 @@ function drawFin(){const el=$('fChart');if(!el||$('vFin').hidden)return;const re
  if(pts.length>1){const yb=Y(Math.max(y0,Math.min(0,y1)));s.push(GR('gReal',C.good,.28,0),`<path d="${pts.map((p,i)=>`${i?'L':'M'}${X(i).toFixed(1)},${Y(p.v).toFixed(1)}`).join('')}L${X(pts.length-1).toFixed(1)},${yb}L${X(0)},${yb}Z" fill="url(#gReal)"/>`)}
  if(pts.length>1)s.push(`<path d="${pts.map((p,i)=>`${i?'L':'M'}${X(i).toFixed(1)},${Y(p.v).toFixed(1)}`).join('')}" fill="none" stroke="${C.good}" stroke-width="2.25" stroke-linejoin="round"/>`);
  if(pts.length)s.push(`<circle cx="${X(off-1)}" cy="${Y(base)}" r="4" fill="${C.good}" stroke="${C.bg||'#000'}" stroke-width="2"/>`);
- const lbl=ym=>{const [y,mm]=ym.split('-');return MESES[+mm-1].slice(0,3)+(mm==='01'||n<=8?' '+y.slice(2):'')},step=Math.max(1,Math.ceil(n/(W<500?5:9)));
- all.forEach((p,i)=>{if(i%step===0||i===n-1)s.push(`<text x="${X(i)}" y="${H-10}" text-anchor="${i===0?'start':i===n-1?'end':'middle'}" font-size="10.5" fill="${C.dim}">${lbl(p.lab)}</text>`)});
+ const lbl=ym=>{const [y,mm]=ym.split('-');return MESES[+mm-1].slice(0,3)+(mm==='01'||n<=8?' '+y.slice(2):'')},labs=all.filter(p=>!p.endCur),step=Math.max(1,Math.ceil(labs.length/(W<500?5:9)));
+ labs.forEach((p,i)=>{if(i%step===0||i===labs.length-1)s.push(`<text x="${X(p.pos)}" y="${H-10}" text-anchor="${i===0?'start':i===labs.length-1?'end':'middle'}" font-size="10.5" fill="${C.dim}">${lbl(p.lab)}</text>`)});
  s.push(`<line id="fx" x1="0" x2="0" y1="${m.t}" y2="${H-m.b}" stroke="${C.dim}" visibility="hidden"/><rect x="${m.l}" y="${m.t}" width="${W-m.l-m.r}" height="${H-m.t-m.b}" fill="transparent" id="fhit"/>`);
  el.innerHTML=s.join('')+'</svg><div class="tip" id="ftip" hidden></div>';
  const svg=el.querySelector('svg'),hit=el.querySelector('#fhit'),tip=el.querySelector('#ftip'),lx=el.querySelector('#fx');
- hit.addEventListener('mousemove',e=>{const r=svg.getBoundingClientRect(),xx=(e.clientX-r.left)/r.width*W;let i=Math.round((xx-m.l)/(W-m.l-m.r)*(n-1));i=Math.max(0,Math.min(n-1,i));const p=all[i],[y,mm]=p.lab.split('-');
-  lx.setAttribute('x1',X(i));lx.setAttribute('x2',X(i));lx.setAttribute('visibility','visible');tip.hidden=false;
-  tip.innerHTML=p.real?`<b>${MESES[+mm-1]} ${y}</b><br>acumulado real: <b>${fmt(p.v)}</b>`:`<b>${MESES[+mm-1]} ${y}</b>, proyección<br>mediana: <b>${fmt(p.v)}</b><br>8 de cada 10: ${fmt(p.lo)} a ${fmt(p.hi)}`;
-  const px=X(i)/W*r.width;tip.style.left=Math.min(r.width-180,Math.max(0,px+10))+'px';tip.style.top='8px'});
+ hit.addEventListener('mousemove',e=>{const r=svg.getBoundingClientRect(),xx=(e.clientX-r.left)/r.width*W;const ps=(xx-m.l)/(W-m.l-m.r)*maxPos;let i=0;all.forEach((q,k)=>{if(Math.abs(q.pos-ps)<Math.abs(all[i].pos-ps))i=k});const p=all[i],[y,mm]=p.lab.split('-');
+  lx.setAttribute('x1',X(p.pos));lx.setAttribute('x2',X(p.pos));lx.setAttribute('visibility','visible');tip.hidden=false;
+  tip.innerHTML=p.real?`<div class="th"><b>${MESES[+mm-1][0].toUpperCase()+MESES[+mm-1].slice(1)} ${y}</b><span class="tg2 rl">${i===off-1?'hoy':'real'}</span></div><div class="tr"><span>Acumulado</span><b>${fmt(p.v)}</b></div>`:`<div class="th"><b>${p.endCur?'Fin de '+MESES[+mm-1]:MESES[+mm-1][0].toUpperCase()+MESES[+mm-1].slice(1)} ${y}</b><span class="tg2">previsto</span></div><div class="tr"><span>Caso típico</span><b>${fmt(p.v)}</b></div><div class="tr"><span>8 de cada 10 futuros</span><b>${fmt(p.lo)} a ${fmt(p.hi)}</b></div>`;
+  const px=X(p.pos)/W*r.width;tip.style.left=Math.min(r.width-180,Math.max(0,px+10))+'px';tip.style.top='8px'});
  hit.addEventListener('mouseleave',()=>{tip.hidden=true;lx.setAttribute('visibility','hidden')})}
 // --- eventos ---
 function segOn(id,fn){$(id).addEventListener('click',e=>{const b=e.target.closest('button[data-v]');if(!b)return;segSet(id,b.dataset.v);fn(b.dataset.v)})}
