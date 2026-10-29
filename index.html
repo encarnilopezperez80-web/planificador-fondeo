@@ -531,6 +531,11 @@ aside{top:var(--navh,140px)!important;max-height:calc(100vh - var(--navh,140px) 
 .hdzone i{position:absolute;top:5px;left:50%;width:42px;height:4px;margin-left:-21px;border-radius:999px;background:var(--line2);opacity:.9;transition:opacity .2s,background .2s}
 .hdzone:hover i{background:var(--head)}
 html.hdh .hdzone{display:block}
+
+/* modo encabezado oculto: flota por encima del contenido */
+html.ahx .topbar{position:fixed!important;top:8px!important;left:max(16px,calc((100vw - 1680px)/2));right:max(16px,calc((100vw - 1680px)/2));z-index:9;margin:0!important}
+html.ahx .wrap{padding-top:12px}
+html.ahx .setp{top:96px}
 </style></head><body>
 
 <div class="wrap">
@@ -993,16 +998,19 @@ function route(){const h=location.hash,v=h==='#stats'?'s':h==='#diario'||h==='#f
  $('tCalc').setAttribute('aria-current',v==='c'?'page':'false');$('tStats').setAttribute('aria-current',v==='s'?'page':'false');$('tJour').setAttribute('aria-current',v==='j'?'page':'false');
  if(v==='s'&&(!S.done||S.dirty))schedule();if(v==='s'&&S.evo)setTimeout(drawEvo,0);if(v==='j'){jRender(true);finRender()}requestAnimationFrame(tabInd);SN.key=null;setTimeout(buildSecNav,60);if(window.hdShow)hdShow();setTimeout(rvArm,30);if(route.done)scrollTo({top:0});route.done=true}
 addEventListener('hashchange',route);
-// encabezado que se oculta al bajar y vuelve al subir, al tocar arriba o al pasar el ratón
-{const tb=document.querySelector('.topbar'),zone=$('hdZone');let lastY=scrollY,hover=false,hideT;
- const setH=h=>{const on=!!(UI&&UI.ahide!==false);h=h&&on&&scrollY>90&&!hover&&$('setP').hidden&&!(document.activeElement&&tb.contains(document.activeElement));tb.classList.toggle('hid',h);document.documentElement.classList.toggle('hdh',h)};
- addEventListener('scroll',()=>{const y=scrollY,d=y-lastY;if(Math.abs(d)>6){setH(d>0);lastY=y}if(y<=90)setH(false)},{passive:true});
- zone.addEventListener('mouseenter',()=>{hover=true;setH(false)});zone.addEventListener('click',()=>{hover=true;setH(false)});
- tb.addEventListener('mouseenter',()=>{hover=true;clearTimeout(hideT)});
- tb.addEventListener('mouseleave',()=>{hover=false;clearTimeout(hideT);hideT=setTimeout(()=>{if(!hover&&scrollY>90)setH(true)},900)});
- addEventListener('mousemove',e=>{if(e.clientY<14&&tb.classList.contains('hid')){hover=true;setH(false);return}
-  if(hover&&!tb.contains(e.target)&&!zone.contains(e.target)&&e.clientY>tb.getBoundingClientRect().bottom+30){hover=false;clearTimeout(hideT);hideT=setTimeout(()=>{if(!hover&&scrollY>90)setH(true)},900)}},{passive:true});
- window.hdShow=()=>setH(false)}
+// encabezado oculto: solo aparece al llevar el ratón arriba (en móvil, al subir o arriba del todo)
+{const tb=document.querySelector('.topbar'),zone=$('hdZone'),R=document.documentElement,canHover=!!(window.matchMedia&&matchMedia('(hover:hover)').matches);let hover=false,hideT,lastY=scrollY,peek=false;
+ const on=()=>!!(UI&&UI.ahide!==false);
+ const want=()=>on()&&!hover&&!peek&&$('setP').hidden&&!(document.activeElement&&tb.contains(document.activeElement))&&(canHover||scrollY>90);
+ const upd=()=>{R.classList.toggle('ahx',on());const h=want();tb.classList.toggle('hid',h);R.classList.toggle('hdh',h)};
+ const later=ms=>{clearTimeout(hideT);hideT=setTimeout(upd,ms||700)};
+ zone.addEventListener('mouseenter',()=>{hover=true;upd()});zone.addEventListener('click',()=>{hover=true;upd()});
+ tb.addEventListener('mouseenter',()=>{hover=true;clearTimeout(hideT);upd()});
+ tb.addEventListener('mouseleave',()=>{hover=false;later(700)});
+ addEventListener('mousemove',e=>{if(e.clientY<16&&tb.classList.contains('hid')){hover=true;upd();return}if(hover&&!tb.contains(e.target)&&!zone.contains(e.target)&&e.clientY>tb.getBoundingClientRect().bottom+24){hover=false;later(700)}},{passive:true});
+ addEventListener('scroll',()=>{if(canHover)return;const y=scrollY,d=y-lastY;if(Math.abs(d)>6){peek=d<0;lastY=y;upd()}},{passive:true});
+ window.hdUpd=upd;window.hdShow=()=>{peek=true;upd();clearTimeout(hideT);hideT=setTimeout(()=>{peek=false;upd()},1600)};
+ hdShow()}
 
 // brillo de tarjetas: guarda la posición del ratón dentro de la tarjeta
 document.addEventListener('pointermove',e=>{if(!document.documentElement.classList.contains('glow'))return;const c=e.target.closest&&e.target.closest('.card,.hero,.ac,.oc');if(!c)return;const r=c.getBoundingClientRect();c.style.setProperty('--mx',(e.clientX-r.left)+'px');c.style.setProperty('--my',(e.clientY-r.top)+'px')},{passive:true});
@@ -1029,7 +1037,7 @@ function secSpy(){const nav=$('secNav');if(!nav||nav.hidden||!SN.items.length)re
  if(a===SN.active)return;SN.active=a;nav.querySelectorAll('a').forEach(x=>x.classList.toggle('on',+x.dataset.i===a));
  const on=nav.querySelector('a.on');if(on){const L=on.offsetLeft-nav.clientWidth/2+on.offsetWidth/2;nav.scrollTo({left:L,behavior:document.documentElement.classList.contains('no-anim')?'auto':'smooth'})}}
 $('secNav').addEventListener('click',e=>{const a=e.target.closest('a[data-i]');if(!a)return;e.preventDefault();const o=SN.items[+a.dataset.i];if(!o)return;
- const tb=document.querySelector('.topbar'),y=o.el.getBoundingClientRect().top+scrollY-(tb?tb.offsetHeight:0)-14;
+ const tb=document.querySelector('.topbar'),y=o.el.getBoundingClientRect().top+scrollY-(document.documentElement.classList.contains('ahx')?4:(tb?tb.offsetHeight:0))-14;
  scrollTo({top:Math.max(0,y),behavior:document.documentElement.classList.contains('no-anim')?'auto':'smooth'})});
 {let rq=0;addEventListener('scroll',()=>{if(rq)return;rq=requestAnimationFrame(()=>{rq=0;secSpy()})},{passive:true});addEventListener('resize',()=>{navH();secSpy()})}
 {let bt;const mo=new MutationObserver(()=>{clearTimeout(bt);bt=setTimeout(buildSecNav,180)});mo.observe(document.querySelector('.wrap')||document.body,{subtree:true,childList:true,attributes:true,attributeFilter:['hidden']})}
@@ -1087,7 +1095,7 @@ function uiModeNow(){if(UI.mode==='auto')return sysLight()?'light':'dark';if(UI.
 function uiApply(redraw){const R=document.documentElement;R.setAttribute('data-size',UI.size||'m');R.classList.toggle('no-anim',!UI.anim);uiCss();
  const m=uiModeNow();if(typeof applyMode==='function')applyMode(m,true);R.setAttribute('data-font',UI.font||'schibsted');R.setAttribute('data-rad',UI.rad||'r');R.setAttribute('data-dens',UI.dens||'n');R.classList.toggle('priv',!!UI.priv);R.classList.toggle('fx',UI.glass!==false);R.classList.toggle('glow',UI.glow!==false);R.classList.toggle('grain',UI.grain!==false);{const bp=$('bPriv');if(bp)bp.setAttribute('aria-pressed',!!UI.priv)}
  if(redraw!==false)requestAnimationFrame(()=>{if(typeof tabInd==='function')tabInd()});uiForm()}
-function uiSave(){store.set('ui',UI);uiApply();if(typeof cfgPush==='function')try{cfgPush()}catch(e){}}
+function uiSave(){store.set('ui',UI);uiApply();if(window.hdUpd)hdUpd();if(typeof cfgPush==='function')try{cfgPush()}catch(e){}}
 function cssv(k){return getComputedStyle(document.documentElement).getPropertyValue('--'+k).trim()}
 function toHex(c){const cv=document.createElement('canvas').getContext('2d');cv.fillStyle='#000';cv.fillStyle=c;return cv.fillStyle.startsWith('#')?cv.fillStyle:'#000000'}
 function uiForm(){if(!$('setP'))return;segSet('uMode',UI.mode);segSet('uSize',UI.size);segSet('uHome',UI.home);segSet('uFont',UI.font);segSet('uRad',UI.rad);segSet('uDens',UI.dens);segSet('uAlert',String(UI.alert||0));
