@@ -536,6 +536,8 @@ html.hdh .hdzone{display:block}
 html.ahx .topbar{position:fixed!important;top:8px!important;left:max(16px,calc((100vw - 1680px)/2));right:max(16px,calc((100vw - 1680px)/2));z-index:9;margin:0!important}
 html.ahx .wrap{padding-top:12px}
 html.ahx .setp{top:96px}
+html.ahx aside{top:16px!important;max-height:calc(100vh - 28px)!important}html.ahx :is(.view .card,.view .hero,.view .ac,.view [data-nav],.divh){scroll-margin-top:18px}
+@media (max-width:900px){html.ahx aside{max-height:none!important}}
 </style></head><body>
 
 <div class="wrap">
@@ -1001,15 +1003,16 @@ addEventListener('hashchange',route);
 // encabezado oculto: solo aparece al llevar el ratón arriba (en móvil, al subir o arriba del todo)
 {const tb=document.querySelector('.topbar'),zone=$('hdZone'),R=document.documentElement,canHover=!!(window.matchMedia&&matchMedia('(hover:hover)').matches);let hover=false,hideT,lastY=scrollY,peek=false;
  const on=()=>!!(UI&&UI.ahide!==false);
- const want=()=>on()&&!hover&&!peek&&$('setP').hidden&&!(document.activeElement&&tb.contains(document.activeElement))&&(canHover||scrollY>90);
+ const want=()=>on()&&!hover&&!peek&&$('setP').hidden&&!tb.querySelector(':focus-visible:is(input,select,textarea)')&&(canHover||scrollY>90);
  const upd=()=>{R.classList.toggle('ahx',on());const h=want();tb.classList.toggle('hid',h);R.classList.toggle('hdh',h)};
  const later=ms=>{clearTimeout(hideT);hideT=setTimeout(upd,ms||700)};
  zone.addEventListener('mouseenter',()=>{hover=true;upd()});zone.addEventListener('click',()=>{hover=true;upd()});
  tb.addEventListener('mouseenter',()=>{hover=true;clearTimeout(hideT);upd()});
  tb.addEventListener('mouseleave',()=>{hover=false;later(700)});
+ tb.addEventListener('click',e=>{const a=e.target.closest('a');if(a)setTimeout(()=>a.blur(),0)});
  addEventListener('mousemove',e=>{if(e.clientY<16&&tb.classList.contains('hid')){hover=true;upd();return}if(hover&&!tb.contains(e.target)&&!zone.contains(e.target)&&e.clientY>tb.getBoundingClientRect().bottom+24){hover=false;later(700)}},{passive:true});
  addEventListener('scroll',()=>{if(canHover)return;const y=scrollY,d=y-lastY;if(Math.abs(d)>6){peek=d<0;lastY=y;upd()}},{passive:true});
- window.hdUpd=upd;window.hdShow=()=>{peek=true;upd();clearTimeout(hideT);hideT=setTimeout(()=>{peek=false;upd()},1600)};
+ window.hdUpd=upd;let peekT;window.hdShow=()=>{peek=true;upd();clearTimeout(peekT);peekT=setTimeout(()=>{peek=false;upd()},1600)};
  hdShow()}
 
 // brillo de tarjetas: guarda la posición del ratón dentro de la tarjeta
