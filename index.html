@@ -523,6 +523,14 @@ aside{top:var(--navh,140px)!important;max-height:calc(100vh - var(--navh,140px) 
 #oTable td:first-child,#oTable th:first-child{padding-left:16px!important}
 #oTable tr.hl td{background:color-mix(in srgb,var(--head) 10%,transparent);box-shadow:inset 0 1px 0 color-mix(in srgb,var(--head) 35%,transparent),inset 0 -1px 0 color-mix(in srgb,var(--head) 35%,transparent)}
 #oTable tr.hl td:first-child{box-shadow:inset 3px 0 0 var(--head),inset 0 1px 0 color-mix(in srgb,var(--head) 35%,transparent),inset 0 -1px 0 color-mix(in srgb,var(--head) 35%,transparent)}
+
+/* encabezado que se oculta */
+.topbar{transition:transform .38s cubic-bezier(.3,.8,.2,1),opacity .3s}
+.topbar.hid{transform:translateY(calc(-100% - 16px));opacity:0;pointer-events:none}
+.hdzone{position:fixed;top:0;left:0;right:0;height:18px;z-index:7;display:none}
+.hdzone i{position:absolute;top:5px;left:50%;width:42px;height:4px;margin-left:-21px;border-radius:999px;background:var(--line2);opacity:.9;transition:opacity .2s,background .2s}
+.hdzone:hover i{background:var(--head)}
+html.hdh .hdzone{display:block}
 </style></head><body>
 
 <div class="wrap">
@@ -552,6 +560,7 @@ aside{top:var(--navh,140px)!important;max-height:calc(100vh - var(--navh,140px) 
     <label class="chk"><input type="checkbox" id="uGrain"> Textura de grano fino</label>
     <label class="chk"><input type="checkbox" id="uAnim"> Animaciones</label></div>
   <h4 class="sgh">Reloj y avisos</h4>
+  <label class="chk"><input type="checkbox" id="uAhide"> Ocultar el encabezado al bajar (vuelve al subir o al llevar el ratón arriba)</label>
   <label class="chk"><input type="checkbox" id="uSec"> Segundos en el reloj</label>
   <div class="sg"><span class="sl">Aviso antes de la apertura de NY</span><div class="seg" id="uAlert"><button type="button" data-v="0">No</button><button type="button" data-v="5">5 min</button><button type="button" data-v="10">10 min</button><button type="button" data-v="15">15 min</button></div>
     <button type="button" class="btn sm lnk" id="uAlertT">Probar el aviso</button></div>
@@ -561,6 +570,7 @@ aside{top:var(--navh,140px)!important;max-height:calc(100vh - var(--navh,140px) 
   <div class="srow"><button type="button" class="btn sm" id="uReset">Restablecer ajustes</button><span class="hint">Se guardan en este dispositivo y en tus copias.</span></div>
 </div>
 <div class="toast" id="toast" role="status" hidden></div>
+<div class="hdzone" id="hdZone" aria-hidden="true"><i></i></div>
 
 <!-- ================= HOY ================= -->
 <section class="view" id="vHoy" aria-label="Hoy" hidden>
@@ -981,8 +991,19 @@ function segSet(id,v){$(id).querySelectorAll('button').forEach(x=>x.setAttribute
 // ================= navegación =================
 function route(){const h=location.hash,v=h==='#stats'?'s':h==='#diario'||h==='#finanzas'?'j':h==='#calc'?'c':(UI&&UI.home)||'c';document.documentElement.setAttribute('data-sec',v);$('vFin').hidden=v!=='j';$('vHoy').hidden=true;$('vCalc').hidden=v!=='c';$('vStats').hidden=v!=='s';$('vJour').hidden=v!=='j';
  $('tCalc').setAttribute('aria-current',v==='c'?'page':'false');$('tStats').setAttribute('aria-current',v==='s'?'page':'false');$('tJour').setAttribute('aria-current',v==='j'?'page':'false');
- if(v==='s'&&(!S.done||S.dirty))schedule();if(v==='s'&&S.evo)setTimeout(drawEvo,0);if(v==='j'){jRender(true);finRender()}requestAnimationFrame(tabInd);SN.key=null;setTimeout(buildSecNav,60);setTimeout(rvArm,30);if(route.done)scrollTo({top:0});route.done=true}
+ if(v==='s'&&(!S.done||S.dirty))schedule();if(v==='s'&&S.evo)setTimeout(drawEvo,0);if(v==='j'){jRender(true);finRender()}requestAnimationFrame(tabInd);SN.key=null;setTimeout(buildSecNav,60);if(window.hdShow)hdShow();setTimeout(rvArm,30);if(route.done)scrollTo({top:0});route.done=true}
 addEventListener('hashchange',route);
+// encabezado que se oculta al bajar y vuelve al subir, al tocar arriba o al pasar el ratón
+{const tb=document.querySelector('.topbar'),zone=$('hdZone');let lastY=scrollY,hover=false,hideT;
+ const setH=h=>{const on=!!(UI&&UI.ahide!==false);h=h&&on&&scrollY>90&&!hover&&$('setP').hidden&&!(document.activeElement&&tb.contains(document.activeElement));tb.classList.toggle('hid',h);document.documentElement.classList.toggle('hdh',h)};
+ addEventListener('scroll',()=>{const y=scrollY,d=y-lastY;if(Math.abs(d)>6){setH(d>0);lastY=y}if(y<=90)setH(false)},{passive:true});
+ zone.addEventListener('mouseenter',()=>{hover=true;setH(false)});zone.addEventListener('click',()=>{hover=true;setH(false)});
+ tb.addEventListener('mouseenter',()=>{hover=true;clearTimeout(hideT)});
+ tb.addEventListener('mouseleave',()=>{hover=false;clearTimeout(hideT);hideT=setTimeout(()=>{if(!hover&&scrollY>90)setH(true)},900)});
+ addEventListener('mousemove',e=>{if(e.clientY<14&&tb.classList.contains('hid')){hover=true;setH(false);return}
+  if(hover&&!tb.contains(e.target)&&!zone.contains(e.target)&&e.clientY>tb.getBoundingClientRect().bottom+30){hover=false;clearTimeout(hideT);hideT=setTimeout(()=>{if(!hover&&scrollY>90)setH(true)},900)}},{passive:true});
+ window.hdShow=()=>setH(false)}
+
 // brillo de tarjetas: guarda la posición del ratón dentro de la tarjeta
 document.addEventListener('pointermove',e=>{if(!document.documentElement.classList.contains('glow'))return;const c=e.target.closest&&e.target.closest('.card,.hero,.ac,.oc');if(!c)return;const r=c.getBoundingClientRect();c.style.setProperty('--mx',(e.clientX-r.left)+'px');c.style.setProperty('--my',(e.clientY-r.top)+'px')},{passive:true});
 // aparición suave de las tarjetas que quedan por debajo al cambiar de página
@@ -1001,7 +1022,7 @@ function buildSecNav(){const nav=$('secNav');if(!nav)return;const it=secItems(),
  if(real.length<3){nav.hidden=true;nav.innerHTML='';navH();return}nav.hidden=false;
  nav.innerHTML=it.map((o,i)=>o.sep?'<span class="sp" aria-hidden="true"></span>':`<a href="#" data-i="${i}">${esc(o.t)}</a>`).join('')+'<i class="secprog"></i>';SN.active=-1;navH();secSpy()}
 function navH(){const tb=document.querySelector('.topbar');if(tb)document.documentElement.style.setProperty('--navh',(tb.offsetHeight+14)+'px')}
-function secSpy(){const nav=$('secNav');if(!nav||nav.hidden||!SN.items.length)return;const tb=document.querySelector('.topbar'),top=(tb?tb.getBoundingClientRect().bottom:0)+40;
+function secSpy(){const nav=$('secNav');if(!nav||nav.hidden||!SN.items.length)return;const tb=document.querySelector('.topbar'),top=(tb?Math.max(0,tb.getBoundingClientRect().bottom):0)+40;
  let a=-1;SN.items.forEach((o,i)=>{if(o.sep)return;const r=o.el.getBoundingClientRect();if(r.top<=top)a=i});if(a<0){const f=SN.items.findIndex(o=>!o.sep);a=f}
  if(innerHeight+scrollY>=document.documentElement.scrollHeight-4){for(let i=SN.items.length-1;i>=0;i--)if(!SN.items[i].sep){a=i;break}}
  const pg=nav.querySelector('.secprog');if(pg){const h=document.documentElement.scrollHeight-innerHeight;pg.style.width=(h>0?Math.min(100,scrollY/h*100):0)+'%'}
@@ -1044,7 +1065,7 @@ function nyTick(){const el=$('nyS');if(!el)return;const now=new Date();
  alertCheck(S_,now);if(UI&&(UI.mode==='sched')&&now.getSeconds()===0){const m=uiModeNow();if(document.documentElement.getAttribute('data-mode')!==m)applyMode(m,true)}}
 nyTick();setInterval(nyTick,1000);
 // ================= ajustes de la interfaz =================
-var UI;const UID={mode:'dark',pal:'matcha',good:'',bad:'',head:'',proj:'',size:'m',home:'c',anim:true,sec:false,font:'schibsted',rad:'r',dens:'n',priv:false,alert:0,bgD:'',bgL:'',glass:true,glow:true,grain:true,dayFrom:'08:00',dayTo:'20:00',mine:[]};
+var UI;const UID={mode:'dark',pal:'matcha',good:'',bad:'',head:'',proj:'',size:'m',home:'c',anim:true,sec:false,font:'schibsted',rad:'r',dens:'n',priv:false,alert:0,bgD:'',bgL:'',ahide:true,glass:true,glow:true,grain:true,dayFrom:'08:00',dayTo:'20:00',mine:[]};
 const PALS={
  matcha:{n:'Matcha',dots:['#a6c4a0','#b14052','#ffe4ed','#fef8f0'],d:'',l:''},
  oceano:{n:'Océano',dots:['#1a535c','#4ecdc4','#ff6b6b','#ffe66d'],
@@ -1073,7 +1094,7 @@ function uiForm(){if(!$('setP'))return;segSet('uMode',UI.mode);segSet('uSize',UI
  $('uAnim').checked=!!UI.anim;$('uSec').checked=!!UI.sec;$('uPriv').checked=!!UI.priv;$('uSchedB').hidden=UI.mode!=='sched';$('uDayFrom').value=UI.dayFrom;$('uDayTo').value=UI.dayTo;
  const card=(k,n,dots,del)=>`<div class="pw"><button type="button" data-v="${esc(k)}" aria-pressed="${UI.pal===k}"><span class="dots">${dots.map(c=>`<i style="background:${esc(c)}"></i>`).join('')}</span>${esc(n)}</button>${del?`<button type="button" class="del" data-del="${esc(k)}" aria-label="Borrar paleta ${esc(n)}">✕</button>`:''}</div>`;
  $('uPal').innerHTML=Object.entries(PALS).map(([k,P])=>card(k,P.n,P.dots,false)).join('')+(UI.mine||[]).map(m=>card(m.id,m.n,[m.bgD,m.good,m.bad,m.head,m.proj].filter(Boolean).concat((PALS[m.base]||PALS.matcha).dots).slice(0,4),true)).join('');
- $('uGood').value=toHex(cssv('good'));$('uBad').value=toHex(cssv('bad'));$('uHead').value=toHex(cssv('head'));$('uProj').value=toHex(cssv('violet'));$('uGlass').checked=UI.glass!==false;$('uGlow').checked=UI.glow!==false;$('uGrain').checked=UI.grain!==false;
+ $('uGood').value=toHex(cssv('good'));$('uBad').value=toHex(cssv('bad'));$('uHead').value=toHex(cssv('head'));$('uProj').value=toHex(cssv('violet'));$('uGlass').checked=UI.glass!==false;$('uAhide').checked=UI.ahide!==false;$('uGlow').checked=UI.glow!==false;$('uGrain').checked=UI.grain!==false;
  {const R=document.documentElement,cur=R.getAttribute('data-mode');$('uBgD').value=UI.bgD||((palOf(UI.pal).mine||{}).bgD)||(cur==='dark'?toHex(cssv('bg')):'#000000');$('uBgL').value=UI.bgL||((palOf(UI.pal).mine||{}).bgL)||(cur==='light'?toHex(cssv('bg')):'#ffffff')}}
 // aviso antes de la apertura
 let alertDone='';
@@ -1990,7 +2011,7 @@ if(window.matchMedia)try{matchMedia('(prefers-color-scheme: light)').addEventLis
  $('uPal').addEventListener('click',e=>{const d=e.target.closest('[data-del]');if(d){UI.mine=(UI.mine||[]).filter(m=>m.id!==d.dataset.del);if(UI.pal===d.dataset.del)UI.pal='matcha';uiSave();return}const b=e.target.closest('button[data-v]');if(!b)return;UI.pal=b.dataset.v;UI.good=UI.bad=UI.head=UI.proj=UI.bgD=UI.bgL='';uiSave()});
  [['uGood','good'],['uBad','bad'],['uHead','head'],['uProj','proj'],['uBgD','bgD'],['uBgL','bgL']].forEach(([id,k])=>{$(id).addEventListener('input',e=>{UI[k]=e.target.value;store.set('ui',UI);uiCss();applyMode(document.documentElement.getAttribute('data-mode'),true)});$(id).addEventListener('change',()=>uiSave())});
  $('uColR').addEventListener('click',()=>{UI.good=UI.bad=UI.head=UI.proj=UI.bgD=UI.bgL='';uiSave()});
- [['uGlass','glass'],['uGlow','glow'],['uGrain','grain']].forEach(([id,k])=>$(id).addEventListener('change',e=>{UI[k]=e.target.checked;uiSave()}));
+ [['uGlass','glass'],['uGlow','glow'],['uGrain','grain'],['uAhide','ahide']].forEach(([id,k])=>$(id).addEventListener('change',e=>{UI[k]=e.target.checked;uiSave()}));
  $('uPalSave').addEventListener('click',()=>{const n=($('uPalName').value||'').trim()||`Mi paleta ${(UI.mine||[]).length+1}`;const O=palOf(UI.pal);
   const M0=O.mine||{},m={id:'u'+Date.now().toString(36),n,base:O.base,good:UI.good||M0.good||'',bad:UI.bad||M0.bad||'',head:UI.head||M0.head||'',proj:UI.proj||M0.proj||'',bgD:UI.bgD||M0.bgD||'',bgL:UI.bgL||M0.bgL||''};
   UI.mine=(UI.mine||[]).concat(m).slice(-9);UI.pal=m.id;UI.good=UI.bad=UI.head=UI.proj=UI.bgD=UI.bgL='';$('uPalName').value='';uiSave();toast(`Paleta <b>${esc(n)}</b> guardada.`,3500)});
