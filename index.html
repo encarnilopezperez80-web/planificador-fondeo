@@ -538,6 +538,34 @@ html.ahx .wrap{padding-top:12px}
 html.ahx .setp{top:96px}
 html.ahx aside{top:16px!important;max-height:calc(100vh - 28px)!important}html.ahx :is(.view .card,.view .hero,.view .ac,.view [data-nav],.divh){scroll-margin-top:18px}
 @media (max-width:900px){html.ahx aside{max-height:none!important}}
+
+/* ===== ajuste a la pantalla ===== */
+:root{--pad:clamp(12px,2.1vh,22px);--gap:clamp(10px,1.5vh,18px)}
+.wrap{gap:var(--gap)!important}
+.card{padding:var(--pad) calc(var(--pad) + 2px)!important;gap:var(--gap)!important}
+.kp>div,.tiles>div,.an>div,.hn>div{padding:clamp(8px,1.3vh,14px) clamp(11px,1.2vw,16px)!important}
+.kp .big .v{font-size:clamp(22px,3.3vh,30px)!important}
+.kp .v,.tiles .v{font-size:clamp(16px,2.3vh,20px)}
+.chartbox{padding-top:clamp(8px,1.4vh,16px)!important}
+.cols{height:clamp(70px,11vh,110px)!important}
+.bigin{font-size:clamp(26px,4vh,34px)!important;padding-block:clamp(8px,1.3vh,12px)!important}
+#oTable td,#oTable th{padding-block:clamp(5px,.9vh,10px)!important}
+.cal button{min-height:clamp(52px,7.4vh,86px)}
+html[data-dens="c"] .card{padding:clamp(10px,1.6vh,16px) clamp(12px,1.4vw,18px)!important;gap:clamp(8px,1.2vh,12px)!important}
+html[data-dens="c"] .wrap{gap:clamp(8px,1.2vh,12px)!important}
+html[data-dens="c"] h2{font-size:15.5px}
+html[data-dens="c"] .note{padding-block:8px}
+html[data-dens="c"] .cal button{min-height:clamp(46px,6.4vh,72px)}
+
+/* tabla de métricas de tus trades en dos columnas en pantallas anchas */
+@media (min-width:1000px){
+ #jsT1 tbody{display:grid;grid-template-columns:1fr 1fr;column-gap:28px}
+ #jsT1 tr{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--cline)}
+ #jsT1 tr:first-child{display:none}
+ #jsT1 td{border:0!important;padding-block:clamp(6px,1vh,9px)!important}
+ #jsT1 tr:hover td{background:none}
+ #js2 .brk{grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+}
 </style></head><body>
 
 <div class="wrap">
@@ -560,7 +588,7 @@ html.ahx aside{top:16px!important;max-height:calc(100vh - 28px)!important}html.a
   <div class="sg"><span class="sl">Tipografía</span><div class="seg" id="uFont"><button type="button" data-v="schibsted">Schibsted</button><button type="button" data-v="manrope">Manrope</button><button type="button" data-v="dmsans">DM Sans</button></div></div>
   <div class="sg"><span class="sl">Esquinas</span><div class="seg" id="uRad"><button type="button" data-v="r">Redondas</button><button type="button" data-v="m">Suaves</button><button type="button" data-v="s">Rectas</button></div></div>
   <div class="two"><div class="sg"><span class="sl">Texto</span><div class="seg" id="uSize"><button type="button" data-v="s">S</button><button type="button" data-v="m">M</button><button type="button" data-v="l">L</button></div></div>
-   <div class="sg"><span class="sl">Densidad</span><div class="seg" id="uDens"><button type="button" data-v="n">Cómoda</button><button type="button" data-v="c">Compacta</button></div></div></div>
+   <div class="sg"><span class="sl">Densidad</span><div class="seg" id="uDens"><button type="button" data-v="a">Auto</button><button type="button" data-v="n">Cómoda</button><button type="button" data-v="c">Compacta</button></div></div></div>
   <div class="sg"><span class="sl">Efectos</span>
     <label class="chk"><input type="checkbox" id="uGlass"> Cristal y luz ambiental de fondo</label>
     <label class="chk"><input type="checkbox" id="uGlow"> Brillo que sigue al ratón en las tarjetas</label>
@@ -1000,8 +1028,10 @@ function route(){const h=location.hash,v=h==='#stats'?'s':h==='#diario'||h==='#f
  $('tCalc').setAttribute('aria-current',v==='c'?'page':'false');$('tStats').setAttribute('aria-current',v==='s'?'page':'false');$('tJour').setAttribute('aria-current',v==='j'?'page':'false');
  if(v==='s'&&(!S.done||S.dirty))schedule();if(v==='s'&&S.evo)setTimeout(drawEvo,0);if(v==='j'){jRender(true);finRender()}requestAnimationFrame(tabInd);SN.key=null;setTimeout(buildSecNav,60);if(window.hdShow)hdShow();setTimeout(rvArm,30);if(route.done)scrollTo({top:0});route.done=true}
 addEventListener('hashchange',route);
+{let rt;addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(()=>{if(UI&&(UI.dens||'a')==='a')document.documentElement.setAttribute('data-dens',innerHeight<940?'c':'n');if(S&&S.done&&!$('vStats').hidden){try{renderGL();drawEvo();ladderCard()}catch(e){}}if(!$('vFin').hidden){try{drawCounts()}catch(e){}}navH&&navH()},200)})}
+
 // encabezado oculto: solo aparece al llevar el ratón arriba (en móvil, al subir o arriba del todo)
-{const tb=document.querySelector('.topbar'),zone=$('hdZone'),R=document.documentElement,canHover=!!(window.matchMedia&&matchMedia('(hover:hover)').matches);let hover=false,hideT,lastY=scrollY,peek=false;
+{const tb=document.querySelector('.topbar'),zone=$('hdZone'),R=document.documentElement,canHover=!!(window.matchMedia&&(matchMedia('(hover:hover)').matches||matchMedia('(any-hover:hover)').matches));let hover=false,hideT,lastY=scrollY,peek=false;
  const on=()=>!!(UI&&UI.ahide!==false);
  const want=()=>on()&&!hover&&!peek&&$('setP').hidden&&!tb.querySelector(':focus-visible:is(input,select,textarea)')&&(canHover||scrollY>90);
  const upd=()=>{R.classList.toggle('ahx',on());const h=want();tb.classList.toggle('hid',h);R.classList.toggle('hdh',h)};
@@ -1010,6 +1040,8 @@ addEventListener('hashchange',route);
  tb.addEventListener('mouseenter',()=>{hover=true;clearTimeout(hideT);upd()});
  tb.addEventListener('mouseleave',()=>{hover=false;later(700)});
  tb.addEventListener('click',e=>{const a=e.target.closest('a');if(a)setTimeout(()=>a.blur(),0)});
+ addEventListener('pointermove',e=>{if(e.pointerType==='mouse'&&!canHover){canHover=true;upd()}},{passive:true});
+ document.addEventListener('mouseleave',()=>{if(hover){hover=false;later(500)}});
  addEventListener('mousemove',e=>{if(e.clientY<16&&tb.classList.contains('hid')){hover=true;upd();return}if(hover&&!tb.contains(e.target)&&!zone.contains(e.target)&&e.clientY>tb.getBoundingClientRect().bottom+24){hover=false;later(700)}},{passive:true});
  addEventListener('scroll',()=>{if(canHover)return;const y=scrollY,d=y-lastY;if(Math.abs(d)>6){peek=d<0;lastY=y;upd()}},{passive:true});
  window.hdUpd=upd;let peekT;window.hdShow=()=>{peek=true;upd();clearTimeout(peekT);peekT=setTimeout(()=>{peek=false;upd()},1600)};
@@ -1076,7 +1108,7 @@ function nyTick(){const el=$('nyS');if(!el)return;const now=new Date();
  alertCheck(S_,now);if(UI&&(UI.mode==='sched')&&now.getSeconds()===0){const m=uiModeNow();if(document.documentElement.getAttribute('data-mode')!==m)applyMode(m,true)}}
 nyTick();setInterval(nyTick,1000);
 // ================= ajustes de la interfaz =================
-var UI;const UID={mode:'dark',pal:'matcha',good:'',bad:'',head:'',proj:'',size:'m',home:'c',anim:true,sec:false,font:'schibsted',rad:'r',dens:'n',priv:false,alert:0,bgD:'',bgL:'',ahide:true,glass:true,glow:true,grain:true,dayFrom:'08:00',dayTo:'20:00',mine:[]};
+var UI;const UID={mode:'dark',pal:'matcha',good:'',bad:'',head:'',proj:'',size:'m',home:'c',anim:true,sec:false,font:'schibsted',rad:'r',dens:'a',priv:false,alert:0,bgD:'',bgL:'',ahide:true,glass:true,glow:true,grain:true,dayFrom:'08:00',dayTo:'20:00',mine:[]};
 const PALS={
  matcha:{n:'Matcha',dots:['#a6c4a0','#b14052','#ffe4ed','#fef8f0'],d:'',l:''},
  oceano:{n:'Océano',dots:['#1a535c','#4ecdc4','#ff6b6b','#ffe66d'],
@@ -1096,7 +1128,7 @@ function uiCss(){const O=palOf(UI.pal),P=O.P,M=O.mine||{};let c='';if(P.d)c+=`ht
 const sysLight=()=>!!(window.matchMedia&&matchMedia('(prefers-color-scheme: light)').matches);
 function uiModeNow(){if(UI.mode==='auto')return sysLight()?'light':'dark';if(UI.mode==='sched'){const n=new Date(),t=n.getHours()*60+n.getMinutes(),f=x=>{const [h,m]=String(x||'').split(':').map(Number);return(h||0)*60+(m||0)},a=f(UI.dayFrom),b=f(UI.dayTo);return(a<=b?t>=a&&t<b:t>=a||t<b)?'light':'dark'}return UI.mode==='light'?'light':'dark'}
 function uiApply(redraw){const R=document.documentElement;R.setAttribute('data-size',UI.size||'m');R.classList.toggle('no-anim',!UI.anim);uiCss();
- const m=uiModeNow();if(typeof applyMode==='function')applyMode(m,true);R.setAttribute('data-font',UI.font||'schibsted');R.setAttribute('data-rad',UI.rad||'r');R.setAttribute('data-dens',UI.dens||'n');R.classList.toggle('priv',!!UI.priv);R.classList.toggle('fx',UI.glass!==false);R.classList.toggle('glow',UI.glow!==false);R.classList.toggle('grain',UI.grain!==false);{const bp=$('bPriv');if(bp)bp.setAttribute('aria-pressed',!!UI.priv)}
+ const m=uiModeNow();if(typeof applyMode==='function')applyMode(m,true);R.setAttribute('data-font',UI.font||'schibsted');R.setAttribute('data-rad',UI.rad||'r');R.setAttribute('data-dens',(UI.dens||'a')==='a'?((innerHeight||900)<940?'c':'n'):UI.dens);R.classList.toggle('priv',!!UI.priv);R.classList.toggle('fx',UI.glass!==false);R.classList.toggle('glow',UI.glow!==false);R.classList.toggle('grain',UI.grain!==false);{const bp=$('bPriv');if(bp)bp.setAttribute('aria-pressed',!!UI.priv)}
  if(redraw!==false)requestAnimationFrame(()=>{if(typeof tabInd==='function')tabInd()});uiForm()}
 function uiSave(){store.set('ui',UI);uiApply();if(window.hdUpd)hdUpd();if(typeof cfgPush==='function')try{cfgPush()}catch(e){}}
 function cssv(k){return getComputedStyle(document.documentElement).getPropertyValue('--'+k).trim()}
@@ -1278,10 +1310,11 @@ function runJobs(tasks,isDead,onEach){return new Promise(res=>{const W=pool(),ou
 // ================= gráficos =================
 let C={};function refreshC(){const cs=getComputedStyle(document.documentElement),g=k=>cs.getPropertyValue('--'+k).trim();C={bg:g('s1'),ink:g('ink'),mut:g('mut'),dim:g('dim'),line:g('line'),acc:g('acc'),good:g('good'),gd:g('good-d'),bad:g('bad'),bd:g('bad-d'),warn:g('warn'),open:g('open'),neutral:g('neutral'),violet:g('violet'),orange:g('orange'),grid:g('grid'),sky:g('sky'),gold:g('gold'),buy:g('buy')}}
 const GR=(id,c,a,b)=>`<defs><linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${c}" stop-opacity="${a}"/><stop offset="1" stop-color="${c}" stop-opacity="${b}"/></linearGradient></defs>`;
+function chH(W,a,b){return W<500?a:Math.round(Math.max(160,Math.min(b,(innerHeight||900)*0.27)))}
 function axisY(s,W,m,Y,y0,y1,fmt,n=4){for(let i=0;i<=n;i++){const v=y0+(y1-y0)*i/n;s.push(`<line x1="${m.l}" x2="${W-m.r}" y1="${Y(v)}" y2="${Y(v)}" stroke="${C.grid}" stroke-dasharray="1 3"/><text x="${m.l-8}" y="${Y(v)+3.5}" text-anchor="end" font-size="10.5" fill="${C.dim}" font-family="Schibsted Grotesk">${fmt(v)}</text>`)}}
 function hist(el,lg,vals){const v=A2(vals).filter(fin).sort((a,b)=>a-b);if(!v.length){el.innerHTML='';return}const lo=q(v,.01),hi=q(v,.99);const nb=24,w=(hi-lo)/nb||1;const cnt=new Array(nb).fill(0);
  for(const x of v){let k=Math.floor((Math.min(Math.max(x,lo),hi)-lo)/w);if(k>=nb)k=nb-1;if(k<0)k=0;cnt[k]++}
- const W=Math.max(280,Math.round(el.clientWidth||760)),H=W<500?200:220,m={l:44,r:14,t:10,b:34},mx=Math.max(...cnt)/v.length,X=x=>m.l+(x-lo)/(hi-lo||1)*(W-m.l-m.r),Y=f=>m.t+(1-f/mx)*(H-m.t-m.b);
+ const W=Math.max(280,Math.round(el.clientWidth||760)),H=chH(W,200,220),m={l:44,r:14,t:10,b:34},mx=Math.max(...cnt)/v.length,X=x=>m.l+(x-lo)/(hi-lo||1)*(W-m.l-m.r),Y=f=>m.t+(1-f/mx)*(H-m.t-m.b);
  const s=[`<svg viewBox="0 0 ${W} ${H}" role="img">`];axisY(s,W,m,Y,0,mx,f=>Math.round(f*100)+'%',3);
  cnt.forEach((c,i)=>{const a=lo+i*w,b=a+w,f=c/v.length,col=b<=0?C.bd:a>=0?C.gd:C.warn;s.push(`<rect x="${X(a)+1}" y="${Y(f)}" width="${Math.max(1,X(b)-X(a)-2)}" height="${Y(0)-Y(f)}" fill="${col}"><title>${usd(a)} a ${usd(b)}: ${pct(f)}</title></rect>`)});
  if(lo<0&&hi>0)s.push(`<line x1="${X(0)}" x2="${X(0)}" y1="${m.t}" y2="${H-m.b}" stroke="${C.ink}" stroke-opacity=".6" stroke-dasharray="2 3"/><text x="${X(0)+5}" y="${m.t+10}" font-size="10.5" fill="${C.mut}">$0</text>`);
@@ -1340,7 +1373,7 @@ function renderEvo(){const B=S.B,M=B.months,N=B.N,pts_=[{m:0,lo:0,q1:0,v:0,q3:0,
 function drawEvo(){const el=$('cEvo'),P=S.evo;if(!el||!P||$('vStats').hidden)return;const n=P.length;
  $('lEvo').innerHTML=`<span><i style="background:${C.good}"></i>caso típico</span><span><i style="background:${C.good};opacity:.35"></i>la mitad de los planes</span><span><i style="background:${C.good};opacity:.15"></i>8 de cada 10 planes</span>`;
  const vs=P.flatMap(p=>[p.lo,p.hi,0]);let y0=Math.min(...vs),y1=Math.max(...vs);if(y0===y1)y1=y0+1;const pd=(y1-y0)*.06;y0-=pd;y1+=pd;
- const W=Math.max(280,Math.round(el.clientWidth||760)),H=W<500?210:250,m={l:W<500?52:62,r:14,t:12,b:26},X=i=>m.l+i/(n-1)*(W-m.l-m.r),Y=v=>m.t+(1-(v-y0)/(y1-y0))*(H-m.t-m.b);
+ const W=Math.max(280,Math.round(el.clientWidth||760)),H=chH(W,210,250),m={l:W<500?52:62,r:14,t:12,b:26},X=i=>m.l+i/(n-1)*(W-m.l-m.r),Y=v=>m.t+(1-(v-y0)/(y1-y0))*(H-m.t-m.b);
  const s=[`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Dinero acumulado mes a mes">`];
  for(let i=0;i<=4;i++){const v=y0+(y1-y0)*i/4;s.push(`<line x1="${m.l}" x2="${W-m.r}" y1="${Y(v)}" y2="${Y(v)}" stroke="${C.grid}" stroke-dasharray="1 3"/><text x="${m.l-8}" y="${Y(v)+3.5}" text-anchor="end" font-size="10.5" fill="${C.dim}">${usd(v)}</text>`)}
  if(y0<0&&y1>0)s.push(`<line x1="${m.l}" x2="${W-m.r}" y1="${Y(0)}" y2="${Y(0)}" stroke="${C.dim}"/>`);
@@ -1986,7 +2019,7 @@ function drawJ2(){const el=$('j2svg');if(!el||!J2.series)return;const R=J2.serie
  else if(J2.chart==='d'){let c=0;R.forEach(x=>{c+=x.t.pl;pts_.push({x,v:c})});lab='resultado acumulado ($)';fmt=v=>usd(v)}
  else{const V=[];R.forEach(x=>{if(!x.be&&x.r!=null){V.push(x.r>0?1:0);const w=V.slice(-20);if(V.length>=5)pts_.push({x,v:w.reduce((s,y)=>s+y,0)/w.length})}});lab='win rate de los últimos 20 trades (sin breakeven)';fmt=v=>pct(v);zero=false}
  if(pts_.length<2){el.innerHTML='<p class="hint">Necesitas más trades para dibujar este gráfico.</p>';return}
- const W=Math.max(280,Math.round(el.clientWidth||760)),H=W<500?200:240,m={l:58,r:14,t:12,b:30},vs=pts_.map(p=>p.v);let y0=Math.min(...vs),y1=Math.max(...vs);if(zero){y0=Math.min(0,y0);y1=Math.max(0,y1)}if(J2.chart==='wr'){y0=0;y1=1}if(y0===y1)y1=y0+1;const pd=(y1-y0)*.08;if(J2.chart!=='wr'){y0-=pd;y1+=pd}
+ const W=Math.max(280,Math.round(el.clientWidth||760)),H=chH(W,200,240),m={l:58,r:14,t:12,b:30},vs=pts_.map(p=>p.v);let y0=Math.min(...vs),y1=Math.max(...vs);if(zero){y0=Math.min(0,y0);y1=Math.max(0,y1)}if(J2.chart==='wr'){y0=0;y1=1}if(y0===y1)y1=y0+1;const pd=(y1-y0)*.08;if(J2.chart!=='wr'){y0-=pd;y1+=pd}
  const X=i=>m.l+i/(pts_.length-1)*(W-m.l-m.r),Y=v=>m.t+(1-(v-y0)/(y1-y0))*(H-m.t-m.b);
  const s=[`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${lab}">`];
  for(let i=0;i<=4;i++){const v=y0+(y1-y0)*i/4;s.push(`<line x1="${m.l}" x2="${W-m.r}" y1="${Y(v)}" y2="${Y(v)}" stroke="${C.grid}" stroke-dasharray="1 3"/><text x="${m.l-8}" y="${Y(v)+3.5}" text-anchor="end" font-size="10.5" fill="${C.dim}">${fmt(v)}</text>`)}
@@ -2291,7 +2324,7 @@ function finTaxPlan(){const el=$('txChart');if(!el)return;$('txSal').value=FIN.s
  // gráfico apilado por mes
  const n=S.length;if(!n){el.innerHTML='';return}
  $('txLeg').innerHTML=`<span><i style="background:${C.good}"></i>te queda limpio</span><span><i style="background:${C.warn}"></i>IRPF</span><span><i style="background:${C.acc}"></i>autónomos</span><span><i style="background:${C.dim}"></i>mes en pérdidas</span><span class="hint">claro = previsto</span>`;
- const W=Math.max(300,Math.round(el.clientWidth||900)),H=W<500?200:230,m={l:W<500?50:58,r:10,t:12,b:26};const hi=Math.max(50,...S.map(r=>Math.max(r.rend,r.reta))),lo=Math.min(0,...S.map(r=>r.neto<0?r.rend-r.reta:0));
+ const W=Math.max(300,Math.round(el.clientWidth||900)),H=chH(W,200,230),m={l:W<500?50:58,r:10,t:12,b:26};const hi=Math.max(50,...S.map(r=>Math.max(r.rend,r.reta))),lo=Math.min(0,...S.map(r=>r.neto<0?r.rend-r.reta:0));
  const Y_=v=>m.t+(1-(v-lo)/(hi-lo))*(H-m.t-m.b),bw=Math.max(4,Math.min(36,(W-m.l-m.r)/n*0.62)),X=i=>m.l+(i+.5)*(W-m.l-m.r)/n;
  const s=[`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Impuestos y autónomos cada mes">`];
  for(let i=0;i<=4;i++){const v=lo+(hi-lo)*i/4;s.push(`<line x1="${m.l}" x2="${W-m.r}" y1="${Y_(v)}" y2="${Y_(v)}" stroke="${C.grid}" stroke-dasharray="1 3"/><text x="${m.l-6}" y="${Y_(v)+3.5}" text-anchor="end" font-size="10.5" fill="${C.dim}">${eur(v)}</text>`)}
@@ -2320,7 +2353,7 @@ function drawCounts(){const el=$('mCnt');if(!el||$('vFin').hidden)return;const A
  const ser=[['buy','Challenges comprados','compradas',C.buy],['apr','Challenges aprobados','aprobadas',C.good],['bur','Cuentas quemadas','quemadas',C.bad],['pay','Retiros cobrados','retiros',C.warn]];
  $('cLeg').innerHTML=ser.map(x=>`<span><i style="background:${x[3]}"></i>${x[2]}</span>`).join('')+`<span><i style="background:${C.violet};border-radius:50%"></i>fondeadas vivas</span><span class="hint">claro = previsto</span>`;
  const tot=(r,k)=>r[k]+(r.add?r.add[k]:0);
- const n=rows.length,W=Math.max(300,Math.round(el.clientWidth||900)),H=W<500?200:230,m={l:34,r:10,t:14,b:26},hi=Math.max(2,...rows.map(r=>Math.max(tot(r,'buy'),tot(r,'apr'),tot(r,'bur'),tot(r,'pay'),r.fa)))*1.1;
+ const n=rows.length,W=Math.max(300,Math.round(el.clientWidth||900)),H=chH(W,200,230),m={l:34,r:10,t:14,b:26},hi=Math.max(2,...rows.map(r=>Math.max(tot(r,'buy'),tot(r,'apr'),tot(r,'bur'),tot(r,'pay'),r.fa)))*1.1;
  const gw=(W-m.l-m.r)/n,bw=Math.max(2,Math.min(12,gw*0.8/4)),X=i=>m.l+(i+.5)*gw,Y=v=>m.t+(1-v/hi)*(H-m.t-m.b);
  const s=[`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Cuentas compradas, aprobadas, quemadas, retiros y fondeadas vivas cada mes">`];
  for(let i=0;i<=4;i++){const v=hi*i/4;s.push(`<line x1="${m.l}" x2="${W-m.r}" y1="${Y(v)}" y2="${Y(v)}" stroke="${C.grid}" stroke-dasharray="1 3"/><text x="${m.l-6}" y="${Y(v)+3.5}" text-anchor="end" font-size="10.5" fill="${C.dim}">${n1(v)}</text>`)}
@@ -2356,7 +2389,7 @@ function drawFin(){const el=$('fChart');if(!el||$('vFin').hidden)return;const re
  if(pts.length+pr.length<2){el.innerHTML='<p class="hint">Aún no hay datos suficientes para el gráfico.</p>';$('fLeg').innerHTML='';return}
  $('fLeg').innerHTML=`<span><i style="background:${C.good}"></i>real</span>${pr.length?`<span><i style="background:${C.violet}"></i>proyección (mediana)</span><span><i style="background:${C.violet};opacity:.25"></i>8 de cada 10 futuros</span>`:''}`;
  const all=[...pts,...pr],n=all.length,maxPos=Math.max(1,...all.map(p=>p.pos)),vs=all.flatMap(p=>[p.v,p.lo??p.v,p.hi??p.v,0]);let y0=Math.min(...vs),y1=Math.max(...vs);if(y0===y1)y1=y0+1;const pd=(y1-y0)*.08;y0-=pd;y1+=pd;
- const W=Math.max(280,Math.round(el.clientWidth||760)),H=W<500?210:250,m={l:W<500?52:64,r:14,t:12,b:30},X=i=>m.l+i/maxPos*(W-m.l-m.r),Y=v=>m.t+(1-(v-y0)/(y1-y0))*(H-m.t-m.b);
+ const W=Math.max(280,Math.round(el.clientWidth||760)),H=chH(W,210,250),m={l:W<500?52:64,r:14,t:12,b:30},X=i=>m.l+i/maxPos*(W-m.l-m.r),Y=v=>m.t+(1-(v-y0)/(y1-y0))*(H-m.t-m.b);
  const s=[`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Resultado neto acumulado, real y proyectado">`],fmt=v=>money(v);
  for(let i=0;i<=4;i++){const v=y0+(y1-y0)*i/4;s.push(`<line x1="${m.l}" x2="${W-m.r}" y1="${Y(v)}" y2="${Y(v)}" stroke="${C.grid}" stroke-dasharray="1 3"/><text x="${m.l-8}" y="${Y(v)+3.5}" text-anchor="end" font-size="10.5" fill="${C.dim}">${fmt(v)}</text>`)}
  if(y0<0&&y1>0)s.push(`<line x1="${m.l}" x2="${W-m.r}" y1="${Y(0)}" y2="${Y(0)}" stroke="${C.dim}"/>`);
