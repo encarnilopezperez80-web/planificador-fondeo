@@ -566,6 +566,36 @@ html[data-dens="c"] .cal button{min-height:clamp(46px,6.4vh,72px)}
  #jsT1 tr:hover td{background:none}
  #js2 .brk{grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
 }
+
+/* ===== formatos: nada se sale de su caja ===== */
+.brk{grid-template-columns:repeat(auto-fit,minmax(min(100%,290px),1fr))!important}
+#js2 .brk{grid-template-columns:repeat(auto-fit,minmax(min(100%,290px),1fr))!important}
+.bk{min-width:0;overflow:hidden}
+.bkr{grid-template-columns:minmax(0,1fr) minmax(44px,32%) max-content!important;gap:10px!important}
+.bkl{min-width:0}.bkl b,.bkl span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bkv{min-width:3.6em;font-size:14px}
+.mcs{grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr))!important}
+.mc{min-width:0;overflow:hidden}
+.mst{grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:5px!important}
+.mst div{min-width:0;padding:7px 8px!important}
+.mst b{font-size:17px!important}
+.mst span{font-size:10.5px!important;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mfl div{grid-template-columns:minmax(52px,auto) minmax(0,1fr) auto!important}
+.mft{font-size:11px}
+.sh{flex-wrap:wrap;row-gap:8px}
+.sh select,.sh .seg{max-width:100%}
+.sh>div{max-width:100%;min-width:0}
+#jsAcc{max-width:min(100%,320px);text-overflow:ellipsis}
+.kp>div,.tiles>div,.an>div,.hn>div{min-width:0}
+.kp .v,.tiles .v{overflow-wrap:anywhere}
+
+.mcs{grid-template-columns:repeat(auto-fill,minmax(min(100%,340px),1fr))!important}
+.mc{container-type:inline-size}
+.mst span{text-overflow:clip}
+@container (max-width:380px){.mst{grid-template-columns:repeat(2,minmax(0,1fr))!important}.mst div{flex-direction:row!important;align-items:baseline!important;gap:6px!important}}
+.mft{flex-direction:column;gap:3px}
+.bk{container-type:inline-size}
+@container (max-width:300px){.bkr{grid-template-columns:minmax(0,1fr) max-content!important}.bkb{grid-column:1/-1;order:3}}
 </style></head><body>
 
 <div class="wrap">
