@@ -512,6 +512,17 @@ html.grain[data-mode="light"] body::after{opacity:.07;mix-blend-mode:multiply}
 html.no-anim .rv{opacity:1;transform:none}
 @media (prefers-reduced-motion:reduce){html.fx body::before{animation:none}.rv{opacity:1;transform:none}}
 aside{top:var(--navh,140px)!important;max-height:calc(100vh - var(--navh,140px) - 12px)!important}@media (max-width:900px){aside{max-height:none!important}}
+
+/* tabla de la calculadora con bordes */
+.otw{border:1px solid var(--line2)!important;border-radius:14px!important;overflow:hidden;background:color-mix(in srgb,var(--card) 80%,transparent)}
+#oTable{border-collapse:separate;border-spacing:0}
+#oTable th,#oTable td{border:0;border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding-inline:14px!important}
+#oTable th:last-child,#oTable td:last-child{border-right:0}
+#oTable tr:last-child td{border-bottom:0}
+#oTable th{background:var(--tile);color:var(--mut);font-weight:600;border-bottom:1px solid var(--line2)}
+#oTable td:first-child,#oTable th:first-child{padding-left:16px!important}
+#oTable tr.hl td{background:color-mix(in srgb,var(--head) 10%,transparent);box-shadow:inset 0 1px 0 color-mix(in srgb,var(--head) 35%,transparent),inset 0 -1px 0 color-mix(in srgb,var(--head) 35%,transparent)}
+#oTable tr.hl td:first-child{box-shadow:inset 3px 0 0 var(--head),inset 0 1px 0 color-mix(in srgb,var(--head) 35%,transparent),inset 0 -1px 0 color-mix(in srgb,var(--head) 35%,transparent)}
 </style></head><body>
 
 <div class="wrap">
@@ -600,7 +611,7 @@ aside{top:var(--navh,140px)!important;max-height:calc(100vh - var(--navh,140px) 
       <div id="oNote" class="note"></div>
     </div>
     <div class="card" style="padding:0;overflow:hidden">
-      <div class="tw ptbl" style="border:0;border-radius:0"><table id="oTable"></table></div>
+      <div class="tw ptbl otw"><table id="oTable"></table></div>
     </div>
   </div>
  </div>
